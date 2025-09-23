@@ -2,7 +2,7 @@
 
 \subsection*{Definición}
 
-Vamos a decir que un transformer $T_N$ es la 0-1 normalización de un transformer $T$ si el $h_n^L$ de $T_N$ cumple que:
+Vamos a decir que un transformer $T_N$ es la normalización  de un transformer $T$ si el $h_n^L$ de $T_N$ cumple que:
 
 \todo{repensar está definición: no sería mejor que sea algo tipo $\infty,-\infty$ si responde no y $-\infty,\infty$ si responde sí? El comportamiento como estamos tomando argmax sería el mismo}
 \begin{align*}
@@ -19,3 +19,75 @@ Vamos a decir que un transformer $T_N$ es la 0-1 normalización de un transforme
     \infty & \text{ si T responde sí } \\
     \end{cases} 
 \end{align*}
+
+
+\subsection*{Implementación}
+
+La matriz de $OUTPUT$ del transformer $\infty-$normalizado va a ser la misma que para el 0-1 normalizado. Veamos cómo conseguir ahora que el último vector sea lo deseado.
+
+Sin pérdida de generalidad podemos $\infty$ normalizar un transformer 0-1 normalizado, por ende podemos suponer que $h_n^L = (T_{NO}, T_{SI}, 0, \dots, 0)$
+
+Primero vamos a obtener un vector de la forma $(0,x,0,\dots,0)$ donde valdrá que $x = 0$ si T respondía NO y $x>0$ si T respondía SI.
+Notar que si $T$ responde SI entonces $T_{SI} > T_{NO}$ y que si $T$ responde NO entonces $T_{NO} > T_{SI}$.
+
+
+Al pasar por una capa de FF con $W_2 = Id$, $b1 = 0$, $b2 = 0$ y $W_1$ con todos ceros salvo los dos elementos de la última fila los cuales valdrían $-1$ y $1$. Obtenemos algo cercano a lo deseado:
+
+
+
+\begin{align*}
+    Id \; \text{relu}\left(\left(\begin{matrix}
+        &0      &\dots  &0      &0      &0      \\
+        &\vdots &\ddots &\vdots &\vdots &\vdots \\
+        &0      &\dots  &0      &0      &0      \\
+        &0      &\dots  &0      &-1     &1      \\
+    \end{matrix}\right)
+        \left(\begin{matrix}
+        T_{NO} \\
+        T_{SI} \\ 
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right)+0\right) + 0 = \left(\begin{matrix} 
+        0 \\
+        \vdots \\
+        0 \\
+        \text{relu}(T_{SI}-T_{NO})
+    \end{matrix}\right)
+\end{align*}
+
+
+
+Dado que la FF se suma a lo que ya teníamos nuestro n-ésimo vector ahora es de la forma: $(T_{NO}, T_{SI}, 0, \dots, 0, \text{relu}(T_{SI}-T_{NO}))$. Notar que: 
+
+\[\text{relu}(T_{SI}-T_{NO}) \begin{cases}
+    = 0 \text{ si $T$ responde NO} \\
+    > 0 \text{ si $T$ responde SI} \\
+\end{cases}\]
+
+
+Dado que podemos aplicarle transformaciones lineales a un vector podemos colocar en 0 las dos primeras coordenadas basta aplicarle la identidad con 0 en los primeros dos elementos de la diagonal. Luego ya tendríamos un vector de la pinta $(0, \dots, 0, \text{relu}(T_{SI}-T_{NO}))$. Con una permutación podemos transformarlo en $(0, \text{relu}(T_{SI}-T_{NO}), 0, \dots, 0)$.
+
+Por la representación finita ocurre que dado dado un $x$ no negativo vale:
+
+\[x *\infty = \begin{cases}
+    &0 \text{ si } x = 0 \\
+    &y \text{ para algún } y \ge 1 \text{ si } x \ge 1 \text{ pues } x \ge \frac{1}{\infty} \\
+\end{cases}\]
+
+Luego 
+
+\[(x *\infty) *\infty= \begin{cases}
+    &0 \text{ si } x = 0 \\
+    &\infty \text{ si } x \ge 1 \\
+\end{cases}\]
+
+Por lo tanto aplicarle la transformación lineal que multiplica por $\infty$ dos veces al vector que tenemos nos da el resultado esperado pero con 0 en la primer coordenada. Lo cual se puede solucionar con una capa de FF donde $W_2 = W_1 = Id$, $b_1 = 0$ y $b_2 = (1,0,\dots,0)$.
+
+
+Tomando como matriz de output la identidad que proyecta las primeras dos coordenadas es evidente ver que el comportamiento de este nuevo transformer es igual al del original: 
+\begin{itemize}
+    \item Si $T$ respondía NO entonces la primer coordenada será 1 y la segunda 0, por lo tanto el argmax hace que el transformer $\infty$-normalizado devuelva NO (pues está asociado a la primer coordenada, la cual es mayor que la segunda).
+    \item Si $T$ respondía NO entonces la primer coordenada será 1 y la segunda $\infty$, por lo tanto el argmax hace que el transformer $\infty$-normalizado devuelva SI (pues está asociado a la segunda coordenada la cual es mayor que la primera).
+\end{itemize}
+
