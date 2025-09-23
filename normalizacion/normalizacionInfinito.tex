@@ -1,0 +1,21 @@
+\section*{Normalización $\infty$}
+
+\subsection*{Definición}
+
+Vamos a decir que un transformer $T_N$ es la 0-1 normalización de un transformer $T$ si el $h_n^L$ de $T_N$ cumple que:
+
+\todo{repensar está definición: no sería mejor que sea algo tipo $\infty,-\infty$ si responde no y $-\infty,\infty$ si responde sí? El comportamiento como estamos tomando argmax sería el mismo}
+\begin{align*}
+    & (h_n^L)_i =
+    \begin{cases}
+    1 & \text{si } i = 1 \\
+    x & \text{si } i = 2 \\
+    0 & \text{cc }
+    \end{cases} 
+    & \text{ donde }
+    & x = 
+    \begin{cases}
+    0 & \text{ si T responde no }  \\
+    \infty & \text{ si T responde sí } \\
+    \end{cases} 
+\end{align*}
