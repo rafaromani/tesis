@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Transformers cosas}
+\author{GLyC}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Tareas}
+
+\begin{itemize}
+    \item Completar el formulario de Lambda.
+
+    \begin{enumerate}
+        \item Resumen de trabajo, 150 palabras.
+        \item Listar 3 objetivos específicos (90 palabras)
+        \item 2 referencias
+    \end{enumerate}
+
+    \item Poner a Cifu como Director, priorizan gente de menor rango.
+
+    \item Ideas
+    
+    \begin{enumerate}
+        \item Estudiar transformers probabilisticos (o sea, modelar el azar en algún lado). Las clases involucradas podrían ser RNC, el equivalente randomizado de NC. Buscar bibliografía. Que el CoT se haga de forma randomizada. Buscar bibliografia de complejidad de transformers con CoT.
+
+        \item Intentar caracterizar la complejidad de los transformers con log depth, suenan TC1 pero al parecer resuelven problemas en AC2.
+
+        \item 
+    \end{enumerate}
+\end{itemize}
+
+\section{Dudas}
+
+Puede ser Cifu el director?
+
+\section{Formulario}
+
+
+\begin{itemize}
+    \item  Título del proyecto (máximo 40 palabras):  Entendiendo los límites teóricos de los LLMs desde el punto de vista de la complejidad computacional: el rol de la aleatoriedad dentro del Chain Of Thought.
+    
+    \item Resumen: En este proyecto se realizará un análisis de la expresividad y capacidad de cómputo de los transformers desde un punto de vista formal con el objetivo de entender sus limitaciones intrínsecas como modelo computacional. 
+    
+    Estudios recientes han demostrado, teórica y empíricamente, que ciertas tareas quedan fuera del alcance de los LLMs debido a restricciones arquitectónicas como la longitud de la ventana de contexto, la profundidad de la red, la precisión numérica y la extensión de la Chain of Thought (CoT). No obstante, la mayoría de estas abstracciones pasa por alto la naturaleza probabilística de los transformers, representada habitualmente mediante el parámetro ``temperatura''.    Con el fin de obtener límites de capacidad más realistas, en esta propuesta se plantea enriquecer los marcos teóricos existentes incorporando explícitamente los componentes estocásticos inherentes al funcionamiento de los transformers. Aparte, se busca comprender cómo la aleatoriedad interactúa con el resto de los parámetros mencionados anteriormente.
+
+    \item Listar 3 objetivos específicos (90 palabras): 1) Formalizar adecuadamente los aspectos no determinísticos de los transformers, hasta ahora ignorados en la literatura. 2) Caracterizar el poder computacional de esta abstracción más realista. Para hacer esto se utilizarán herramientas provenientes del área de complejidad computacional, y en especial resultados asociados a la expresividad de circuitos 3) Entender cómo se relaciona el no determinismo con el resto de los parámetros libres ya nombrados, y en especial con aspectos poco entendidos como la profundidad de la red. 
+
+
+    \item Listar dos referencias bibliográficas significativas (60 palabras).
+    
+    Li, Z., Liu, H., Zhou, D., \& Ma, T. (2024). Chain of thought empowers transformers to solve inherently serial problems. arXiv preprint arXiv:2402.12875, 1.
+    
+    Merrill, W., \& Sabharwal, A. (2023). The expressive power of transformers with chain of thought. arXiv preprint arXiv:2310.07923.
+
+    \item ¿Por qué deberíamos elegir tu postulación? Escribí una oración detallando por qué es buena para vos y otra detallado por qué es buena para la comunidad (máximo 150 palabras)
+
+    (Para vos \$\$)
+
+    A medida que los transformers van tomando más protagonismo dentro del desarrollo de la IA, para la computación se vuelve fundamental entender la frontera de su poder expresivo (algo bastante inexplorado científicamente hasta el momento) tanto desde un punto de vista del usuario (para entender en qué tareas sería inútil utilizarlos) como del punto de vista del desarrollador (para entender qué a parámetros le deberían prestar más atención).
+
+    Recibir esta beca me daría la oportunidad de ponerme completamente en el rol de científico, trabajando junto a expertos en la teoría de la computación en una pregunta fundamental en la IA pero desde un punto de vista teórico, que es el tipo de enfoque que más me interesó siempre a lo largo de la carrera. Que se elija mi postulación para trabajar en temas que tanto me apasionan sería, además de un orgullo, muy motivante para mí.
+
+    
+
+    Esta propuesta de trabajo busca comprender teóricamente los límites de capacidad de una herramienta tremendamente popular y de alcance masivo como lo son los LLMs. En este sentido, el trabajo que se espera requiere de un dominio teórico de herramientas asociadas a complejidad computacional como también de ideas e intuiciones del área de Inteligencia Artificial. Por lo tanto, esperamos que durante el programa se lleven a cabo diversas reuniones motivando la interconexión entre distintos grupos dentro de la facultad.
+
+    Finalmente, creemos que entender la frontera de uso de los transformers es fundamental tanto desde un punto de vista del usuario (para entender en qué tareas no se los debería usar) como del punto de vista del desarollador (qué parámetros se deberían mejorar).
+
+    \item Nombre y Apellido de director/a/e propuesta/o/e.: Santiago Cifuentes
+
+    \item Correo electrónico de directora/director propuesta/o/e: cifuentessantiago76@gmail.com
+
+    \item Cargo docente del director/a/e propuesta/o/e.: Jefe de Trabajos Prácticos
+
+    \item Cargo CONICET del director/a/e propuesta/o/e.: Becario
+
+    \item Nombre y Apellido de co-directora/director/e propuesta/o/e.: Santiago Figueira
+
+    \item Correo electrónico de co-directora/director propuesta/o/e: sfigueir@gmail.com
+
+    \item Cargo docente del co-director/a/e propuesta/o/e.: Profesor asociado
+
+    \item Cargo CONICET del co-director/a/e propuesta/o/e.
+
+    \item La persona propuesta para la dirección
+    
+    \item Ha dirigido una tesis doctoral finalizada? No
+
+    \item Ha co-dirigido una tesis doctoral finalizada? No
+
+    \item Ha dirigido una tesina de licenciatura finalizada? Si
+
+    \item Ha co-dirigido una tesina de licenciatura finalizada? Si
+
+    \item Aval de director/a/e propuesto/a/e (adjuntar carta membreteada y firmada por responsable del laboratorio en el que se realizará el proyecto y la dirección del Instituto/Departamento, avalando la presentación) en formato PDF. Si la persona propuesta para dirigir no fuera aquella responsable del laboratorio, esta última persona debe añadir su visto bueno a la postulación.
+
+    \item algo más: Desde muy chico me apasionaron las ciencias. Al principio solo conocía el enseñarlas en clase, por lo tanto quería ser docente. De más grande descubrí el mundo de la divulgación, y no pude parar de contarles a mis amigos y familia sobre lo que me apasionaba. Pero en el medio de este proceso me empezaron a surgir preguntas, principalmente sobre los fundamentos que rigen al universo. Fue ahí cuando me dí cuenta que lo que yo quería hacer era ser científico. Pero no solo para resolver mis preguntas, eso nunca me dejó satisfecho. Mi objetivo real siempre fue resolverlas para poder comunicárselas a todos los que quieran escuchar, y poder de esta forma, compartir lo que me apasiona con la mayor cantidad de personas posible. Por ello soy ayudante desde que pude concursar por primera vez y siempre que pude participé en actividades de divulgación que acerquen la ciencia básica al resto de la sociedad e inspiren a más chicos a seguir este camino.
+
+    Realizar la tesis respondiendo preguntas fundamentales que se vienen gestando en mi cabeza hace tanto tiempo, junto a expertos como son mis directores, me parece un puntapié inicial ideal para mi carrera como científico de la computación. Más aún si es acompañada por una beca como esta, la cual me da esperanza y motivación para seguir con el objetivo de avanzar el conocimiento y comunicarlo en el proceso.
+\end{itemize}
+
+\end{document}
