@@ -4,7 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
-\title{Normalización}
+\title{Normalización de transformers}
 \author{GLyC}
 \date{\today}
 
@@ -23,41 +23,39 @@ Vamos a decir que un transformer $T_N$ es la 0-1 normalización de un transforme
 \begin{equation*}
 (h_n^L)_i =
 \begin{cases}
-0 & \text{si } i \neq 1 \\
-x & \text{cc }
+T_{NO} & \text{si } i = 1 \\
+T_{SI} & \text{si } i = 2 \\
+0 & \text{cc }
 \end{cases}
 \end{equation*}
 
-donde 
+donde $T_{NO}$ y $T_{SI}$ corresponden a los valores que calcula la función $OUTPUT$ antes de hacer el softmax, es decir 
+
 \begin{align*}
-    x = 0 & \text{ si $T$ responde no} \\
-    x > 0 & \text{ si $T$ responde si}
+    T_{NO} &:= (\Theta_{OUTPUT}(h_n^L))_1 \\
+    T_{SI} &:= (\Theta_{OUTPUT}(h_n^L))_2 
 \end{align*}
 
 
 \subsection*{Implementación}
 
-Vamos a tomar un transformer $T$ y obtener su normalizado 0-1. La idea es meter $\Theta_{OUTPUT}$ adentro del ciclo y luego con un par de transformaciones lineales más vamos a obtener lo que queremos.
-
-Voy a llamar $h$ a $h_n^L$ de $T$. Lo que vamos a hacer es agregar algunas capas más a $T$ y vamos a conseguir lo que queremos. 
-
-Primero vamos a transformar $h$ en un vector con $(\Theta_{OUTPUT}h)_1$ en la primer coordenada, $(\Theta_{OUTPUT}h)_2$ en la segunda y 0 en el resto. Llamémoslo $T_{NO}$ y $T_{SI}$ respectivamente. Lo que estamos llamando $T_{SI}$ es la ¿probabilidad? antes del softmax de que $T$ diga sí y $T_{NO}$ de que diga no.  Veamos cuál es la transformación lineal correcta.
+Vamos a tomar un transformer $T$ y obtener su normalizado 0-1. Para ello lo que vamos a hacer es agregar algunas capas más al final de $T$ para conseguir aplicarle una transformación lineal a $h_n^L$.
 
 Dado que $\Theta_{OUTPUT} \in \mathbb{R}^{2\times d}$ basta con extender $\Theta_{OUTPUT}$ con $0$ hasta tener $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$
 
 
 \begin{equation*}
-    \Theta_{OUTPUT}h =   
+    \Theta_{OUTPUT}h_n^L =   
     \left(\begin{matrix}
         T_{NO} \\
         T_{SI}
     \end{matrix}\right) \longrightarrow
     \left(\begin{matrix}
-        &\Theta_{OUTPUT}h &0 &\dots  &0 \\
+        &\Theta_{OUTPUT} &0 &\dots  &0 \\
         &0                &0 &\dots  &0 \\
         &\vdots           &0 &\ddots &\vdots \\
         &0                &0 &\dots  &0 \\
-    \end{matrix}\right)h = 
+    \end{matrix}\right)h_n^L = 
     \left(\begin{matrix}
         T_{NO} \\
         T_{SI} \\ 
@@ -109,7 +107,7 @@ Dado que
 
 Por lo tanto preserva el comportamiento.
 
-
+Falta ver es cómo aplicarle una transformación lineal a un vector y guardarla al final. Más sobre eso en Requisitos.
 
 \section*{Normalización $\infty$}
 
