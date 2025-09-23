@@ -1,7 +1,8 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
-
+\usepackage{todonotes}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 
 \title{Normalización}
 \author{GLyC}
@@ -15,7 +16,7 @@ Vamos a definir dos nociones de normalización de los transformers. Ambas van a 
 
 \section*{Normalización 0-1}
 
-\subsection*{Definción}
+\subsection*{Definición}
 
 Vamos a decir que un transformer $T_N$ es la 0-1 normalización de un transformer $T$ si el $h_n^L$ de $T_N$ cumple que:
 
@@ -34,10 +35,87 @@ donde
 \end{align*}
 
 
+\subsection*{Implementación}
 
+Vamos a tomar un transformer $T$ y obtener su normalizado 0-1. La idea es meter $\Theta_{OUTPUT}$ adentro del ciclo y luego con un par de transformaciones lineales más vamos a obtener lo que queremos.
+
+Voy a llamar $h$ a $h_n^L$ de $T$. Lo que vamos a hacer es agregar algunas capas más a $T$ y vamos a conseguir lo que queremos. 
+
+Primero vamos a transformar $h$ en un vector con $(\Theta_{OUTPUT}h)_1$ en la primer coordenada, $(\Theta_{OUTPUT}h)_2$ en la segunda y 0 en el resto. Llamémoslo $T_{NO}$ y $T_{SI}$ respectivamente. Lo que estamos llamando $T_{SI}$ es la ¿probabilidad? antes del softmax de que $T$ diga sí y $T_{NO}$ de que diga no.  Veamos cuál es la transformación lineal correcta.
+
+Dado que $\Theta_{OUTPUT} \in \mathbb{R}^{2\times d}$ basta con extender $\Theta_{OUTPUT}$ con $0$ hasta tener $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$
+
+
+\begin{equation*}
+    \Theta_{OUTPUT}h =   
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{SI}
+    \end{matrix}\right) \longrightarrow
+    \left(\begin{matrix}
+        &\Theta_{OUTPUT}h &0 &\dots  &0 \\
+        &0                &0 &\dots  &0 \\
+        &\vdots           &0 &\ddots &\vdots \\
+        &0                &0 &\dots  &0 \\
+    \end{matrix}\right)h = 
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{SI} \\ 
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right)
+\end{equation*}
+
+
+Luego la matriz $\Theta_{OUTPUT}$ de este nuevo transformer sería:
+
+\begin{equation*}
+    \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+\end{equation*}
+
+Dado que 
+
+\begin{align*}
+    \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+    &\left(\begin{matrix}
+        &\Theta_{OUTPUT}h &0 &\dots  &0 \\
+        &0                &0 &\dots  &0 \\
+        &\vdots           &0 &\ddots &\vdots \\
+        &0                &0 &\dots  &0 \\
+    \end{matrix}\right)h = \\
+    = \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+    &\left(\begin{matrix}
+        T_{NO} \\
+        T_{SI} \\ 
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right) = 
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{SI} \\ 
+    \end{matrix}\right)
+\end{align*}
+
+Por lo tanto preserva el comportamiento.
 
 
 
 \section*{Normalización $\infty$}
+
+
+\section*{Requisitos}
+\todo{mostrar que podemos hacer transformaciones lineales}
+
 
 \end{document}
