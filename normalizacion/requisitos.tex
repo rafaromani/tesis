@@ -1,2 +1,93 @@
 \section*{Requisitos}
-\todo{mostrar que podemos hacer transformaciones lineales}
+
+\subsection*{Hacer una capa 0}
+
+\todo{0}
+
+\subsection*{ATTN y FF controlando que coordenadas afectamos}
+\todo{preservación}
+
+\subsection*{Transformaciones lineales}
+Vamos a ver cómo aplicarle una transformación lineal a uno de nuestros vectores y guardar su resultado en otro vector más a la izquierda, es decir: $h_j^{l+c} = M h_i^l$ para un par $i < j$ elegidos previamente. Notar que el procedimiento que presentamos acá rompe todos los vectores salvo el $h_j$ es decir que no vamos a ser capaces de predecir qué valores tendrán los demás. 
+
+\bigskip
+
+Primero vamos hacer que $h_j = 0$ en las coordenadas que nos interesan. Luego con una capa de ATTN le vamos a sumar $M h_i$.
+
+Por las secciones anteriores podemos asumir que $h_i$ es el único vector que sus últimas coordenadas son $(1,0)$ y que todos los demás terminan en $(0,1)$. Estos números habrían sido puestos por el encoding y preservados en las capas anteriores.
+
+Esta información nos va a permitir construir $W_K$ y $W_Q$ tales que:
+
+\[
+\langle q_{j}, k_{i'} \rangle = \begin{cases}
+    -\infty &\text{ si } i' \neq i \\
+    0  &\text{ si } i' = i 
+\end{cases}
+\]
+
+Notar que las $W_Q$ y $W_K$ que buscamos son las siguientes
+
+\begin{align*}
+    & W_Q = \left(\begin{matrix}
+    &0      &\hdots &0      &0          \\
+    &\vdots &\ddots &\vdots &\vdots     \\
+    &0      &\hdots &0      &0          \\
+    &0      &\hdots &0      &-\infty    \\
+\end{matrix}\right)
+    &W_K = \left(\begin{matrix}
+    &0      &\hdots &0      &0      &0      \\
+    &\vdots &\ddots &\vdots &\vdots &\vdots \\
+    &0      &\hdots &0      &0      &0      \\
+    &0      &\hdots &0      &0      &1      \\
+\end{matrix}\right)
+\end{align*}
+
+
+dado que
+
+
+\begin{align*}
+    &q_{j} = W_Q \; h_j = \left(\begin{matrix}
+        0 \\
+        \vdots \\
+        0 \\
+        -\infty
+    \end{matrix}\right)
+    &k_{i'} = W_K \; h_{i'} = \left(\begin{matrix}
+        0 \\
+        \vdots \\
+        0 \\
+        (h_{i'})_{d} \\
+    \end{matrix}\right)
+\end{align*}
+
+pues ahora $\langle q_{j}, k_{i'} \rangle = -\infty *(h_{i'})_{d}$
+
+\bigskip
+
+Luego usando $W_O = M$ y $W_V = id$ obtendríamos lo esperado.
+
+Dado que $e^{-\infty} = 0$ ocurre que $softmax(-\infty, \dots, -\infty, 0) = (0, \dots, 0, 1)$. Lo cual genera que $(s_j)_{i'} = \mathbb{I}(i' = i)$ y por ende:
+
+\[
+  W_O \sum_{i'=0}^{n} (s_j)_{i'} v_{i'} = 
+  W_O \sum_{i'=0}^{j} (s_j)_{i'} v_{i'} = 
+  W_O \sum_{i'=0}^{j} (s_j)_{i'} h_{i'} = 
+  W_O \sum_{i'=0}^{j} \mathbb{I}(i' = i) h_{i'} = 
+  W_O \; h_i
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
