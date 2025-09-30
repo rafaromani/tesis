@@ -1,0 +1,96 @@
+\section*{Normalization 0-1}
+
+\subsection*{Definition}
+
+We will say that a transformer $T_N$ is the 0-1 normalization of a transformer $T$ if the $h_n^L$ of $T_N$ respects:
+
+
+\begin{equation*}
+(h_n^L)_i =
+\begin{cases}
+T_{NO} & \text{if } i = 1 \\
+T_{YES} & \text{if } i = 2 \\
+0 & \text{cc }
+\end{cases}
+\end{equation*}
+
+where $T_{NO}$ and $T_{YES}$ correspond to the values of the $OUTPUT$ function before the softmax:
+
+\begin{align*}
+    T_{NO} &:= (\Theta_{OUTPUT}(h_n^L))_1 \\
+    T_{YES} &:= (\Theta_{OUTPUT}(h_n^L))_2 
+\end{align*}
+
+
+\subsection*{Implementation}
+
+Let $T$ be a transformer, we will construct its 0-1 normalized. For doing that we will add some layers at the end of $T$ with the intention of applying a linear transformation to $h_n^L$
+
+Since $\Theta_{OUTPUT} \in \mathbb{R}^{2\times d}$, it is enough to extend $\Theta_{OUTPUT}$ with zeros until obtaining $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$.
+
+
+\begin{equation*}
+    \Theta_{OUTPUT}h_n^L =   
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{YES}
+    \end{matrix}\right) \longrightarrow
+    \left(\begin{matrix}
+        &\Theta_{OUTPUT} &0 &\dots  &0 \\
+        &0                &0 &\dots  &0 \\
+        &\vdots           &0 &\ddots &\vdots \\
+        &0                &0 &\dots  &0 \\
+    \end{matrix}\right)h_n^L = 
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{YES} \\ 
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right)
+\end{equation*}
+
+
+Then the matrix $\Theta_{OUTPUT}$ of the new transformer will be:
+
+\begin{equation*}
+    \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+\end{equation*}
+
+Since
+
+\begin{align*}
+    \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+    &\left(\begin{matrix}
+        &\Theta_{OUTPUT}h &0 &\dots  &0 \\
+        &0                &0 &\dots  &0 \\
+        &\vdots           &0 &\ddots &\vdots \\
+        &0                &0 &\dots  &0 \\
+    \end{matrix}\right)h = \\
+    = \left(\begin{matrix}
+        &1 &0 &0 &\dots &0 \\
+        &0 &1 &0 &\dots &0 
+    \end{matrix}\right)
+    &\left(\begin{matrix}
+        T_{NO} \\
+        T_{YES} \\ 
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right) = 
+    \left(\begin{matrix}
+        T_{NO} \\
+        T_{YES} \\ 
+    \end{matrix}\right)
+\end{align*}
+
+It's easy to see that the normalized transformer preserves the behavior.
+
+It's missing how to apply a linear transformation and save it at the end. More about that in requirements.
+
