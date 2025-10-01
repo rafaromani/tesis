@@ -2,11 +2,19 @@
 
 \subsection*{Embedding with flags}
 
-\todo{flagear vectores con el positional embedding}
 
-Assume there is a transformer $T$ with embedding size $d$. Its possible to add flags expanding the embedding size. The flags are added using the positional embedding. Its needed to extend the dimensions of all the matrix and the token embedding, but doing it with zeros works.
+Assume there is a transformer $T$ with embedding size $d$. It's possible to add flags expanding the embedding size. The flags are added using the positional embedding. It's needed to extend the dimensions of all the matrix and the token embedding, but doing it with zeros works.
 
-Lets see how to add a flag to the $i$th vector.
+Since the positional embedding from $T$ is just a mapping from $n_max$ to $\mathbb{R}^d$ for doing the flagging it's enough to define the positional embedding of the transformer with flags as:
+
+\begin{equation*}
+    (\theta'_{TE}(n))_j = \begin{cases}
+        (\theta_{TE}(n))_j  & \text{ if } j \neq d+1 \\
+        1                   & \text{ if } j = d+1  \text{ and } n = i \\
+        0                   & \text{ if } j = d+1  \text{ and } n \neq i
+    \end{cases}
+\end{equation*}
+
 
 
 \subsection*{Add one specific vector to the $i$th}
