@@ -2,11 +2,11 @@
 
 \subsection*{Definition}
 
-We will say that a transformer $T_N$ is the 0-1 normalization of a transformer $T$ if the $h_n^L$ of $T_N$ respects:
+We will say that a transformer $T_N$ is the 0-1 normalization of a transformer $T$ if accepts the word $\omega v$ if and only if the original transformer accepted $\omega$, where $v$ is any symbol of the language and the last vector after the last layer of $T_N$ respects:
 
 
 \begin{equation*}
-(h_n^L)_i =
+(h_{n+1}^L)_i =
 \begin{cases}
 T_{NO} & \text{if } i = 1 \\
 T_{YES} & \text{if } i = 2 \\
@@ -24,9 +24,9 @@ where $T_{NO}$ and $T_{YES}$ correspond to the values of the $OUTPUT$ function b
 
 \subsection*{Implementation}
 
-Let $T$ be a transformer, we will construct its 0-1 normalized. For doing that we will add some layers at the end of $T$ with the intention of applying a linear transformation to $h_n^L$
+Let $T$ be a transformer, we will construct its 0-1 normalized. For doing that we will add some layers at the end of $T$ with the intention of applying a linear transformation to $h_n^L$ and storing it in the vector coming from the extra character at the end.
 
-Since $\Theta_{OUTPUT} \in \mathbb{R}^{2\times d}$, it is enough to extend $\Theta_{OUTPUT}$ with zeros until obtaining $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$.
+The linear transformation that we will need to apply is $\Theta_{OUTPUT}$ but the dimensions doesn't match. This can be solved extending $\Theta_{OUTPUT}$ with zeros until obtaining $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$.
 
 
 \begin{equation*}
@@ -51,7 +51,8 @@ Since $\Theta_{OUTPUT} \in \mathbb{R}^{2\times d}$, it is enough to extend $\The
 \end{equation*}
 
 
-Then the matrix $\Theta_{OUTPUT}$ of the new transformer will be:
+If we are capable to apply the OUTPUT matrix inside the layers of the transformer, then the matrix $\Theta_{OUTPUT}$ will be just a projection of the firsts two coordinates:
+
 
 \begin{equation*}
     \left(\begin{matrix}
