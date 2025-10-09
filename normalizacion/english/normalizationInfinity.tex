@@ -2,8 +2,7 @@
 
 \subsection*{Definition}
 
-We will say that a transformer $T_N$ is the $\infty$-normalization of a transformer $T$ if the $h_n^L$ of $T_N$ respects:
-
+We will say that a transformer $T_N$ is the $\infty$-normalization of a transformer $T$ if accepts the word $\omega v$ if and only if the original transformer accepted $\omega$, where $v$ is any symbol of the language and the last vector after the last layer of $T_N$ respects:
 
 \begin{align*}
     & (h_n^L)_i =
@@ -23,9 +22,9 @@ We will say that a transformer $T_N$ is the $\infty$-normalization of a transfor
 
 \subsection*{Implementation}
 
-The $OUTPUT$ matrix of the $\infty-$normalized transformer will be the same as the $0-1$ normalized. Lets analyze now how to get $h_n^L$ to be what we want.
+The $OUTPUT$ matrix of the $\infty-$normalized transformer will be the same as the 0-1 normalized. Lets analyze now how to get $h_n^L$ to be what we want.
 
-Without loss of generality we can $\infty$-normalize a $0-1$ normalized transformer, so we can assume that $h_n^L = (T_{NO}, T_{YES}, 0, \dots, 0)$
+Without loss of generality we can $\infty$-normalize a 0-1 normalized transformer, so we can assume that $h_n^L = (T_{NO}, T_{YES}, 0, \dots, 0)$
 
 Applying the following linear transformation we get the correct signs:
 
