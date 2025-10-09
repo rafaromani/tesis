@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Cosas para hacer}
+\author{GLyC}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Op lineales y booleanas}
+
+\begin{itemize}
+    \item Pensar cómo hacer para agregar los vectores extra que necesitamos para las op lineales. Y si en vez de copiarlos en un nuevo vector lo que entiendo que requiere agregarle caracteres a la palabra (no suena buena idea para CoT) le duplicamos la dimensión y lo guardamos abajo? $\rightarrow$ parece ser la solución, hay que arreglarlo en el archivo de normalización.
+    \item Implementar operadores booleanos $\rightarrow$ fácil con normalización y sin CoT
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Alfabeto}
+
+\begin{itemize}
+    \item Repensar todo usando un alfabeto $\Sigma$ sin forzar a que sea $\{0,1\}$. Debería valer todo lo mismo. Esta bueno que podemos agregar símbolos de parada. Nos permite repensar cuando deja de hacer CoT. (la idea es que sea cuando imprime el símbolo de parada (usar uno para no y uno para si) y que lo haga antes de $n_{max}$)
+    \item Ambicioso: probar que podemos simular cualquier alfabeto con $\{0,1\}$. No vi este resultado en ningún lado.
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{CoT}
+
+\begin{itemize}
+    \item Correr dos transformers a la vez pero con CoT. Fácil si tenemos un alfabeto más rico que $\{0,1\}$
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aleatoriedad}
+\begin{itemize}
+    \item Pensar cómo funcionaría lo del sampleo
+    \item Escribir que podemos determinizar uno que samplea (usas normalización $\infty$)
+\end{itemize}
+
+
+\end{document}
