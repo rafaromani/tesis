@@ -2,7 +2,8 @@
 
 \subsection*{Definition}
 
-We will say that a transformer $T_N$ is the $\infty$-normalization of a transformer $T$ if accepts the word $\omega v$ if and only if the original transformer accepted $\omega$, where $v$ is any symbol of the language and the last vector after the last layer of $T_N$ respects:
+We will say that a transformer $T_N$ is the $\infty$-normalization of a transformer $T$ if it accepts exactly the same words and the $h_n^L$ of $T_N$ respects:
+
 
 \begin{align*}
     & (h_n^L)_i =
@@ -14,8 +15,8 @@ We will say that a transformer $T_N$ is the $\infty$-normalization of a transfor
     & \text{ where }
     & x = 
     \begin{cases}
-    -\infty & \text{ if T answers no }  \\
-    \infty & \text{ if T answers sí } \\
+    -\infty & \text{ if $T$ rejects }  \\
+    \infty & \text{ if $T$ accepts } \\
     \end{cases} 
 \end{align*}
 
@@ -26,7 +27,9 @@ The $OUTPUT$ matrix of the $\infty-$normalized transformer will be the same as t
 
 Without loss of generality we can $\infty$-normalize a 0-1 normalized transformer, so we can assume that $h_n^L = (T_{NO}, T_{YES}, 0, \dots, 0)$
 
-Applying the following linear transformation we get the correct signs:
+Lets call $x' = T_{YES} - T_{NO}$. If $T$ answers yes, then $x' > 0$ because $T_{YES} > T_{NO}$. If $T$ answers no, then the oposite happens, $x' < 0$ since $T_{NO} > T_{YES}$.
+
+Applying the following linear transformation we get a vector with $x'$ and $-x'$:
 
 \begin{equation*}
     \left(\begin{matrix}
@@ -49,36 +52,47 @@ Applying the following linear transformation we get the correct signs:
         0 \\
         \vdots \\
         0
+    \end{matrix}\right)=
+    \left(\begin{matrix}
+        x' \\
+        -x' \\ 
+        0 \\
+        \vdots \\
+        0
     \end{matrix}\right)
 \end{equation*}
 
-
-If $T$ answered yes, then $T_{YES} > T_{NO}$ and if $T$ answered no, then $T_{NO} > T_{YES}$.
-Lets call $x' = T_{YES} - T_{NO}$, if $T$ answers yes, $x' > 0$, if answers no, $x' < 0$.
 
 
 Because of the finite representation, it happens that for every $z \ge 0$:
 
 \[z *\infty = \begin{cases}
-    &0 \text{ if } z = 0 \\
-    &y \text{ for some } y \ge 1 \text{ if } z \ge 1 \text{ since } x \ge \frac{1}{\infty} \\
+    0   &\text{ if } z = 0 \\
+    y   &\text{ for some } y \ge 1 \text{, if } z \ge 1 \text{ since } z \ge \frac{1}{\infty} \\
 \end{cases}\]
 
 Then
 
 \[(z *\infty) *\infty= \begin{cases}
-    &0 \text{ si } z = 0 \\
-    &\infty \text{ si } z \ge 1 \\
+    0       &\text{ if } z = 0 \\
+    \infty  &\text{ if } z \ge 1 \\
 \end{cases}\]
 
-The same happens with $z \le 0$.
+In the same way, for all $z \le 0$ it holds that:
+
+\[(z *\infty) *\infty= \begin{cases}
+    0           &\text{ if } z = 0 \\
+    -\infty     &\text{ if } z \ge 1 \\
+\end{cases}\]
+
 
 Therefore, applying twice the linear transformation that multiplies by $\infty$ gives us what we want.
 
-As we said before, using the projection of the first two coordinates as output matrix is clear that this new transformer preserves the behavior of the original:
+Same as with the 0-1 normalization, using the projection of the first two coordinates as output matrix of $T_N$ preserves the behavior.
+
 
 \begin{itemize}
-    \item If $T$ answered no then the first coordinate will be $\infty$ and the second one $-\infty$ before the softmax. But for the properties of the finite representation, $e^{-\infty} = 0$ and $e^{\infty} = \infty$. Then the output of the softmax will be $(1,0)$. So the argmax will pick no.
+    \item If $T$ answered no then the first coordinate will be $\infty$ and the second one $-\infty$ before applying softmax. But for the properties of the finite representation, $e^{-\infty} = 0$ and $e^{\infty} = \infty$. Then the output of the softmax will be $(1,0)$. So the argmax will pick no.
     \item In the same way if $T$ answered yes, the output of the softmax will be $(0,1)$. So the argmax  will pick yes.
 \end{itemize}
 
