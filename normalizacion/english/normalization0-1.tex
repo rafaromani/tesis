@@ -2,11 +2,10 @@
 
 \subsection*{Definition}
 
-We will say that a transformer $T_N$ is the 0-1 normalization of a transformer $T$ if accepts the word $\omega v$ if and only if the original transformer accepted $\omega$, where $v$ is any symbol of the language and the last vector after the last layer of $T_N$ respects:
-
+We will say that a transformer $T_N$ is the 0-1 normalization of a transformer $T$ if the $h_n^L$ of $T_N$ respects:
 
 \begin{equation*}
-(h_{n+1}^L)_i =
+(h_{n}^L)_i =
 \begin{cases}
 T_{NO} & \text{if } i = 1 \\
 T_{YES} & \text{if } i = 2 \\
@@ -24,9 +23,7 @@ where $T_{NO}$ and $T_{YES}$ correspond to the values of the $OUTPUT$ function b
 
 \subsection*{Implementation}
 
-Let $T$ be a transformer, we will construct its 0-1 normalized. For doing that we will add some layers at the end of $T$ with the intention of applying a linear transformation to $h_n^L$ and storing it in the vector coming from the extra character at the end.
-
-The linear transformation that we will need to apply is $\Theta_{OUTPUT}$ but the dimensions doesn't match. This can be solved extending $\Theta_{OUTPUT}$ with zeros until obtaining $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$.
+Let $T$ be a transformer, we will construct its 0-1 normalized. The idea is to add some layers at the end of $T$ such that they multiply $h_n^L$ by $\Theta_{OUTPUT}$. Since the dimensions doesn't match, it's needed to extend the matrix with zeros obtaining $\Theta_{OUTPUT}' \in \mathbb{R}^{d\times d}$.
 
 
 \begin{equation*}
@@ -51,7 +48,7 @@ The linear transformation that we will need to apply is $\Theta_{OUTPUT}$ but th
 \end{equation*}
 
 
-If we are capable to apply the OUTPUT matrix inside the layers of the transformer, then the matrix $\Theta_{OUTPUT}$ will be just a projection of the firsts two coordinates:
+If we are capable to apply the OUTPUT matrix of $T$ inside the layers of the transformer, then the matrix $\Theta_{OUTPUT}$ of $T_N$ will be just a projection of the firsts two coordinates:
 
 
 \begin{equation*}
@@ -73,7 +70,7 @@ Since
         &0                &0 &\dots  &0 \\
         &\vdots           &0 &\ddots &\vdots \\
         &0                &0 &\dots  &0 \\
-    \end{matrix}\right)h = \\
+    \end{matrix}\right)h_n^L = \\
     = \left(\begin{matrix}
         &1 &0 &0 &\dots &0 \\
         &0 &1 &0 &\dots &0 
@@ -92,6 +89,3 @@ Since
 \end{align*}
 
 It's easy to see that the normalized transformer preserves the behavior.
-
-It's missing how to apply a linear transformation and save it at the end. More about that in requirements.
-
