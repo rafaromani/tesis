@@ -1,16 +1,20 @@
 \section*{Linear transformations}
 
+We define two ways of applying linear transformations to an specific vector. Both have the effect of corrupting every vector except the one with the result. The first one saves the answer in a different vector to the right of the one receiving the transformation. Note that this requieres adding a extra character at the end (so we get and extra vector) if we want to apply a transformation to the last vector, which we will need for the normalizations. This is uncomfortable for doing CoT. Thats why we also introduce a second way of applying linear transformation which saves the answer in the same vector, but requieres to double the embedding size.
+
+\subsection*{Linear transformation storing to the right}
+
 In this section we will see how to apply a linar transformation to one of the vectors and save the output in another more to the right, in other words: $h_j^{l+c} = M h_i^l$ for some $i < j$ previously chosen.
 
-Note that after this procedure all the vector will have their values corrupted with the exception of $h_j$.
+Note that after this procedure all the vector will have their values corrupted with the exception of $h_j$. 
 
 \bigskip
 
-First we will make $h_j = 0$ at the coordinates we are interested. Then with an ATTN layer we will add $M h_i$.
+First we will make $h_j = 0$ at the coordinates we are interested (this can be achieved with the previous sections). Then with an ATTN layer we will add $M h_i$.
 
-Thanks to the previous sections we can assume that $h_i$ is the only vector which has $(1,0)$ in the lasts coordinates and that the rests end in $(0,1)$. These numbers would have been set by the encoding and preserved trough the previous layers.
+Using the previous sections we can assume that every vector's last two coordinates are $(0,1)$, except $h_i$'s which are $(1,0)$. These numbers would have been set by the encoding and preserved trough the previous layers.
 
-Assuming this will allow us to construct $W_K$ and $W_Q$ such that:
+Assuming this we will construct $W_K$ and $W_Q$ such that:
 
 \[
 \langle q_{j}, k_{i'} \rangle = \begin{cases}
@@ -59,7 +63,9 @@ so $\langle q_{j}, k_{i'} \rangle = -\infty *(h_{i'})_{d}$
 
 \bigskip
 
-Taking $W_O = M$ y $W_V = id$ we get what we were looking for. This happens because the fact that $e^{-\infty} = 0$ makes that $softmax(-\infty, \dots, -\infty, 0) = (0, \dots, 0, 1)$, which makes $(s_j)_{i'} = \mathbb{I}(i' = i)$ so finally:
+Taking $W_O = M$ y $W_V = id$ we get what we were looking for. 
+
+This works because $e^{-\infty} = 0$ and $softmax(-\infty, \dots, -\infty, 0) = (0, \dots, 0, 1)$, which makes $(s_j)_{i'} = \mathbb{I}(i' = i)$. In summary:
 
 \[
   W_O \sum_{i'=0}^{n} (s_j)_{i'} v_{i'} = 
@@ -68,3 +74,7 @@ Taking $W_O = M$ y $W_V = id$ we get what we were looking for. This happens beca
   W_O \sum_{i'=0}^{j} \mathbb{I}(i' = i) h_{i'} = 
   W_O \; h_i
 \]
+
+
+\subsection*{Linear transformation doubling the embedding size}
+
