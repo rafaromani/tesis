@@ -1,9 +1,11 @@
 \section*{Embedding with flags}
 
 
-Assume there is a transformer $T$ with embedding size $d$. It's possible to add flags expanding the embedding size. The flags are added using the positional embedding. It's needed to extend the dimensions of all the matrix and the token embedding, but doing it with zeros works.
+Assume there is a transformer $T$ with embedding size $d$. 
+It's possible to add flags if we expand the embedding size. 
+Since the dimensions of the embedding will be modified, it is needed to also change the dimensions of all the matrices and the token embedding. That can be done with zeros so it doesn't affect the behavior.
 
-Since the positional embedding from $T$ is just a mapping from $n_max$ to $\mathbb{R}^d$ for doing the flagging it's enough to define the positional embedding of the transformer with flags as:
+Since the positional embedding from $T$ is just a mapping from $[n_{max}]$ to $\mathbb{R}^d$ it is the perfect place for marking the $i$th vector. It can be done defining the positional embedding of the transformer with flags as:
 
 \begin{equation*}
     (\theta'_{TE}(n))_j = \begin{cases}
@@ -12,3 +14,6 @@ Since the positional embedding from $T$ is just a mapping from $n_max$ to $\math
         0                   & \text{ if } j = d+1  \text{ and } n \neq i
     \end{cases}
 \end{equation*}
+
+Note that is possible to flag multiple vectors in the same coordinate or to flag with a different value than $1$. Also the flagging can be done in any coordinate, not only in the last one.
+
