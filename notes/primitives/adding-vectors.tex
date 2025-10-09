@@ -1,0 +1,47 @@
+\section*{Add one specific vector to the $i$th}
+
+The $i$ is fixed from the construction of the transformer. We can use a coordinate (lets pick the last one) for flagging witch is the $i$th vector. This vector will have a 1 in this coordinate and the others  will have a 0.
+
+Now lets define a FF layer such that $FF(h_j) = \mathbb{I}(j=i)*v$.
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        & 0         &\dots  &0      & v_1       \\
+        & \vdots    &\ddots &\vdots & \vdots    \\
+        & 0         &\dots  &0      & v_d       \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        & 0      \\
+        & \vdots \\
+        & 0      \\
+    \end{matrix}\right) 
+\end{align*}
+
+If we were to pick the $k$th coordinate for the flag then we have to put $v$ in the $k$th column.
+
+\subsubsection*{Make the $i$th vector zero}
+
+For making a vector zero we will use the limits of the finite representation.
+
+For all $x$ it happens that $(x + \infty) + \infty = \infty$. Since $x \ge -\infty$, it happens that $x + \infty \ge 0$, then $(x + \infty) + \infty \ge \infty$, so $(x + \infty) + \infty = \infty$. Therefore if we want to get zero, it's enough to subtract $\infty$.
+
+\begin{align*}
+    h_i \leftarrow \left(\left( h_i + 
+    \left(\begin{matrix}
+    &\infty \\
+    &\vdots \\
+    &\infty \\
+\end{matrix}\right)\right)
+    + \left(\begin{matrix}
+    &\infty \\
+    &\vdots \\
+    &\infty \\
+\end{matrix}\right)\right)
+    + \left(\begin{matrix}
+    &-\infty \\
+    &\vdots \\
+    &-\infty \\
+\end{matrix}\right)
+\end{align*}
+
