@@ -1,10 +1,10 @@
 \section*{Linear transformations}
 
-We define two ways of applying linear transformations to an specific vector. Both have the effect of corrupting every vector except the one with the result. The first one saves the answer in a different vector to the right of the one receiving the transformation. Note that this requieres adding a extra character at the end (so we get and extra vector) if we want to apply a transformation to the last vector, which we will need for the normalizations. This is uncomfortable for doing CoT. Thats why we also introduce a second way of applying linear transformation which saves the answer in the same vector, but requieres to double the embedding size.
+We define two ways of applying linear transformations to an specific vector. Both have the effect of corrupting every vector except the one with the result. The first one saves the answer in a different vector to the right of the one receiving the transformation. Note that this requires adding a extra character at the end (so we get and extra vector) if we want to apply a transformation to the last vector, which we will need for the normalizations. This is uncomfortable for doing CoT. Thats why we also introduce the second way of applying linear transformation which saves the answer in the same vector, but requires to double the embedding size.
 
 \subsection*{Linear transformation storing to the right}
 
-In this section we will see how to apply a linar transformation to one of the vectors and save the output in another more to the right, in other words: $h_j^{l+c} = M h_i^l$ for some $i < j$ previously chosen.
+In this section we will see how to apply a linear transformation to one of the vectors and save the output in another more to the right, in other words: $h_j^{l+c} = M h_i^l$ for some $i < j$ previously chosen.
 
 Note that after this procedure all the vector will have their values corrupted with the exception of $h_j$. 
 
@@ -70,7 +70,7 @@ This works because $e^{-\infty} = 0$ and $softmax(-\infty, \dots, -\infty, 0) = 
 \[
   W_O \sum_{i'=0}^{n} (s_j)_{i'} v_{i'} = 
   W_O \sum_{i'=0}^{j} (s_j)_{i'} v_{i'} = 
-  W_O \sum_{i'=0}^{j} (s_j)_{i'} h_{i'} = 
+  W_O \sum_{i'=0}^{j} (s_j)_{i'} h_{i'} = \]\[ =
   W_O \sum_{i'=0}^{j} \mathbb{I}(i' = i) h_{i'} = 
   W_O \; h_i
 \]
@@ -78,3 +78,57 @@ This works because $e^{-\infty} = 0$ and $softmax(-\infty, \dots, -\infty, 0) = 
 
 \subsection*{Linear transformation doubling the embedding size}
 
+As it was said before, if we want to store the result of the linear transformation in the same vector (because of the error given by the finite representation)\footnote{maybe expand this?} we will have to double the embedding size.
+
+The linear transformation will be realized trough two layers of ATTN. The first layer will store the answer of the linear transformation in the second half of the embedding and overwrite the first one with zeros.
+Then, the second layer will swap the two parts so the answer its finally stored in the first part of the embedding. It will also overwrite the second half with zeros so it can be reused.
+
+First, its needed to extend all previous matrices and embeddings from dimension $d$ to dimension $2*d + 1$. This has to be done with zeros in everyplace with the exception of the positional embedding and the last coordinate of the vector we want to multiply. The plus $1$ came from the flag and the times $2$ for having space to save the result.
+
+
+As we assumed before, the vector we will want to multiply by a matrix will be flagged with a $1$ in the last coordinate and all the other will have a $0$.
+As seen before the matrices for $W_Q$ and $W_K$ will be such that $h_i$ only attends to its self:
+
+\begin{align*}
+    & W_Q = W_K = \left(\begin{matrix}
+    &0      &\hdots &0      &0          \\
+    &\vdots &\ddots &\vdots &\vdots     \\
+    &0      &\hdots &0      &0          \\
+    &0      &\hdots &0      &\infty    \\
+\end{matrix}\right)
+\end{align*}
+
+Then,
+
+\begin{align*}
+    & (W_Q h_{i'})_j = (W_K h_{i'})_j = \begin{cases}
+    0       &\text{ if } j \neq 2*d+1               \\
+    0       &\text{ if } j = 2*d+1 \land i' \neq i  \\
+    \infty  &\text{ if } j = 2*d+1 \land i' = i
+\end{cases}
+\end{align*}
+
+$W_V$ will be the identity and $W_O$ will be:
+\begin{align*}
+    & W_O = \left(\begin{matrix}
+    &-id^{\mathbb{R}^{d\times d}}     &0^{\mathbb{R}^{d\times d}}     &0^{\mathbb{R}^d} \\
+    &M                                &0^{\mathbb{R}^{d\times d}}     &0^{\mathbb{R}^d} \\
+    &0^{\mathbb{R}^{1\times d}}       &0^{\mathbb{R}^{1\times d}}     &0^{\mathbb{R}}
+\end{matrix}\right)
+\end{align*}
+Where $M$ is the matrix of the linear transformation wanted to apply.
+
+
+Note than in the ATTN vector, all the values will be $0$ except for $\langle q_i, k_i\rangle$ which will be $1$. Lets call $h_i^1$ to the first half of $h_i$. Then, the output of the ATTN layer of the $i$th vector will be: $(-h^1_i, Mh^1_i, 0)$ which added to $h_i$ gives us $(0^d, Mh^1_i, 1)$.
+
+In the second layer we only need to swap the halves of $h_i$. For that we will use the same query key and value matrices but the $W_O$ will be:
+
+\begin{align*}
+    & W_O = \left(\begin{matrix}
+    &0                                &id^{\mathbb{R}^{d\times d}}     &0^{\mathbb{R}^d} \\
+    &-id^{\mathbb{R}^{d\times d}}      &0^{\mathbb{R}^{d\times d}}     &0^{\mathbb{R}^d} \\
+    &0^{\mathbb{R}^{1\times d}}       &0^{\mathbb{R}^{1\times d}}     &0^{\mathbb{R}}
+\end{matrix}\right)
+\end{align*}
+
+Then the output in the $i$th vector of this layer of ATTN will be $(M h_i, -M h_i, 0)$ so after adding it with the previous one we get $(M h_i, 0^{d+1})$. Exactly what we were looking for.
