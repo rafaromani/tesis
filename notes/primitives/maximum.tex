@@ -24,7 +24,7 @@ We will show how to do it with two coordinates and then it's easily extended to 
     \\
     & \xrightarrow[\text{\text{\shortstack{coordinates with \\ the comparations}}}]{\text{Divide by $\infty$ the}}
     \left( \begin{matrix} a \\ b \\ \mathbb{I}(a>b) \\ \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
-    \xrightarrow[transf]{\text{Linear}}
+    \xrightarrow[\text{operation}]{\text{Special}}
     \left( \begin{matrix} a \times \mathbb{I}(a>b) \\ b \times \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
     = \begin{cases}
         \left( \begin{matrix} a \\ 0 \\ \end{matrix} \right) & \text{ if } a > b \\
@@ -34,10 +34,7 @@ We will show how to do it with two coordinates and then it's easily extended to 
 \end{align*}
 
 
-
-
 If we want to apply this operation to more than two coordinates it can be done applying it in pairs and then doing maximum of the addition of the pairs. The expressions will be slightly more complex but the idea remains the same (because it's the same process but it needs to affect more coordinates).
-
 
 
 \begin{align*}
@@ -68,8 +65,86 @@ Note that either $\alpha$ or $\beta$ it's cero and the other one it's the maximu
 
 Clearly this process can be extend to more coordinates.
 
+\subsection*{Special operation}
+
+The operation we are looking for to do its not a proper linear transformation but with the infinity trick it can be done.
 
 
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b \\ \dots
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a \times \mathbb{I}_a \\ b \times \mathbb{I}_b\\ \dots
+    \end{matrix}\right)
+\end{equation*}
+
+It can be performed with 3 layers of FF. The first two will be:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        & 0         &\dots  &0      & 0         & \infty    \\
+        & \vdots    &\ddots &\vdots & \infty    & 0         \\
+        & \vdots    &\ddots &\vdots & 0         & 0         \\
+        & \vdots    &\ddots &\vdots & \vdots    & \vdots    \\
+        & 0         &\dots  &0      & 0         & 0         \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        & 0      \\
+        & \vdots \\
+        & 0      \\
+    \end{matrix}\right) 
+\end{align*}
+
+since the output of this FF when inputted with $(a, b, \mathbb{I}_a, \mathbb{I}_b, \dots)$ will be: 
+
+\begin{align*}
+    FF\left(\left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b \\ \dots
+    \end{matrix}\right)\right) 
+    = 
+    \left(\begin{matrix}
+        \infty \times \mathbb{I}_b \\
+        \infty \times \mathbb{I}_a \\
+        0 \\
+        \vdots \\
+        0
+    \end{matrix}\right)
+\end{align*}
+
+After two iterations of this the FF the smaller one between the first and second coordinate will be infinity and the other one will have the value unmodified.
+
+Now it's enough to subtract infinity from the coordinate that had originally the smaller value. That can be done with almost the same FF:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        & 0         &\dots  &0      & 0         & -\infty    \\
+        & \vdots    &\ddots &\vdots & -\infty    & 0         \\
+        & \vdots    &\ddots &\vdots & 0         & 0         \\
+        & \vdots    &\ddots &\vdots & \vdots    & \vdots    \\
+        & 0         &\dots  &0      & 0         & 0         \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        & 0      \\
+        & \vdots \\
+        & 0      \\
+    \end{matrix}\right) 
+\end{align*}
+
+In summary we did:
 
 
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b \\ \dots
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a + \infty \times \mathbb{I}_a + \infty \times \mathbb{I}_a - \infty \times \mathbb{I}_a \\ b + \infty \times \mathbb{I}_b + \infty \times \mathbb{I}_b - \infty \times \mathbb{I}_b\\ \dots
+    \end{matrix}\right)    
+\end{equation*}
 
+Which thanks to the finite representation it's exactly what we want.
