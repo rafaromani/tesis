@@ -1,0 +1,75 @@
+\section*{Maximum of two numbers}
+
+A useful mechanic is being able to do this transformation:
+
+\begin{equation*}
+    \left( \begin{matrix} a \\ b \\ \end{matrix} \right)
+    \rightarrow 
+    \begin{cases}
+        \left( \begin{matrix} a \\ 0 \\ \end{matrix} \right) & \text{ if } a > b \\
+        \\
+        \left( \begin{matrix} 0 \\ b \\ \end{matrix} \right) & \text{ if } b > a 
+    \end{cases}
+\end{equation*}
+
+
+We will show how to do it with two coordinates and then it's easily extended to more.
+
+\begin{align*}
+    & \left( \begin{matrix} a \\ b \\ \vdots \\ \end{matrix} \right) 
+    \xrightarrow{\text{FF layer}}
+    \left( \begin{matrix} a \\ b \\ \text{relu}(a-b) \\ \text{relu}(b-a) \\ \vdots \\ \end{matrix} \right) 
+    \xrightarrow[\text{the coordinates with the relu}]{\text{Multiply twice by $\infty$}}
+    \left( \begin{matrix} a \\ b \\ \infty \times \mathbb{I}(a>b) \\ \infty \times \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right) \longrightarrow 
+    \\
+    & \xrightarrow[\text{\text{\shortstack{coordinates with \\ the comparations}}}]{\text{Divide by $\infty$ the}}
+    \left( \begin{matrix} a \\ b \\ \mathbb{I}(a>b) \\ \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
+    \xrightarrow[transf]{\text{Linear}}
+    \left( \begin{matrix} a \times \mathbb{I}(a>b) \\ b \times \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
+    = \begin{cases}
+        \left( \begin{matrix} a \\ 0 \\ \end{matrix} \right) & \text{ if } a > b \\
+        \\
+        \left( \begin{matrix} 0 \\ b \\ \end{matrix} \right) & \text{ if } b > a 
+    \end{cases}
+\end{align*}
+
+
+
+
+If we want to apply this operation to more than two coordinates it can be done applying it in pairs and then doing maximum of the addition of the pairs. The expressions will be slightly more complex but the idea remains the same (because it's the same process but it needs to affect more coordinates).
+
+
+
+\begin{align*}
+    & \left( \begin{matrix} a \\ b \\ c \\ d \\ \vdots \\ \end{matrix} \right)
+    \rightarrow
+    \left( \begin{matrix} a \times \mathbb{I}(a>b) \\ b \times \mathbb{I}(b>a) \\ c \times \mathbb{I}(c>d) \\ d \times \mathbb{I}(d>c) \\ \vdots \\ \end{matrix} \right)
+    = \left( \begin{matrix} \alpha \\ \beta \\ \gamma \\ \delta \\ \vdots \\ \end{matrix} \right)
+    \rightarrow
+    \left(\begin{matrix}
+        \alpha \\ \beta \\ \gamma \\ \delta \\ 
+        relu((\alpha + \beta) - (\gamma + \delta)) \\
+        relu((\gamma + \delta) - (\alpha + \beta)) \\       
+        \vdots \\
+    \end{matrix}\right)
+    \rightarrow \\ &\rightarrow
+    \dots \rightarrow
+    \left( \begin{matrix} 
+        \alpha \times \mathbb{I}((\alpha + \beta) - (\gamma + \delta)) \\ 
+        \beta  \times \mathbb{I}((\alpha + \beta) - (\gamma + \delta)) \\ 
+        \gamma \times \mathbb{I}((\gamma + \delta) - (\alpha + \beta)) \\ 
+        \delta \times \mathbb{I}((\gamma + \delta) - (\alpha + \beta)) \\ 
+        \vdots \\ 
+    \end{matrix} \right)
+\end{align*}
+
+
+Note that either $\alpha$ or $\beta$ it's cero and the other one it's the maximum between $a$ or $b$ (if the maximum is $a$ then $\beta$ will be zero and respectively if the maximum is $b$,$\alpha$ will be zero). The same happens with $c$, $\gamma$, $d$, $\delta$, 
+
+Clearly this process can be extend to more coordinates.
+
+
+
+
+
+
