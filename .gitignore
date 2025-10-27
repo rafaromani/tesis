@@ -327,5 +327,6 @@ TSWLatexianTemp*
 
 
 
-/papers
+/ignore
 .vscode
+cosas.pdf
