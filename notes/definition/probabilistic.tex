@@ -1,0 +1,37 @@
+\subsection*{Probabilistic}
+
+We will define the probabilistic transformers in the exact same way as the deterministic transformers with the exception that in the last step of each iteration of CoT we will replace the $argmax$ function by a $sample$ function witch will output a token not deterministically based on the probability distribution computed in the step before.
+
+
+We will say that a probabilistic transformer $PTF$ computes a language $L$ when
+
+\begin{equation*}
+    x \in L \iff \mathbb{P}_{out_{T(\mid x \mid)} \dots out_{1}}(out_{T(\mid x \mid)} | out_{T(\mid x \mid)} \dots out_{1}) > 2/3
+\end{equation*}
+
+
+An alternative definition would be based on the random bits it needs to do the sampling.
+
+We can simulate the sample function with the following algorithm:
+
+\begin{enumerate}
+    \item define range for each token
+    \item res = 0.\_
+    \item while its not clear in witch range res is add a random bit to the end of res
+\end{enumerate}
+
+Lets see how to define the ranges. Lets assume the tokens $\Sigma = \{t_1, \cdots t_n \}$ and their associated probabilities $p_1, \cdots p_n$. The range associated to the $i$th token will be $[ \Sigma_{j=1}^{i-1} p_j , p_i + \Sigma_{j=1}^{i-1} p_j )$ which is the same as $[ \Sigma_{j=1}^{i-1} p_j, \Sigma_{j=1}^{i} p_j )$. It is important to notice that this calculations are made outside the transformer, there fore are not limited to the floating point arithmetic.
+
+For example, with the tokens $\Sigma = \{t_1, t_2, t_3\}$ and the probabilities $\{p_1 = 0.33, p_2 = 0.22, p_3 = 0.45\}$ the ranges will be $[0, 0.33)$ for $x_1$, $[0.33, 0,55)$ for $x_2$ and $[0.55, 1)$ for $x_3$. \todo{is it worth to formally prove that this is sound?}
+
+An important question to make it's how many bits are required for each sampling. In the worst case are needed as many as bits has the smallest probability, because the those numbers came from the transformer, they are bounded by its finite representation. It's important to notice that although that number its bounded it could be exponential in relation to the size of the representation because we will need the exact binary representation of the number, not in floating point representation. \todo{could happen that by the numerical error the probabilities doesnt add to 1?}
+
+\todo{here it goes an argument about why the expected number of bits needed its not exponential}
+
+In this definition we will say that given a random list of bits of size at most ?? the transformer will answer right with a high probability.
+
+\begin{equation*}
+    x \in L \iff \mathbb{P}_{r = \{0,1\}^*} (PTF(x, r)) > 2/3
+\end{equation*}
+
+If the number representation it is fixed, then the number of bits needed it is linear with relation to the number of CoT steps. 
