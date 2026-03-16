@@ -1,0 +1,79 @@
+Cosas que hablamos y habría que escribir pero valen
+
+0) La def original cambiarla para que la proba solo dependa de los primeros
+	en el fondo sigue dependiendo de los intermedios pero queda mucho mejor escrita
+
+	x ∈ L ⟺ Pr(w_T(|x|) = x_accept | w_i = x_i ∀ 1 ≤ i ≤ n)
+
+
+1)RCoT[O(1)] = CoT[O(1)]
+	La ⊃ vale por def
+		normalizas inf
+		cambias el argmax por sampl
+
+	La ⊂ vale porque determinizas, si hay más de un paso de CoT quizas hay que hacer un poquito de magia pero tmb debería valer
+
+	Pareciera que este argumento extiende CoT[T(n)] = RCoT[T(n)]
+	Son iguales????
+
+
+2) coRCoT[T(n)] = RCoT[T(n)]
+	mismo truco de swapear los accept y reject
+
+
+3.1) Escribir bien cómo se hace el producto cartesiano con el replicar símbolos de parada cuando uno termina antes
+3.2) Equivalencia entre tener muchos símbolos de accept y reject y tener uno de cada
+		(se resuelve con un paso más de CoT)
+
+
+3) Teorema de amplificación
+	Haces producto cartesiano y si ambos son si devolves si
+
+
+4) Cerrado por intersección
+	Amplificas hasta que ambas sean > 3/4
+	Luego el producto cartesiano dice si 9/16 > 1/2
+	Amplificas hasta 2/3
+
+
+5) RCoT[log(n)] ⊆ TC₀
+	Es la misma prueba de que CoT[log(n)] ⊆ AC₀
+	Es decir simulas las trazas
+	La unica diferencia es que cuando sampleas simulas todos los posibles valores que puede tener el S que usas para elegir el token (es constante por la repr finita) y después tomas mayority.
+
+
+
+
+Cosas que no sabemos
+
+6) RAC₀ ⊆ RCoT[logn]
+
+
+7) ver que identity testing está en PRCoT = RCoT[poly(n)]
+	
+	IT canónico de BPP que se cree no está en P
+	Hacer un algoritmo en 3 pasos que haga Zippel
+	Dificultad: evaluar el polinomio
+	Idea: revisar el handbook
+	si podemos implementar esto mas o menos uniformemente estaría bueno
+	
+
+
+
+
+
+
+
+Nuevas ideas:
+	RCoT[log(n)] ⊆ RAC₀
+
+	RAC₀[log n bits] = RAC₀
+
+
+
+
+
+TO-DO:
+	buscar RAC0 distinto de AC0
+	pareciera que con promesas de mayority vale
+	Switching lemma
