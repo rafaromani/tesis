@@ -12,7 +12,8 @@ We will say that a probabilistic transformer $PTF$ computes a language $L$ when
 
 An alternative definition would be based on the random bits it needs to do the sampling.
 
-We can simulate the sample function with the following algorithm. First we define the ranges of each token storing their upper end and then we call the function sample starting with $s$ being $0.\_$:
+We can simulate the sample function with the following algorithm. 
+First we define the ranges of each token storing their upper end, and then we call the function sample starting with $s$ being $0.\_$:
 
 
 \begin{enumerate}
@@ -23,21 +24,29 @@ We can simulate the sample function with the following algorithm. First we defin
 \end{enumerate}
 
 
-Lets see how to define the ranges. Lets assume the tokens $\Sigma = \{t_1, \cdots t_n \}$ and their associated probabilities $p_1, \cdots p_n$. The range associated to the $i$th token will be $[ \Sigma_{j=1}^{i-1} p_j , p_i + \Sigma_{j=1}^{i-1} p_j )$ which is the same as $[ \Sigma_{j=1}^{i-1} p_j, \Sigma_{j=1}^{i} p_j )$. It is important to notice that this calculations are made outside the transformer, there fore are not limited to the floating point arithmetic.
+Let's see how to define the ranges. 
+Let's assume the tokens $\Sigma = \{t_1, \cdots t_n \}$ and their associated probabilities $p_1, \cdots p_n$. 
+The range associated to the $i$th token will be $[ \Sigma_{j=1}^{i-1} p_j , p_i + \Sigma_{j=1}^{i-1} p_j )$ which is the same as $[ \Sigma_{j=1}^{i-1} p_j, \Sigma_{j=1}^{i} p_j )$. 
+It is important to notice that these calculations are made outside the transformer, therefore are not limited to the floating point arithmetic.
 
 For example, with the tokens $\Sigma = \{t_1, t_2, t_3\}$ and the probabilities $\{p_1 = 0.33, p_2 = 0.22, p_3 = 0.45\}$ the ranges will be $[0, 0.33)$ for $x_1$, $[0.33, 0,55)$ for $x_2$ and $[0.55, 1)$ for $x_3$. \todo{is it worth to formally prove that this is sound?}
 
-An important question to make it's how many bits are required for each sampling. In the worst case are needed as many as bits has the smallest probability, because the those numbers came from the transformer, they are bounded by its finite representation. It's important to notice that although that number its bounded it could be exponential in relation to the size of the representation because we will need the exact binary representation of the number, not in floating point representation. \todo{could happen that by the numerical error the probabilities doesnt add to 1?}
+An important question to make it's how many bits are required for each sampling. 
+In the worst case are needed as many as bits has the smallest probability, because the those numbers came from the transformer, they are bounded by its finite representation. 
+It's important to notice that although that number its bounded it could be exponential in relation to the size of the representation because we will need the exact binary representation of the number, not in floating point representation. \todo{could happen that by the numerical error the probabilities doesnt add to 1?}
 
 \todo{here it goes an argument about why the expected number of bits needed its not exponential}
 
-Its important to notice that the expected number of bits, although in the worst case it could be exponential, its constant, only depends on the number of tokens. This is because the probability of reaching the $k$-th recursive call its the probability of matching any border of the ranges so its $\sum_{i=1}^{\mid \Sigma \mid} \frac{1}{2^k} = \frac{\mid \Sigma \mid}{2^k}$. Lets call $X$ the random variable representing the number of recursive steps:
+It's important to notice that the expected number of bits, although in the worst case it could be exponential, its constant, only depends on the number of tokens. 
+This is because the probability of reaching the $k$-th recursive call it's the probability of matching any border of the ranges so its $\sum_{i=1}^{\mid \Sigma \mid} \frac{1}{2^k} = \frac{\mid \Sigma \mid}{2^k}$. 
+Let's call $X$ the random variable representing the number of recursive steps:
 
 \[
 E[X] = \sum_k Pr(X = k) k \leq \sum_k Pr(X = k) k = \sum_k \frac{\mid \Sigma \mid}{2^k} k = \mid \Sigma \mid \sum_k \frac{k}{2^k} = \mid \Sigma \mid 2
 \]
 
-Then because in each recursive step its needed only one random bit, the expected number of bits needed for each sample its equal to the doble of the number of tokens. Because those are not changing, we say that the expected number of random bits needed its constant.
+Then because in each recursive step its needed only one random bit, the expected number of bits needed for each sample its equal to the double of the number of tokens. 
+Because those are not changing, we say that the expected number of random bits needed its constant.
 
 
 In this definition we will say that given a random list of bits of size at most ?? the transformer will answer right with a high probability.
