@@ -1,14 +1,16 @@
 % Nuestra definición
 
+En este trabajo se van a definir los transformers como reconocedores de lenguajes.
+Un transformer consta de una cinta de $n_{max}$ celdas de la que lee el input (escrito en las primeras celdas) y va escribiendo a derecha de lo ya escrito nuevos caracteres usando un generador de tokens.
 
-En este trabajo se van a definir los transformers como ¿máquinas aceptadoras?. \todo{¿Cuál sería la palabra correcta?}
-Un transformer consta de una cinta de $n_{max}$ celdas de la que lee el input (escrito en las primeras $n$ celdas) y va escribiendo a derecha de lo ya escrito nuevos caracteres usando un generador de tokens.
+
+% Explicar funcionamiento de generadores 
 
 El generador de tokens está compuesto por 4 partes: una función de token embedding (TE), una función de codificación posicional (PE), $L$ capas de decodificación y una capa final de output.
 Se define $L$ como la profundidad del transformer.
-Cada capa de decodificación está compuesta por dos subcapas: una capa de atención (ATTN) y una red de propagación hacia adelante totalmente conectada por posiciones (\textit{a position-wise fully-connected feed-forward network}) (FF).
+Cada capa de decodificación está compuesta por dos subcapas: una capa de atención (ATTN) y una red de propagación hacia adelante totalmente conectada por posiciones (\textit{a position-wise fully-connected feed-forward network}) (FF). \todo{¿Cómo digo eso en castellano?}
 
-Cada transformer opera sobre un alfabeto $\Sigma$ y está definido por los parámetros $\theta = (\theta_{TE}, \theta_{PE}, \{\theta_{ATTN}^{(l)}, \theta_{FF}^{(l)}\}_{l=0}^{L-1}, \theta_{output})$. \todo{¿Un comentario sobre que $\theta$ es lo que se entrena?}
+Cada transformer opera sobre un alfabeto $\Sigma$ con dos símbolos especiales para aceptar y rechazar (los cuales no pueden estar presentes en las palabras que toma como input)\todo{puedo sacar ese constraint no?} y está definido por los parámetros $\theta = (\theta_{TE}, \theta_{PE}, \{\theta_{ATTN}^{(l)}, \theta_{FF}^{(l)}\}_{l=0}^{L-1}, \theta_{output})$. \todo{¿Un comentario sobre que $\theta$ es lo que se entrena?}
 
 El modelo estudiado en este trabajo es no uniforme, es decir que para palabras de distintas longitudes se utilizan distintos transformers.
 
@@ -27,13 +29,16 @@ Output: dado $\theta_{output} \in \mathbb{R}^{\mid \Sigma \mid \times d}$ la cap
 
 
 
-% Algoritmo con la estructura del generador
-
-
+% Hablar sobre cómo se genera el siguiente token
+% Va de la mano del algoritmo con la estructura del generador
 % Definición de CoT
 
 
+
+
 % Definición de computar un lenguaje
+
+
 
 
 % Comentarios sobre la definición de toyota y bisimulación
