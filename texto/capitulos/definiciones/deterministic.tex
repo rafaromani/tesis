@@ -1,101 +1,15 @@
-% The introduction has to say that transformers have a tape where they recibe the input and write its output
-
-
-In this work we are going to analyze transformers as language recognizers.
-A transformer is a machine that works over an alphabet $\Sigma$.
-It has only one tape from where it reads the input and in an autoregressive way writes in it more tokens.
-There are two distinguished tokens called stopping symbols.
-Once the transformer writes one of those it halts.
-We say that a transformer accepts a word if when it halts the stopping symbol printed is the accepting one.
-Correspondingly, a transformer rejects a word if the stopping symbol printed is the rejecting one.
-
-In each step the transformer maps the content of the tape to a probability distribution over the alphabet.
-Depending on this distribution the transformer prints the next token.
-The transformer iterates this process until it halts.
-These iterations are called chain of thought.
-
-\todo{Define $\nmax$ and say smt about size of the tape}
-
-The process of generating the next token consists of two separated steps.
-First a probability distribution over the alphabet for the token is computed by a process called distribution generation.
-After that, it is necessary to decide the specific token by a process called token selection.
-These two algorithms together, with their parameters, is what defines the transformer.
-During this work we will analyze and compare two different options for token selection.
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % Formal general def of transformer and CoT %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            % Def of distribution generator %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-As stated before, the \textbf{distribution generation} is a mapping of the content of the tape to a probability distribution over $\Sigma$.
-This process consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$), and a stack of $L$ identical layers, where $L$ is also called the depth of the model. 
-Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
-Each part and layer has its own trainable parameters.
-Then we can define the transformer by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
-
-%Each part
-\textbf{Token Embedding:} It's a mapping from $\Sigma$ to vectors in $\Rd$. This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. For all $a \in \Sigma$, we note $\theta_{\TE}(a) \in \mathbb{R}^d$ to the mapping of token $a$.
-
-\textbf{Position Encoding:} It's a mapping from the positions of the tape to vectors in $\Rd$. This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \nmax}$. For all position of the tape $1 < i < \nmax$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
-
-\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^n$ to $(\Rd)^n$. Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^d \times \mathbb{R}^d \times \mathbb{R}^d \times \mathbb{R}^d$, the layer it's defined by the algorithm \ref{alg:def_attn}. This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers. \todo{Quoting Toyota, maybe search for the original source.}
-
-\begin{algorithm}
-\caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
-\begin{algorithmic}[1]
-\Require  Parameter $\theta_\ATTN = (W_Q,W_K,W_V,W_O)$, Input embedding $h= (h_1,\ldots, h_n)\in\Rd \times \dots \times \Rd$.
-\Ensure Output embedding $h'= (h'_1,\ldots, h'_n) := \ATTN_{\theta_\ATTN}(h_1,\ldots, h_n)$.
-\State $q_i := W_Q  h_i, \; k_i := W_K h_i, \; v_i := W_V h_i, \; \forall i\in[n]$
-\State $s_i := \softmax (\langle q_i, k_1 \rangle, \ldots, \langle q_i, k_i\rangle) \| (0,\ldots, 0) $. 
-\State $h'_i := W_O \sum_{j=1}^n (s_i)_j v_j$.
-\end{algorithmic}
-\end{algorithm}
-
-\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, it's defined as $\FF_{theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
-
-\textbf{Output Layer: } It's a mapping from $\Rd$ to a probability distribution over $\Sigma$. Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, it's defined as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
-
-
-All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.
-
-\begin{algorithm}
-\caption{Distribution generator}\label{alg:def_p_gen}
-\begin{algorithmic}[1]
-\Require   Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $x= (x_1,\ldots, x_n) \in \Sigma^n$.
-\Ensure Output distribution $p_\theta(\cdot | x_1,\ldots, x_n)$.
-\State $h^{(0)}_i \gets \theta_\TE(x_i) + \theta_\PE(i), \; \forall i \in [n]$
-\For{$l = 0,\ldots,L-1$}
-\State	$( h^{(l+0.5)}_1,\ldots, h^{(l+0.5)}_n) \gets (h^{(l)}_1,\ldots, h^{(l)}_n) +\ATTN_{\theta^{(l)}_\ATTN}(h^{(l)}_1,\ldots, h^{(l)}_n) $
-\State  $ h^{(l+1)}_i \gets  h^{(l+0.5)}_i + \FF_{\theta^{(l)}_\FF}(h^{(l+0.5)}_i)$, $\forall i \in [n]$
-\EndFor
-\State $p_\theta(\cdot| x_1,\ldots,x_i) \gets  \OUTPUT_{\theta_\OUTPUT}(h^{(L)})$
-% \State $\transformer_\theta(x)\gets \argmax_{y} p_\theta(y| x_1,\ldots,x_n)$.
-\end{algorithmic}
-\end{algorithm}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                % Def token selection %
+                % Deterministic transformer %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+We call a transformer deterministic when the token selector is the one taking $\argmax$ over the distribution.
+We say that a family of deterministic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ recognize a language $\gL$ when: 
+\[
+\alpha \in \gL \iff \TF_{|\alpha|}^*(\alpha) = \qaccept
+\]
 
-
-
+Given two functions $T(n)$ and $d(n)$ we define the complexity class $\CoT[T(n), d(n)]$.
+Informally, a language $\gL$ is in $\CoT[T(n), d(n)]$ iff there is a deterministic family of transformers with constant depth, embedding size $d(n)$ and budget $T(n)$ that recognizes it.
+Formally, we say a language  $\gL$ is in $\CoT[T(n), d(n)]$ iff there is an integer $L$ and two functions $T'(n) = O(T(n)), d'(n) = O(d(n))$, such that for every positive integer $n$, there is an $L$-layer deterministic transformer, denoted by $\TF_n$ with embedding size $d'(n)$, that can output $\gL(\alpha)$ given any input $\alpha$ in $\Sigma^n$, using $T'(n)$ steps of chain of thought.
 
 
