@@ -82,7 +82,7 @@ Then we can define the distribution generation algorithm by its parameters $\the
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, it's defined as $\FF_{theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, it's defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
 
 \textbf{Output Layer: } It's a mapping from $\Rd$ to a probability distribution over $\Sigma$. Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, it's defined as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
 
@@ -94,10 +94,10 @@ All these parts come together for the distribution generator process in the algo
 \begin{algorithmic}[1]
 \Require   Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^{|\alpha|}$.
 \Ensure Output distribution $p_\theta(\cdot | \alpha)$.
-\State $h^{(0)}_i \gets \theta_\TE(\alpha_i) + \theta_\PE(i), \; \forall i \in |\alpha|$
+\State $h^{(0)}_i \gets \theta_\TE(\alpha_i) + \theta_\PE(i), \; \forall 1 \leq i \leq |\alpha|$
 \For{$l = 0,\ldots,L-1$}
 \State	$( h^{(l+0.5)}_1,\ldots, h^{(l+0.5)}_{|\alpha|}) \gets (h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) +\ATTN_{\theta^{(l)}_\ATTN}(h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) $
-\State  $ h^{(l+1)}_i \gets  h^{(l+0.5)}_i + \FF_{\theta^{(l)}_\FF}(h^{(l+0.5)}_i)$, $\forall i \in |\alpha|$
+\State  $ h^{(l+1)}_i \gets  h^{(l+0.5)}_i + \FF_{\theta^{(l)}_\FF}(h^{(l+0.5)}_i)$, $\forall 1 \leq i \leq |\alpha|$
 \EndFor
 \State $p_\theta(\cdot| \alpha) \gets  \OUTPUT_{\theta_\OUTPUT}(h^{(L)}_{|\alpha|})$
 \end{algorithmic}
