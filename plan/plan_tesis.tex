@@ -1,0 +1,133 @@
+% !TeX encoding = utf8
+
+\documentclass[a4paper,8pt]{article} %en vez de 11pt
+\usepackage[spanish]{babel}
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,xspace,a4wide}
+\usepackage{hyperref,color}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+%\usepackage{macros}
+\usepackage{enumitem}% Permite poner cosas del tipo \begin{enumerate}[label=\Alph*]
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+
+
+%\usepackage{pgfgantt}
+%\usetikzlibrary{decorations.pathmorphing, shadows, shadings}
+
+\hypersetup{
+    colorlinks=true,   % color instead of boxes
+    citecolor=blue,    % cite links in blue
+    linkcolor=blue,    % other internal links in gray
+%    linktocpage,         % in TOC, LOF and LOT, the link is on the page number
+}
+
+
+\usepackage{sectsty}%Para cambiar tamaño de Section sizes
+\sectionfont{\fontsize{8}{15}\selectfont}
+
+
+
+\usepackage[font=small,labelfont=bf]{caption} % Para el texto de las figuras sea chico es el font = small. Para que Figure este en mayuscula seria con labelfont = bf
+
+
+\let\OLDthebibliography\thebibliography %para reducir espacio en biblio
+\renewcommand\thebibliography[1]{
+  \OLDthebibliography{#1}
+  \setlength{\parskip}{0pt}
+  \setlength{\itemsep}{0pt plus 0.3ex}
+}
+
+
+\begin{document}
+\thispagestyle{empty} %Para no poner page number
+
+\begin{center}
+% {\huge Entendiendo los límites teóricos de los LLMs desde el punto de vista de la complejidad computacional: el rol de la aleatoriedad dentro del Chain Of Thought}
+
+% \vspace{0.5cm}
+{\huge \textbf{Plan de trabajo}}
+
+\vspace{0.2cm}
+{\large Tesis de Licenciatura en Ciencias de la Computación}
+\end{center}
+\vspace{-0.1em}
+\noindent
+
+
+\section*{\Large Título tentativo}
+\noindent “Entendiendo los límites teóricos de los LLMs desde el punto de vista de la complejidad computacional: el rol de la aleatoriedad dentro del Chain Of Thought"
+
+\section*{\Large Contexto}
+
+En los últimos años, los modelos de procesamiento del lenguaje natural y las inteligencias artificiales generativas comenzaron a cobrar un rol central en la sociedad.
+La mayoría de estos modelos están construidos sobre \textit{transformers}, una arquitectura para modelos de NLP presentada en 2017 por investigadores de Google \cite{ATTN-all-you-need}.
+Un \textit{transformer} consiste en múltiples capas en las que se mapea una secuencia de \textit{tokens} a vectores sobre los cuales se computan diversos algoritmos para luego definir un \textit{token} de salida.
+
+Una técnica conocida para mejorar la performance de los grandes modelos del lenguaje (LLM) es forzarlos a imprimir pasos intermedios en su razonamiento.
+Este proceso se conoce como \textit{Chain of Thought} (CoT).
+Se puede hacer que los modelos impriman pasos intermedios sin necesidad de entrenarlos nuevamente. 
+Para conseguirlo, basta con agregar frases a la consulta como \textit{let's think step by step} o incluso agregar los primeros pasos del razonamiento (aunque sean equivocados) \cite{wang-etal-2023-towards} \cite{cot-prompt}.
+Esto es conocido como \textit{CoT-prompting}.
+
+\medskip
+
+Observando los incrementos agigantados en las capacidades de los LLM, naturalmente surge la pregunta y preocupación sobre cuál es el límite de su poder y qué se requiere para alcanzarlo.
+Múltiples estudios intentaron responder de manera teórica a estas preguntas, pero la representación de los \textit{transformers} como máquinas formales es un desafío aún abierto.
+En la literatura se encuentran diversas opciones.
+Cada formalización se toma distintas libertades para encontrar un punto medio entre representar fielmente a un \textit{transformer} real y definir una máquina lo suficientemente sencilla sobre la que se puedan probar teoremas.
+Entre las diferencias que se observan aparecen cuestiones como qué limitaciones tienen las funciones utilizadas para transformar las cadenas de \textit{tokens} en cadenas de vectores o qué sistema se utiliza para representar los números que componen a los vectores.
+Según estas decisiones, se obtienen resultados distintos para el poder expresivo de los \textit{transformers}.
+
+\medskip
+
+El poder de las máquinas de Turing se analiza en relación con cuántos pasos se las deja computar o cuánta memoria utilizar.
+En los \textit{transformers} no hay consenso sobre cuál es el recurso a estudiar.
+Por ejemplo, Merrill y Sabharwal analizaron qué ocurre al utilizar modelos con más capas \cite{log-depth}.
+En cambio, Li et al estudiaron qué clases de problemas pueden resolver cuando permiten más o menos pasos de CoT pero dejando fija la cantidad de capas. Además, analizaron qué ocurre al permitir agrandar la dimensión de los vectores con los que los modelos trabajan \cite{toyota}.
+
+
+Dadas las diferencias entre formalizaciones y poco consenso en qué recurso limitar para estudiar el poder de cómputo, adaptar resultados entre distintas investigaciones se vuelve complejo.
+El área no tiene definiciones claras ni simulaciones entre las distintas opciones.
+Además, las formalizaciones estudiadas son todas determinísticas.
+Por lo tanto, no capturan el comportamiento estocástico que intrínsecamente tienen los \textit{transformers}.
+
+
+
+
+\section*{\Large Objetivos y plan}
+
+Esquemáticamente, se espera llevar a cabo el siguiente plan:
+
+\begin{enumerate}
+    \item Realizar una revisión bibliográfica para identificar las diversas formalizaciones que se utilizan y los resultados de expresividad asociados a ellas.
+    \item Unificar las formalizaciones que sea posible.
+    \item Estudiar las propiedades de las clases de problemas que se pueden resolver al limitar los pasos de CoT.
+    \item Definir una formalización probabilística para los \textit{transformers}.
+    \item Definir clases de problemas que los \textit{transformers} probabilisticos pueden resolver según los pasos de CoT que se les permite hacer.
+    \item Estudiar las propiedades de estas clases y analizar si coinciden con clases conocidas.
+\end{enumerate}
+
+\section*{\Large Cronograma y Factibilidad}
+
+El tesista ya viene trabajando en el plan delineado en la sección anterior a través de una beca BIIC - Lambda Class desde septiembre de 2025. 
+Dicho eso, las únicas tareas restantes son aquellas relacionadas con estudiar las clases de complejidad probabilísticas.
+Se espera que estas tareas, junto a la escritura de la tesis, le demanden al tesista 3 meses.
+
+
+
+\vspace{1em}
+
+%\vspace{-1em}
+\renewcommand{\section}[2]{}% Para que no ponga el título Referencias
+%\sectionfont{\fontsize{10}{15}\selectfont}
+
+{\small 
+\bibliographystyle{plain-initials} % Para que ponga inicial de nombre + apellido de forma estandarizada
+\bibliography{biblio}
+\thispagestyle{empty}
+}
+
+
+\end{document}
