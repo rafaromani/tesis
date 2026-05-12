@@ -3,7 +3,7 @@
 \usetikzlibrary{automata, positioning}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+\usepackage[english]{babel}
 \usepackage{listings}
 \usepackage{amsthm}
 \usepackage{tabularx}
@@ -53,11 +53,7 @@
 \usepackage[section]{placeins}
 
 \usepackage{subfigure}
-\newtheorem{theorem}{Teorema}[section]
-\theoremstyle{remark}
-\newtheorem*{remark}{Observación}
-\theoremstyle{definition}
-\newtheorem{definition}{Definición}[section]
+
 
 \input{mis-pckgs.tex}
 
@@ -69,11 +65,11 @@
 %%%% CARATULA
 
 \def\autor{Rafael Romani}
-\def\tituloTesis{[acá va tu titulo]}
-\def\runtitulo{[acá va tu titulo]}
-\def\runtitle{[acá va tu titulo]}
-\def\director{[acá va tu director]}
-\def\codirector{[acá va tu codirector]}
+\def\tituloTesis{[your title here]}
+\def\runtitulo{[your title here]}
+\def\runtitle{[your title here]}
+\def\director{Santiago Cifuentes}
+\def\codirector{Santiago Figueira}
 \def\lugar{Buenos Aires, 2026}
 \input{caratula}
 
@@ -83,7 +79,7 @@
 \input{abs_esp.tex}
 
 \cleardoublepage
-%\input{abs_en.tex} % OPCIONAL: comentar si no se quiere
+\input{abs_en.tex} % OPCIONAL: comentar si no se quiere
 
 \cleardoublepage
 \input{agradecimientos.tex} % OPCIONAL: comentar si no se quiere
@@ -96,6 +92,18 @@
 
 %%%% ACA VA EL CONTENIDO DE LA TESIS
 
-\input{capitulos/defs.tex}
+\input{capitulos/motivation.tex}
+\input{capitulos/theo_framework.tex}
+\input{capitulos/CoT_results.tex}
+\input{capitulos/RCoT_results.tex}
+\input{capitulos/conclusion.tex}
+
+
+{
+\bibliographystyle{plain-initials} % Para que ponga inicial de nombre + apellido de forma estandarizada
+\nocite{*}
+\bibliography{biblio}
+\thispagestyle{empty}
+}
 
 \end{document}

@@ -2,17 +2,39 @@
 
 ## Motivation for studying transformer expressiveness
 
-- AI is super powerfull
-- LLM are super cool
-- They are based in the paper ATTN is all you need 
+In 2017 a paper came out that revolutionized AI.
+Attention is all you need (+250k citations only in Google Scholar)
+This paper presented an architecture for AI that completely changed how AI models understand text.
+This paper presented the transformers, and now they are everywhere.
+Most of the AI models that people interact are build over transformers (Claude, ChatGPT, DeepSeek, Gemini, etc.)
+In fact, GPT stands for Generative Pre-trained Transformer.
+
+Given the central role these models are starting to take in our society it's important to study how powerful are they.
+Also, it comes to interest to analyze what they need to become better.
+Do they need to be bigger? To train for more time? To wait more before answering?
+
+These are the questions that the area is trying to solve.
+
+But first let's see what really a transformer is and how do these models look like.
 
 
-## How does a transformer work
+## The autoregressive model
+
+The transformer architecture is a specific type of autoregressive model.
+
+It consumes an input word $\alpha$ in some alphabet $\Sigma$.
+Then produces a token/symbol $\sigma$ of the alphabet.
+Attaches it at the end of the word and repeat the process with $\alpha\sigma$
+
+
+
+
+
 
 - Explain transformers as the two boxes
     - Talk about autoregressive and what does it mean to accept/reject
     - What is CoT
-- Start opening the boxes
+
 
 ### Distribution generation
 - Tokens to vectors
@@ -27,7 +49,7 @@
 
 
 ### Token selector
-- Consume the probabilty distribution and generate the next token
+- Consume the probability distribution and generate the next token
 
 
 
@@ -51,7 +73,7 @@ There is no agreement it's the only thing to play with.
 For example this work uses the depth of the model:
 
 - A little depth goes a long way 
-    - https://arxiv.org/pdf/2503.03961
+    - https://arxiv.org/p   df/2503.03961
     - works over Q^n
     - A different construction:
         - no position encoding

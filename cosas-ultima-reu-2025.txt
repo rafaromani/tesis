@@ -79,3 +79,12 @@ TO-DO:
 	buscar RAC0 distinto de AC0
 	pareciera que con promesas de mayority vale
 	Switching lemma
+
+
+
+
+
+reu 05/05
+
+	parametrizar los random bits
+	promediar todos los outputs
