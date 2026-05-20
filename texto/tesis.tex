@@ -1,0 +1,109 @@
+\documentclass[11pt,a4paper,twoside]{tesis}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage[left=3cm,right=3cm,bottom=3.5cm,top=3.5cm]{geometry}
+
+
+% Configuración del paquete de pseudocódigo
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  mathescape=true,
+  captionpos=b,
+  frame=single,
+  keywordstyle={\color{BrickRed}},
+  keywordstyle=[2]{\color{OliveGreen}},
+  keywordstyle=[3]{\color{MidnightBlue}},
+  commentstyle=\color{OliveGreen},
+}
+
+\lstdefinelanguage{pseudocode}{
+  comment=[l]{//},
+  morekeywords=[3]{if,then,else,for,while,do,return,procedure,function,such,that,let,true,false}
+}
+\lstset{escapeinside={(*@}{@*)}}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=8pt}
+
+\graphicspath{ {./capitulos/} }
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+			% configure language options
+\usepackage[utf8]{inputenc}									% configure input encoding
+\usepackage[inline]{enumitem}									% control layout of itemize, enumerate, description
+\usepackage{xspace}	
+\usepackage{multicol,lipsum}
+% correct added/missing spaces made by tex decoder
+\usepackage{pifont}												% for check and cross marks
+\usepackage{mathtools}                                          % load amsmath, position eqs at fixed position,etc
+\usepackage{amssymb}											% for extra symbols
+%\usepackage{amsthm}											%for qed
+\usepackage{trimclip}                                           % for cliping symbols in boxes
+\usepackage[dvipsnames,svgnames,table]{xcolor}			% adds use of colors
+\usepackage{listings}											% for the lstlisting environment
+\usepackage{url}                                                % for url and hyperlinks
+\usepackage{ulem}   % for crossing out thinks.
+        
+\usepackage[hidelinks]{hyperref}
+
+\usepackage[section]{placeins}
+
+\usepackage{subfigure}
+
+
+\input{mis-pckgs.tex}
+
+\input{commands}
+
+
+\begin{document}
+
+%%%% CARATULA
+
+\def\autor{Rafael Romani}
+\def\tituloTesis{[your title here]}
+\def\runtitulo{[your title here]}
+\def\runtitle{[your title here]}
+\def\director{Santiago Cifuentes}
+\def\codirector{Santiago Figueira}
+\def\lugar{Buenos Aires, 2026}
+\input{caratula}
+
+%%%% ABSTRACTS, AGRADECIMIENTOS Y DEDICATORIA
+\frontmatter
+\pagestyle{empty}
+\input{abs_esp.tex}
+
+\cleardoublepage
+\input{abs_en.tex} % OPCIONAL: comentar si no se quiere
+
+\cleardoublepage
+\input{agradecimientos.tex} % OPCIONAL: comentar si no se quiere
+
+\cleardoublepage
+\tableofcontents
+
+\mainmatter
+\pagestyle{headings}
+
+%%%% ACA VA EL CONTENIDO DE LA TESIS
+
+\input{capitulos/motivation.tex}
+\input{capitulos/theo_framework.tex}
+\input{capitulos/CoT_results.tex}
+\input{capitulos/RCoT_results.tex}
+\input{capitulos/conclusion.tex}
+
+
+{
+\bibliographystyle{plain-initials} % Para que ponga inicial de nombre + apellido de forma estandarizada
+\nocite{*}
+\bibliography{biblio}
+\thispagestyle{empty}
+}
+
+\end{document}

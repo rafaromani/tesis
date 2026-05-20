@@ -3,10 +3,10 @@ Cosas que hablamos y habría que escribir pero valen
 0) La def original cambiarla para que la proba solo dependa de los primeros
 	en el fondo sigue dependiendo de los intermedios pero queda mucho mejor escrita
 
-	x ∈ L ⟺ Pr(w_T(|x|) = x_accept | w_i = x_i ∀ 1 ≤ i ≤ n)
+	x ∈ L ⟺ Pr( w_T(|x|) = x_accept | w_i = x_i ∀ 1 ≤ i ≤ n)
 
 
-1)RCoT[O(1)] = CoT[O(1)]
+1) RCoT[O(1)] = CoT[O(1)]
 	La ⊃ vale por def
 		normalizas inf
 		cambias el argmax por sampl
@@ -19,6 +19,8 @@ Cosas que hablamos y habría que escribir pero valen
 
 2) coRCoT[T(n)] = RCoT[T(n)]
 	mismo truco de swapear los accept y reject
+
+
 
 
 3.1) Escribir bien cómo se hace el producto cartesiano con el replicar símbolos de parada cuando uno termina antes
@@ -77,3 +79,12 @@ TO-DO:
 	buscar RAC0 distinto de AC0
 	pareciera que con promesas de mayority vale
 	Switching lemma
+
+
+
+
+
+reu 05/05
+
+	parametrizar los random bits
+	promediar todos los outputs

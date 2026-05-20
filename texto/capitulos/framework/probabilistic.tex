@@ -1,0 +1,18 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                % Probabilistic transformer %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+When $\TF$ is a deterministic transformer, $\TF^i(\alpha)$ is an exact symbol for all $\alpha \in \Sigma^*$ and $i \in \mathbb{N}$.
+In counterpart, when the token selection process of the transformer samples the distribution, it becomes a random variable.
+
+\begin{definition}[Probabilistic transformer]
+    We call probabilistic transformers to the transformers that sample the distribution for selecting the next token.
+    We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ recognize a language $\gL$ when: 
+    \[
+    \alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3
+    \]
+\end{definition}
+
+
