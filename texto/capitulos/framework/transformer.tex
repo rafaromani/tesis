@@ -59,13 +59,14 @@ Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 As stated before, the \textbf{distribution generation} is a mapping of the content of the tape to a probability distribution over $\Sigma$.
 There are different algorithms for this process in the literature.
-All the transformers considered in this work use an algorithm consisting of the following four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$), and a stack of $L$ identical layers, where $L$ is also called the depth of the model. 
+All the transformers considered in this work use the one presented by \cite{toyota}. 
+This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$), and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
-Then we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
+Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$. Let's define each component.
 
 %Each part
-\textbf{Token Embedding:} It's a mapping from $\Sigma$ to vectors in $\Rd$. This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. For all $a \in \Sigma$, we note $\theta_{\TE}(a) \in \mathbb{R}^d$ to the mapping of token $a$.
+\textbf{Token Embedding:} It's a mapping from $\Sigma$ to vectors in $\Rd$. This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to the mapping of token $\sigma$.
 
 \textbf{Position Encoding:} It's a mapping from the positions of the tape to vectors in $\Rd$. This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
@@ -76,9 +77,9 @@ Then we can define the distribution generation algorithm by its parameters $\the
 \begin{algorithmic}[1]
 \Require  Parameter $\theta_\ATTN = (W_Q,W_K,W_V,W_O)$, Input embedding $h= (h_1,\ldots, h_a)\in\Rd \times \dots \times \Rd$.
 \Ensure Output embedding $h'= (h'_1,\ldots, h'_a) := \ATTN_{\theta_\ATTN}(h_1,\ldots, h_a)$.
-\State $q_i := W_Q  h_i, \; k_i := W_K h_i, \; v_i := W_V h_i, \; \forall i\in[a]$
-\State $s_i := \softmax (\langle q_i, k_1 \rangle, \ldots, \langle q_i, k_i\rangle) \| (0,\ldots, 0) $. 
-\State $h'_i := W_O \sum_{j=1}^a (s_i)_j v_j$.
+\State $q_i := W_Q  h_i, \; k_i := W_K h_i, \; v_i := W_V h_i, \; \forall i\in[1, \dots, a]$
+\State $s_i := \softmax (\langle q_i, k_1 \rangle, \ldots, \langle q_i, k_i\rangle) \| (0,\ldots, 0) $
+\State $h'_i := W_O \sum_{j=1}^a (s_i)_j v_j$
 \end{algorithmic}
 \end{algorithm}
 
@@ -92,7 +93,7 @@ All these parts come together for the distribution generator process in the algo
 \begin{algorithm}
 \caption{Distribution generator}\label{alg:def_p_gen}
 \begin{algorithmic}[1]
-\Require   Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^{|\alpha|}$.
+\Require   Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^*$.
 \Ensure Output distribution $p_\theta(\cdot | \alpha)$.
 \State $h^{(0)}_i \gets \theta_\TE(\alpha_i) + \theta_\PE(i), \; \forall 1 \leq i \leq |\alpha|$
 \For{$l = 0,\ldots,L-1$}
