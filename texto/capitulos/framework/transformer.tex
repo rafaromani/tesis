@@ -70,7 +70,7 @@ Then, we can define the distribution generation algorithm by its parameters $\th
 
 \textbf{Position Encoding:} It's a mapping from the positions of the tape to vectors in $\Rd$. This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
-\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^a$ to $(\Rd)^a$. Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^d \times \mathbb{R}^d \times \mathbb{R}^d \times \mathbb{R}^d$, the layer it's defined by the algorithm \ref{alg:def_attn}. This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers. \cite{cookbook}
+\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^a$ to $(\Rd)^a$. Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer it's defined by the algorithm \ref{alg:def_attn}. This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers. \cite{cookbook}
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
