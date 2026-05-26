@@ -1,3 +1,75 @@
 \chapter{General properties}
 % Capaz cambiar el titulo? General properties
 % Aca van las primitivas, propiedades de la clausura.
+
+In order to better understand $\CoTtndn$ classes, it was needed to fill a gap in the literature related to the properties of these classes.
+For that, in this section we introduce a notion of normalization for transformers and prove that $\CoTtndn$ is closed under boolean operations.
+As middle step, it was needed to build certain primitives operations which are also explained in this chapter.
+
+\section{Transformers Primitives}
+
+\subsection{Flagging Tokens and Positions}
+
+We will see later on that we will want to be able to identify when a certain token appeared in the tape.
+Also, we would like to know when a certain position is reached or if a certain vector corresponds to a specific position.
+This last task is not naturally done because of the extreme parallelism in the model.
+
+For flagging a token we use the token embedding, and in the same way, for flagging a position we use the position encoding.
+Either way, the strategy is exactly the same.
+
+For each flag that we are looking to add, we will add one to the dimension embedding.
+Notice that if we are working with a constant number of flags, the $\CoTtndn$ class does not change. {\color{orange} Not sure about this last sentence. Maybe I should expand the idea if I want to say it}
+
+The idea for flagging is straight forward.
+We will have an extra coordinate that will work as the flag.
+This coordinate will be $1$ if we are flagging its vector or $0$ otherwise.
+
+For example, let's be $\TF$ a transformer and $\theta_{TE}$ its token embedding function.
+We will define a transformer $\TF'$ with the same behavior, but it will have flagged every vector that came from the token $\sigma_f$.
+
+For the sake of clarity, we will add the flag in the last coordinate of the embedding, but this can be done in any position.
+
+Let's define each component of $\TF'$ based on the components of $\TF$.
+First, let's see the token embedding function.
+It will be the same except that in the new coordinate it will put a $1$ if the token that is consuming is the one to be flagged and a $0$ otherwise.
+
+\begin{equation*}
+    (\theta'_{TE}(\sigma))_j = \begin{cases}
+        (\theta_{TE}(\sigma))_j  & \text{ if } j \neq d+1 \\
+        1                   & \text{ if } j = d+1  \text{ and } \sigma = \sigma_f \\
+        0                   & \text{ if } j = d+1  \text{ and } \sigma \neq \sigma_f
+    \end{cases}
+\end{equation*}
+
+
+For the position embedding is enough to always put a $0$ in the new coordinate.
+Then is only necessary to extend the matrix of the other layers to the new dimension.
+This can be done with a new row or column with $0$s.
+The behavior of $\TF'$ will be the same as $\TF$.
+
+
+
+
+\subsection{Preserve coordinates through ATTN and FF}
+
+
+
+
+
+
+\subsection{Add vector}
+
+
+\subsection{Make a vector 0}
+
+\subsection{Linear transformations}
+
+
+
+\section{Normalization}
+
+
+\section{Boolean Operations}
+
+
+
