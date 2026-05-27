@@ -22,7 +22,8 @@ Notice that if we are working with a constant number of flags, the $\CoTtndn$ cl
 
 The idea for flagging is straight forward.
 We will have an extra coordinate that will work as the flag.
-This coordinate will be $1$ if we are flagging its vector or $0$ otherwise.
+This coordinate will have two possible values to be defined.
+It will have the $\ON$ value $f_{\ON}$ if we are flagging its vector or the $\OFF$ value $f_{\OFF}$, otherwise.
 
 For example, let's be $\TF$ a transformer and $\theta_{TE}$ its token embedding function.
 We will define a transformer $\TF'$ with the same behavior, but it will have flagged every vector that came from the token $\sigma_f$.
@@ -31,13 +32,13 @@ For the sake of clarity, we will add the flag in the last coordinate of the embe
 
 Let's define each component of $\TF'$ based on the components of $\TF$.
 First, let's see the token embedding function.
-It will be the same except that in the new coordinate it will put a $1$ if the token that is consuming is the one to be flagged and a $0$ otherwise.
+It will be the same except that in the new coordinate it will put a $V_{\ON}$ if the token that is consuming is the one to be flagged and a $0$ otherwise.
 
 \begin{equation*}
     (\theta'_{TE}(\sigma))_j = \begin{cases}
         (\theta_{TE}(\sigma))_j  & \text{ if } j \neq d+1 \\
-        1                   & \text{ if } j = d+1  \text{ and } \sigma = \sigma_f \\
-        0                   & \text{ if } j = d+1  \text{ and } \sigma \neq \sigma_f
+        f_{\ON}                  & \text{ if } j = d+1  \text{ and } \sigma = \sigma_f \\
+        f_{\OFF}                 & \text{ if } j = d+1  \text{ and } \sigma \neq \sigma_f
     \end{cases}
 \end{equation*}
 
@@ -47,9 +48,12 @@ Then is only necessary to extend the matrix of the other layers to the new dimen
 This can be done with a new row or column with $0$s.
 The behavior of $\TF'$ will be the same as $\TF$.
 
+This mechanism clearly works for adding more dimensions to the embedding.
+We just add new flags with the same value for $f_{\ON}$ and $f_{\OFF}$.
 
 
-\subsection*{Preserve coordinates through ATTN and FF}
+
+\subsection*{Preserve and ignore coordinates through ATTN and FF}
 
 When defining new transformers over existing ones we will want to extend their embedding dimension.
 We would like to preserve the behavior of the old transformer in the existing coordinates but ignore the new ones.
@@ -70,11 +74,187 @@ The same applies in the feed forward layer, putting zeros in the $i$th column an
 
 \subsection*{Linear transformations}
 
-{\color{orange} I think I only use linear transformations for saying that we can remove the output step and make it just a projection (because the embedding dimension doesn't necessary match with the size of the alphabet)}
+Although it looks that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
+Applying a linear transformation to a vector is not direct since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.
+A sharp reader maybe would think that this can be solved applying the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
+This does not hold in our model since the addition and multiplication in the finite representation of the numbers used is not commutative.
+For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
+After applying this process we will have corrupted all vectors except the one we are interested in.
 
+
+
+
+The strategy is the following.
+We will apply the transformation to only one vector which was flagged with $1$ as $f_{\ON}$ and $-1$ as $f_{\OFF}$ in the embedding step.
+This flag will appear duplicated.
+Let's assume the flag is in the last two coordinates.
+For having a clearer notation, we will say that the vector to which we are applying the linear transformation is the $f$th.
+Also, we will call $M$ to the matrix of the linear transformation.
+The linear transformation will be done with two layers of $\ATTN$.
+
+The first layer will compute the result of the transformation and store it in new coordinates added as memory.
+The second layer will move the result to the right place.
+
+For doing this we will need to extend the embedding dimension with enough coordinates to store the result of the transformation.
+Therefore, if we are working with a transformer of embedding dimension $d$ and want to do a linear transformation of a vector, we will need to extend the dimension to $2d+2$.
+The first $d$ coordinates will be for the original vector, the second $d$ coordinates will be the ones using as memory, and the extra two are for the flags.
+We will assume that the $d$ coordinates used as memory are set to $0$ by the layers previous to this mechanism.
+This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in the previous section.
+
+\[
+    h_f = \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \\ 0      \\ \vdots \\ 0      \\ 1 \\ 1 \end{matrix} \right) 
+    \xrightarrow{\text{first $\ATTN$ layer}}
+    h_f = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mx)_1 \\ \vdots \\ (Mx)_d \\ 1 \\ 1 \end{matrix} \right)
+    \xrightarrow{\text{second $\ATTN$ layer}}
+    h_f = \left( \begin{matrix} (Mx)_1 \\ \vdots \\ (Mx)_d \\ 0      \\ \vdots \\ 0      \\ 1 \\ 1 \end{matrix} \right)
+\]
+
+{\color{orange} a graphic representation of the technique}
+
+Let's construct each of the $\ATTN$ layers.
+In both layers we will need for $h_f$ to only attend to itself.
+For accomplishing that we will make use of the fact that the flag has value $1$ only in $h_f$ and $-1$ in the other vectors.
+We asked for the flag by duplicate since we need two $\ATTN$ layers and in each layer we are corrupting all vectors except $h_f$.
+Therefore, making use of the mechanism explained before to preserve and ignore coordinates through $\ATTN$ layers, we will write all the matrix as if we are working with embedding dimension $2d+1$ but in reality, in the first layer we are using the first copy of the flag (and ignoring/preserving the second) and in the second we are doing it in the other way.
+Thus, adding the missing row and column of zeros will get us the real values of the matrix.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% START: ONLY ATTEND TO ITSELF %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let's define the parameters of the $\ATTN$ layers for $h_f$ only attending to itself. 
+If we take as query and key matrix as
+
+\begin{align*}
+    & W_Q = W_K = \left(\begin{matrix}
+                    0      &\hdots &0      &0          \\
+                    \vdots &\ddots &\vdots &\vdots     \\
+                    0      &\hdots &0      &0          \\
+                    0      &\hdots &0      &\maxrep    \\
+                  \end{matrix}\right)
+\end{align*}
+
+\noindent then the keys and values of the vectors are 
+
+\begin{align*}
+    W_Q h_i = q_i = W_K h_i = k_i &= \begin{cases}
+                            (0, \dots, 0, \maxrep*1)     &\text{ if } i = f    \\
+                            (0, \dots, 0, \maxrep*-1)    &\text{ if } i \neq f \\
+                          \end{cases}
+                       &= \begin{cases}
+                            (0, \dots, 0, \maxrep)    &\text{ if } i = f    \\
+                            (0, \dots, 0, \minrep)    &\text{ if } i \neq f \\
+                          \end{cases}
+\end{align*}
+
+\noindent so the attention values for $h_f$ are $1$ for itself and 0 for the rest.
+
+\begin{align*}
+    s_f & = \softmax (&\langle q_f, k_1 \rangle,& &\ldots,& &\langle q_f, k_{f-1}\rangle,& &\langle q_f, k_f\rangle) &&\| (0,\ldots, 0) \\
+        & = \softmax (&\maxrep * \minrep,&        &\ldots,& &\maxrep * \minrep,          & &\maxrep*\maxrep)         &&\| (0,\ldots, 0) \\
+        & = \softmax (&          \minrep,&        &\ldots,& &          \minrep,          & &        \maxrep)         &&\| (0,\ldots, 0) \\
+        & =           &                0,&        &\ldots,& &                0,          & &               1,        && 0,\ldots, 0 \\
+\end{align*}
+
+\[
+(s_f)_i = \begin{cases}
+            1 &\text{ if } i = f    \\
+            0 &\text{ if } i \neq f \\
+          \end{cases}
+\]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% END: ONLY ATTEND TO ITSELF %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% START: FIRST LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now that we got for $h_f$ to attend only to itself, let's remember from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
+Let's analyze what $h'_f$ looks by now:
+
+\[
+h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V h_f)
+\]
+
+\noindent Then, defining $W_O$ and $W_V$ as follows
+
+\begin{align*}
+    W_V &= id^{\mathbb{R}^{(2d+1)\times (2d+1)}}
+    & 
+    W_O &= \left(\begin{matrix}
+                -id^{\Rdd}                 &0^{\Rdd}                   &0^{\Rd} \\
+                M                          &0^{\Rdd}                   &0^{\Rd} \\
+                0^{\mathbb{R}^{1\times d}} &0^{\mathbb{R}^{1\times d}} &id^{\mathbb{R}}
+          \end{matrix}\right)
+\end{align*}
+
+\noindent makes us get
+
+\begin{align*}
+    h'_f = 
+    & \left( \begin{matrix} -x_1    \\ \vdots \\ -x_d    \\ (Mx)_1 \\ \vdots \\ (Mx)_d \\ 1 \end{matrix} \right)
+\end{align*}
+
+\noindent which added to $h_f$ gives us what we were looking for after the first layer.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% END: FIRST LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% START: SECOND LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For the second $\ATTN$ layer, we can use the same mechanism for making $h_f$ only attend to itself.
+And defining $W_V$ and $W_O$ as follows
+
+\begin{align*}
+    W_V &= id^{\mathbb{R}^{(2d+1)\times (2d+1)}}
+    & 
+    W_O &= \left(\begin{matrix}
+                0^{\Rdd}                   &id^{\Rdd}                  &0^{\Rd} \\
+                0^{\Rdd}                   &-id^{\Rdd}                 &0^{\Rd} \\
+                0^{\mathbb{R}^{1\times d}} &0^{\mathbb{R}^{1\times d}} &id^{\mathbb{R}}
+          \end{matrix}\right)
+\end{align*}
+
+\noindent we get
+
+\begin{align*}
+    h'_f = 
+    & \left( \begin{matrix} (Mx)_1 \\ \vdots \\ -(Mx)_d \\ -(Mx)_1 \\ \vdots \\ -(Mx)_d \\ 1 \end{matrix} \right)
+\end{align*}
+
+\noindent which added to $h_f$ gives us what we were looking for after the second layer.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% END: SECOND LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\medskip
+
+If we wanted to remove the flag, we could replace the bottom leftmost coordinate of $W_O$ by $-1$ in both layers.
+
+
+\subsection*{Max of two numbers}
 
 
 \section{Normalization}
+
+
+
 
 
 \section{Boolean Operations}
