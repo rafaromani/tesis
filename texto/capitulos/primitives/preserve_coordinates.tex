@@ -1,0 +1,7 @@
+When defining new transformers over existing ones we will want to extend their embedding dimension.
+We would like to preserve the behavior of the old transformer in the existing coordinates but ignore the new ones.
+Let's see how to extend the dimensions of the $\ATTN$ and $\FF$ layers in a way that we accomplish this.
+
+If we want to ignore the $i$th coordinate through a layer of attention, it's enough to put zeros in the $i$th column and row of $W_Q, W_K, W_V, W_O$. This can be done with as many coordinates as desired. Note that because the $i$th row of $W_O$ is zero, the output vector of the $\ATTN$ layer will have a zero in the $i$th coordinate. This is the point that makes it possible to not just ignore the value of the $i$th coordinate, but to not affect it. This happens because the result of the attention is added to the original vector.
+
+The same applies in the feed forward layer, putting zeros in the $i$th column and row of the matrix and vectors of the $\FF$ makes it ignore the value of the $i$th coordinate. Also in the result of the $\FF$ will appear a zero in the $i$th coordinate.
