@@ -57,7 +57,7 @@ Let's see how to make the maximum strictly positive so we can add this mechanism
 By this point our vector looks like $(0, \dots, 0, x_{max}, 0, \dots, 0)$, we are going to transform it to $(0, \dots, 0, |x_{max}|, 0, \dots, 0)$.
 Remember that the coordinates we are interested in are only the first $|\Sigma|$.
 Let's call $v$ to the block containing these coordinates.
-Our algorithm will do the following (where $\relu$ is applied position wise):
+Our algorithm will do the following:
 
 \[
     \left(\begin{matrix}  v \\ \vdots \end{matrix}\right)
@@ -69,6 +69,7 @@ Our algorithm will do the following (where $\relu$ is applied position wise):
     \left(\begin{matrix}  \relu(v) + \relu(-v) \\ \vdots \end{matrix}\right)
 \]
 
+\noindent where $\relu$ is applied position wise. 
 This works since for all $x$ it holds that $\relu(x) + \relu(-x) = |x|$.
 
 The first step can be done in the same way as the first half of the linear transformations.
