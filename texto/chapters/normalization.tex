@@ -2,7 +2,7 @@ For an easier handling of transformers, we define a notion of normalized transfo
 This notion will specify properties of the $\OUTPUT$ matrix and of the vector consumed by this step.
 
 \begin{definition}[Normalized transformer]
-    We will say a transformer is normalized when it ¿fulfills? {\color{orange} R: which one is the word i'm looking for?} two conditions. First, the matrix of the $\OUTPUT$ has to be a projection, i.e. it's a diagonal matrix with only ones in its diagonal. Second, the last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$. The non projected coordinates are free to be any value.
+    We will say a transformer is normalized when it meets two conditions. First, the matrix of the $\OUTPUT$ has to be a projection, i.e. it's a diagonal matrix with only ones in its diagonal. Second, the last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$. The non projected coordinates are free to be any value.
 \end{definition}
 
 The motivation for this definition is to simplify the $\OUTPUT$ layer (first constraint) and to 
@@ -14,7 +14,7 @@ have more control over the probability distribution generated (second constraint
 \subsection*{Algorithm for normalizing} {\color{orange} not sure about title}
 
 Let's see how to normalize any transformer.
-Let's take a transformer and make it ¿fulfill? {\color{orange} again this word} the first constraint.
+Let's take a transformer and modify it to meet the first constraint.
 
 \smallskip
 
@@ -36,11 +36,10 @@ The linear transformation has to be applied to the last vector.
 
 \medskip
 
-Let's now make it ¿fulfill? {\color{orange} please what is the word im looking for} the second condition.
+Let's now make it meet the second condition.
 
-Once $\TF$ has been change to ¿fulfill? {\color{orange}AAAAA} the first condition, we can use the maximum operation described in the previous section to make all the positions of the vector $0$ except the one that was the maximum before.
-{\color{orange} what if it is negative? how to make it positive?} \todo{this is important to solve}
-Now multiplying by $\maxrep$, then subtracting $1$ and multiplying by $\maxrep$ again gets us what we wanted.
+Once $\TF$ has been modified to meet the first condition, we can use the maximum operation described in the previous section to make all the positions of the vector $0$ except the one that was the maximum before.
+Now, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ and multiplying by $\maxrep$ again gets us what we wanted.
 
 \[
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ x_{max} \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
@@ -51,3 +50,41 @@ Now multiplying by $\maxrep$, then subtracting $1$ and multiplying by $\maxrep$ 
     \xrightarrow[\maxrep]{\text{multiplying by}}
     \left( \begin{matrix} \minrep \\ \vdots \\ \minrep \\ \maxrep \\ \minrep \\ \vdots \\ \minrep    \end{matrix} \right) 
 \]
+
+It could be the case that the maximum was negative, in that case the resulting vector won't be what we are looking for.
+Let's see how to make the maximum strictly positive so we can add this mechanism in the middle.
+
+By this point our vector looks like $(0, \dots, 0, x_{max}, 0, \dots, 0)$, we are going to transform it to $(0, \dots, 0, |x_{max}|, 0, \dots, 0)$.
+Remember that the coordinates we are interested in are only the first $|\Sigma|$.
+Let's call $v$ to the block containing these coordinates.
+Our algorithm will do the following (where $\relu$ is applied position wise):
+
+\[
+    \left(\begin{matrix}  v \\ \vdots \end{matrix}\right)
+    \xrightarrow[]{}
+    \left(\begin{matrix}  v \\ -v \\\vdots \end{matrix}\right)
+    \xrightarrow[]{}
+    \left(\begin{matrix}  \relu(v) \\ \relu(-v) \\\vdots \end{matrix}\right)
+    \xrightarrow[]{}
+    \left(\begin{matrix}  \relu(v) + \relu(-v) \\ \vdots \end{matrix}\right)
+\]
+
+This works since for all $x$ it holds that $\relu(x) + \relu(-x) = |x|$.
+
+The first step can be done in the same way as the first half of the linear transformations.
+For the second step we can take max coordinate in $v$ and $-v$.
+This works because all the coordinates are $0$ except one, which if it is negative will become $0$ and if it is non-negative will remain the same.
+For adding both vectors we can use one $\FF$ with the following parameters.
+Notice that this works since all the coordinates of $\relu(-v)$ are non-negative.
+
+
+\begin{align*}
+    & W_1 = id^{d\times d}
+    & W_2  = \left(\begin{matrix}
+        0^{|\Sigma| \times |\Sigma|}    & id^{|\Sigma| \times |\Sigma|}   & 0^{|\Sigma| \times (d - 2*|\Sigma|)}\\
+        0^{d-|\Sigma| \times |\Sigma|}  & 0^{d-|\Sigma| \times |\Sigma|}  & 0^{d-|\Sigma| \times d-2*|\Sigma|} \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0^{d\times d}
+    \end{matrix}\right) 
+\end{align*}
