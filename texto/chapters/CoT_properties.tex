@@ -28,12 +28,15 @@ As middle step, it was needed to build certain primitives operations which are a
 
 \input{chapters/primitives/max-coord.tex}
 
-\subsection*{Repeat a token}
-{\color{orange} rethink title}
+\subsection*{Repeat a token once it's printed}
 
 \input{chapters/primitives/repeat-token.tex}
 
-\subsection*{Force to halt when certain position is reached}
+\subsection*{Force to halt after certain number of steps of $\CoT$}
+
+With a similar strategy to the previous section, with the $\PE$ we can flag when a certain position is reached.
+Then, if the transformer is normalized, we can make the last vector what ever we want (since it will be the flagged by the $\PE$).
+Particularly, we can force it to concenter the probability in $\qaccept$ or $\qreject$.
 
 \section{Normalization}
 
