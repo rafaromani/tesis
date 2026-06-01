@@ -38,6 +38,10 @@ With a similar strategy to the previous section, with the $\PE$ we can flag when
 Then, if the transformer is normalized, we can make the last vector what ever we want (since it will be the flagged by the $\PE$).
 Particularly, we can force it to concenter the probability in $\qaccept$ or $\qreject$.
 
+\subsection*{Make a vector ignore others in an $\ATTN$ layer}
+
+\input{chapters/primitives/ignore-vectors-attn.tex}
+
 \section{Normalization}
 
 \input{chapters/normalization.tex}
@@ -46,9 +50,12 @@ Particularly, we can force it to concenter the probability in $\qaccept$ or $\qr
 \section{Boolean Operations}
 
 The main objective of this chapter was to prove that the $\CoTtndn$ classes are closed under boolean operations.
+
 Let's show that the complement of a language in $\CoTtndn$ is in $\CoTtndn$ and that the disjunction of two language of the same class, stays in the same class.
 
 \subsection*{Complement of a language}
-
 \input{chapters/boolean-op/deterministic-not.tex}
+
+\subsection*{Disjunction of two languages}
+\input{chapters/boolean-op/deterministic-or.tex}
 
