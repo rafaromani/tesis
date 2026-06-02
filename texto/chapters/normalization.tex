@@ -5,9 +5,7 @@ This notion will specify properties of the $\OUTPUT$ matrix and of the vector co
     We will say a transformer is normalized when it meets two conditions. First, the matrix of the $\OUTPUT$ has to be a projection, i.e. it's a diagonal matrix with only ones in its diagonal. Second, the last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$. The non projected coordinates are free to be any value.
 \end{definition}
 
-The motivation for this definition is to simplify the $\OUTPUT$ layer (first constraint) and to 
-have more control over the probability distribution generated (second constraint). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
-
+The motivation for this definition is to simplify the $\OUTPUT$ layer (first constraint) and to have more control over the probability distribution generated (second constraint). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
 
 
 
