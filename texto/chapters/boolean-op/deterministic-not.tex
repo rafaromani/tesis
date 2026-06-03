@@ -1,7 +1,7 @@
 Let's $\gL \in \CoTtndn$, then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
 For each of the transformers in the family we can define one that behaves exactly the same (internally and externally) but prints the flipped token.
 
-Let's $\TF$ be a transformer, we will construct $\TF'$ that flips the halting token of $\TF$, i.e if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
+Let's $\TF$ be a transformer, we will construct $\TF'$ that flips the decision token of $\TF$, i.e if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
 
 This can be easily done swapping the rows associated to $\qaccept$ and $\qreject$ in the matrix of the $\OUTPUT$ layer of $\TF$.
 Thus, when the largest probability is associated to $\qaccept$ in $\TF$, that same number will be associated to $\qreject$ in $\TF$.
