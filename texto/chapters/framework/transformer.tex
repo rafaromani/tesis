@@ -4,8 +4,8 @@
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
 It has only one tape from where it reads the input and in an autoregressive way writes in it more tokens.
-There are two distinguished tokens called decision symbols.
-Once the transformer writes one of those it halts.
+There are two distinguished tokens called \textbf{decision symbols}.
+Once the transformer writes one of those, it halts.
 We say that a transformer accepts a word if when it halts the decision symbol printed is the accepting one ($\qaccept$).
 Correspondingly, a transformer rejects a word if the decision symbol printed is the rejecting one ($\qreject$).
 
@@ -15,14 +15,18 @@ The transformer iterates this process until it halts.
 These iterations are called \textbf{chain of thought}.
 
 The process of generating the next token consists of two separated steps.
-First a probability distribution over the alphabet for the token is computed by a process called distribution generation.
+First a probability distribution over the alphabet for the next token is computed by a process called distribution generation.
 After that, it is necessary to decide the specific token by a process called token selection.
 These two algorithms together is what defines the transformer.
 During this work we will analyze and compare two different options for token selection.
 
+\medskip
+
 For a more realistic analysis of the transformers, we don't allow an infinite tape.
 The transformers studied in this work, for each input size $n$, will have a tape of size $\budget(n) + n$.
 It's important to remark that, since in every step of the transformer a symbol is written, the maximum number of steps a transformer can do for an input of length $n$ is $\budget(n)$.
+
+\medskip
 
 The process of distribution generation is dependent on many parameters.
 These parameters, in the real models, are the ones calculated during the training.
@@ -30,7 +34,7 @@ We refer to them as $\theta$.
 We consider the parameters as part of the definition of a transformer.
 
 
-\medskip
+\bigskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Formal general def of transformer and CoT %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,7 +63,9 @@ All the transformers considered in this work use the one presented by \cite{toyo
 This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$), and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
-Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$. Let's define each component.
+Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
+The algorithm works over vectors of certain dimension $d$.
+Let's define each component.
 
 %Each part
 \textbf{Token Embedding:} It's a mapping from $\Sigma$ to vectors in $\Rd$. This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to the mapping of token $\sigma$.
@@ -100,6 +106,10 @@ All these parts come together for the distribution generator process in the algo
 \end{algorithmic}
 \end{algorithm}
 
+The $\OUTPUT$ layer and the $\ATTN$ layer uses a $\softmax$ function.
+It is defined from $\mathbb{R}^n$ to $\mathbb{R}^n$ for all $n$ as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
+
+\medskip
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 % Def token selection %
@@ -113,21 +123,6 @@ In this work we will study two selectors.
 The first one always returns the token with the largest probability ($\argmax$ over $p$, where $p$ is the output of the distribution generator).
 The other, works non-deterministically.
 It returns the token $\sigma \in \Sigma$ with probability $p(\sigma)$.
-
-{\color{red} 
-I forgot to talk about finite representation. 
-Define good symbols for $\maxrep$ y $\minrep$. 
-Properties i use later on that i should explain here:
-\begin{itemize}
-        \item $exp(\minrep) = 0$
-        \item $exp(\maxrep) = \maxrep$
-        \item $\minrep*\maxrep = \minrep$
-        \item $\maxrep*\maxrep = \maxrep$
-        \item $x+0 = x$
-        \item $x-x = 0$
-        \item $x + \maxrep + \maxrep + \minrep =  0$ for all $x$.
-\end{itemize}
-}
 
 
 \todo{Add an image representing the transformer architecture}

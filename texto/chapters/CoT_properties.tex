@@ -20,6 +20,10 @@ As middle step, it was needed to build certain primitives operations which are a
 
 \input{chapters/primitives/add-vector.tex}
 
+\subsection*{Make a vector ignore others in an $\ATTN$ layer}
+
+\input{chapters/primitives/ignore-vectors-attn.tex}
+
 \subsection*{Linear transformations}
 
 \input{chapters/primitives/linear-transf}
@@ -45,10 +49,6 @@ If that wasn't the case, we can extend the alphabet with two dummy versions of t
 Then, we can force it to repeat the one it printed until the last position of the budget.
 At that point, we can force it to print the real decision token corresponding to the one it was repeating (if it already printed one) or force it to choose one.
 
-
-\subsection*{Make a vector ignore others in an $\ATTN$ layer}
-
-\input{chapters/primitives/ignore-vectors-attn.tex}
 
 \subsection*{Copy one vector into another with $\ATTN$}
 
