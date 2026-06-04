@@ -1,15 +1,13 @@
 % The introduction has to say that transformers have a tape where they recibe the input and write its output
 
 
-\todo{change halting token or halting symbol for decision token and decision symbol. I also called stopping instead of halting in some places}
-
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
 It has only one tape from where it reads the input and in an autoregressive way writes in it more tokens.
-There are two distinguished tokens called stopping symbols.
+There are two distinguished tokens called decision symbols.
 Once the transformer writes one of those it halts.
-We say that a transformer accepts a word if when it halts the stopping symbol printed is the accepting one ($\qaccept$).
-Correspondingly, a transformer rejects a word if the stopping symbol printed is the rejecting one ($\qreject$).
+We say that a transformer accepts a word if when it halts the decision symbol printed is the accepting one ($\qaccept$).
+Correspondingly, a transformer rejects a word if the decision symbol printed is the rejecting one ($\qreject$).
 
 In each step the transformer maps the content of the tape to a probability distribution over the alphabet.
 Depending on this distribution the transformer prints the next token.
@@ -26,15 +24,10 @@ For a more realistic analysis of the transformers, we don't allow an infinite ta
 The transformers studied in this work, for each input size $n$, will have a tape of size $\budget(n) + n$.
 It's important to remark that, since in every step of the transformer a symbol is written, the maximum number of steps a transformer can do for an input of length $n$ is $\budget(n)$.
 
-
 The process of distribution generation is dependent on many parameters.
 These parameters, in the real models, are the ones calculated during the training.
 We refer to them as $\theta$.
-During this work we assume that the parameters force the transformer to halt exactly when the budget runs out. 
-\todo{Write an appendix about this decision. We can always add an extra step or artifact forcing it}
 We consider the parameters as part of the definition of a transformer.
-
-
 
 
 \medskip
@@ -48,7 +41,7 @@ The autoregressive token generation is defined recursively. The token outputted 
 In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
 
 We note $\TF^*(\alpha)$ for the token written by the transformer when it halts, i.e. at the end of the computation, when the input is $\alpha$.
-As was said before, the transformer only halts when it prints a stopping symbol ($\qaccept$ or $\qreject$).
+As was said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 

@@ -12,8 +12,3 @@ That case can be solved using the non-uniformity of the model.
 If the input word is of size $n$, with the $\PE$ we can flag the first $n$ vectors.
 Then, we can use that flag to make them $0$ in the coordinate used by the $\TE$ for flagging the token to repeat.
 We make them $0$ using a constant function as described in a previous section.
-
-\medskip
-
-Notice that this primitive makes the assumption that a transformer uses all of its budget before halting not a problem.
-This is because if it printed a stopping symbol, but it still had budget, we can force it to repeat it until the end.
