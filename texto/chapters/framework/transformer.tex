@@ -38,7 +38,6 @@ We consider the parameters as part of the definition of a transformer.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Formal general def of transformer and CoT %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\todo{add somewhere the def of softmax}
 
 We note $\TF(\alpha)$ to the token outputted by one step of the transformer $\TF$ when the tape content is $\alpha \in \Sigma^*$.
 The autoregressive token generation is defined recursively. The token outputted after $i$ steps is $\TF^{i}(\alpha) := \TF^{i-1}(\alpha \TF(\alpha))$ with base case $\TF^1(\alpha) := \TF(\alpha)$.
