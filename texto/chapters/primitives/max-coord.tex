@@ -20,12 +20,12 @@ This operation can be done with the following primitives:
     \xrightarrow{\FF \text{ layer}}
     \left( \begin{matrix} a \\ b \\ \relu(a-b) \\ \relu(b-a) \\ \vdots \\ \end{matrix} \right) 
     \xrightarrow[\text{the coordinates with the }\relu]{\text{Multiply twice by } \maxrep}
-    \left( \begin{matrix} a \\ b \\ \maxrep \times \mathbb{I}(a>b) \\ \maxrep \times \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right) \longrightarrow 
+    \left( \begin{matrix} a \\ b \\ \maxrep \cdot \mathbb{I}(a>b) \\ \maxrep \cdot \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right) \longrightarrow 
     \\
     & \xrightarrow[\text{\shortstack{coordinates with \\ the comparison}}]{\text{Divide by $\maxrep$ the}}
     \left( \begin{matrix} a \\ b \\ \mathbb{I}(a>b) \\ \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
     \xrightarrow[\text{operation}]{\text{Special}}
-    \left( \begin{matrix} a \times \mathbb{I}(a>b) \\ b \times \mathbb{I}(b>a) \\ 0 \\ 0 \\ \vdots \\ \end{matrix} \right)
+    \left( \begin{matrix} a \cdot \mathbb{I}(a>b) \\ b \cdot \mathbb{I}(b>a) \\ 0 \\ 0 \\ \vdots \\ \end{matrix} \right)
     = \begin{cases}
         \left( \begin{matrix} a \\ 0 \\ \vdots \\ \end{matrix} \right) & \text{ if } a > b \\
         \\
@@ -47,7 +47,7 @@ Notice that $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}
     \end{matrix}\right)
     \xrightarrow[\text{operation}]{\text{Special}}
     \left(\begin{matrix}
-        a \times \mathbb{I}_a \\ b \times \mathbb{I}_b\\ 0 \\ 0
+        a \cdot \mathbb{I}_a \\ b \cdot \mathbb{I}_b\\ 0 \\ 0
     \end{matrix}\right)
 \end{equation*}
 
@@ -60,8 +60,8 @@ What we will do is the following:
     \end{matrix}\right)
     \xrightarrow[\text{operation}]{\text{Special}}
     \left(\begin{matrix}
-        a            &+& \maxrep \times \mathbb{I}_b &+& \maxrep \times \mathbb{I}_b &+& \minrep \times \mathbb{I}_b \\
-        b            &+& \maxrep \times \mathbb{I}_a &+& \maxrep \times \mathbb{I}_a &+& \minrep \times \mathbb{I}_a \\ 
+        a            &+& \maxrep \cdot \mathbb{I}_b &+& \maxrep \cdot \mathbb{I}_b &+& \minrep \cdot \mathbb{I}_b \\
+        b            &+& \maxrep \cdot \mathbb{I}_a &+& \maxrep \cdot \mathbb{I}_a &+& \minrep \cdot \mathbb{I}_a \\ 
         \mathbb{I}_a &+& 0                          &+& 0                          &+& -\mathbb{I}_a\\
         \mathbb{I}_b &+& 0                          &+& 0                          &+& -\mathbb{I}_b\\
     \end{matrix}\right)    
@@ -90,7 +90,7 @@ The first two will be:
     \end{matrix}\right) 
 \end{align*}
 
-\noindent Notice that the output of this $\FF$ layer when inputted with $(a, b, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \times \mathbb{I}_b, \maxrep \times \mathbb{I}_a, 0, 0)$.
+\noindent Notice that the output of this $\FF$ layer when inputted with $(a, b, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
 
 The third $\FF$ layer will be:
 
@@ -110,4 +110,4 @@ The third $\FF$ layer will be:
     \end{matrix}\right) 
 \end{align*}
 
-\noindent which inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, it will output $(\minrep \times \mathbb{I}_b, \minrep \times \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
+\noindent which inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, it will output $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
