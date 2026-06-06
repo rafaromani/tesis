@@ -3,6 +3,7 @@
 In practice, training and inference of transformers are typically done with 16- or 32-bit floating point numbers and there is active work in reducing that number.
 That's why in this thesis we follow the decision of \cite{toyota} to work on constant-precision transformers, where the output of each arithmetic operation is rounded to the closest  floating point number representable by a fixed number of digits following IEEE 754 standard.
 This analysis avoids the unrealistic infinite precision assumption made by prior works \cite{perez2019turing}.
+The definitions stated in the section are inherited from \cite{toyota}.
 
 Below we give a formal definition of the floating-point number and rounding operation. 
 We use $\phi(a) = \sum_{i=1}^k 2^{k-i}a_i$ to denote the value of binary number represented by $a\in \{0,1\}^k$ for any $k\in\mathbb{N}^+$.
@@ -10,7 +11,7 @@ We use $\phi(a) = \sum_{i=1}^k 2^{k-i}a_i$ to denote the value of binary number 
 \begin{definition}[Floating-point Representation]
 Let $e$ be the number of bits for exponents and $s$ be the number of bits for significand. 
 A $(e+2s+1)$-bit binary string $a = (a_1, a_2, \ldots a_{e+2s+1})\in \{0,1\}^{e+2s+1}$ is a floating-point binary representation of number $\phi_{e,s}(a)\triangleq \sign(a)\cdot 2^{\exponent(a)} \cdot \significand(a)$ with $e$-bit exponent and $2s$-precision, where the sign is $\sign(a)\triangleq 2a_1-1$, the significand is $\significand(a)\triangleq 2^{-s}\phi(a_{2:2s+1})$, and the exponent is $\exponent(a)\triangleq \phi(a_{2s+2:2s+e+1})-2^{\max(0,e-1)}$.
-We define the set of numbers expresable with $e$ bits of exponent and $s$ bits of significand as $\Floating$.
+We define the set of numbers expressible with $e$ bits of exponent and $s$ bits of significand as $\Floating$.
 We define $\maxrep_{e,s}$ as the maximum number in $\Floating$.
 Similarly, we define $\minrep_{e,s}$ as the minimum.
 Since in this work we only analyze constant precision transformers, we will omit the subscripts of $\maxrep$ and $\minrep$.
@@ -41,7 +42,7 @@ We further define the following operations:
 
 \subsection*{Arithmetic tricks}
 
-From the saturation and the iterative rounding some interesting properties appear:
+From the saturation and the iterative rounding presented by \cite{toyota}, some properties appear that are important to remark.
 
 \begin{itemize}
         \item $exp(\minrep) = 0$
