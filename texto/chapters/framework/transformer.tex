@@ -3,28 +3,28 @@
 
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
-It has only one tape from where it reads the input and in an autoregressive way writes in it more tokens.
+It has only one tape from where it reads the input and in an autoregressive\bigsanti{no sé bien a qué se refiere con autoregressive, pero tiene que quedar claro que solo imprime nuevos símbolos de a uno y que no puede modificar símbolos ya escritos. Quizá comparar con autómata vs TM} way writes in it more tokens.
 There are two distinguished tokens called \textbf{decision symbols}.
 Once the transformer writes one of those, it halts.
-We say that a transformer accepts a word if when it halts the decision symbol printed is the accepting one ($\qaccept$).
-Correspondingly, a transformer rejects a word if the decision symbol printed is the rejecting one ($\qreject$).
+We say that a transformer accepts a word if, when it halts, the decision symbol printed is the accepting one ($\qaccept$).
+Analogously, a transformer rejects a word if the decision symbol printed is the rejecting one ($\qreject$).
 
-In each step the transformer maps the content of the tape to a probability distribution over the alphabet.
-Depending on this distribution the transformer prints the next token.
+In each step, the transformer maps the content of the tape to a probability distribution over $\Sigma$.
+Depending on this distribution, the transformer prints the next token.
 The transformer iterates this process until it halts.
 These iterations are called \textbf{chain of thought}.
 
 The process of generating the next token consists of two separated steps.
-First a probability distribution over the alphabet for the next token is computed by a process called distribution generation.
+First a probability distribution over the alphabet for the next token is computed by a process called distribution generation.\bigsanti{así como hiciste con cot, definí nuevos términos con un estilo especial. Yo uso defstlye como comando y después decido si es itálica, negrita, etc}
 After that, it is necessary to decide the specific token by a process called token selection.
 These two algorithms together is what defines the transformer.
 During this work we will analyze and compare two different options for token selection.
 
 \medskip
 
-For a more realistic analysis of the transformers, we don't allow an infinite tape.
-The transformers studied in this work, for each input size $n$, will have a tape of size $\budget(n) + n$.
-It's important to remark that, since in every step of the transformer a symbol is written, the maximum number of steps a transformer can do for an input of length $n$ is $\budget(n)$.
+For a more realistic analysis of the transformers, we don't allow an infinite tape.\santi{de hecho, no habías dicho que era infinita, pero es importante remarcarlo}
+The transformers studied in this work will have, for each input size $n$, a tape of size $\budget(n) + n$.
+It's important to remark that, since in every step of the transformer \santi{los pasos son del cómputo, nodel transformer. Revisar en todo el texto}a symbol is written, the maximum number of steps a transformer can do for an input of length $n$ is $\budget(n)$.
 
 \medskip
 
