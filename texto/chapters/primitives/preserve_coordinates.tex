@@ -6,4 +6,6 @@ If we want to ignore the $i$th coordinate through a layer of attention, it's eno
 
 If we are looking to only preserve but not ignore a coordinate during an $\ATTN$ layer, it's enough to have zeros in only its corresponding row of $W_O$.
 
+\bigsanti{"If we want", "If we are looking for", etc aparece muchas veces. No suena bien. Yo lo redactaría de esta manera: "Si hacemos esto, entonces logramos tal cosa".}
+
 The same applies in the feed forward layer, putting zeros in the $i$th column and row of the matrix and vectors of the $\FF$ makes it ignore the value of the $i$th coordinate. Also in the result of the $\FF$ will appear a zero in the $i$th coordinate.

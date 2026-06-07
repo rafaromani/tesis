@@ -3,11 +3,11 @@ Applying a linear transformation to a vector is not direct since in every step o
 A sharp reader maybe would think that this can be solved applying the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
 This does not hold in our model since the addition and multiplication in the finite representation of the numbers used is not commutative.
 For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
-After applying this process we will have corrupted all vectors except the one we are interested in.
+After applying this process we will have corrupted \santi{corrputed?}all vectors except the one we are interested in.
 
 The strategy we will use is the following.
 For having a clearer notation, we will say that the vector to which we are applying the linear transformation is the $f$th and the matrix of the linear transformation is $M$.
-We will do use two consecutive $\ATTN$ layers where the $f$th vector will only attend to itself.
+We will do use two consecutive $\ATTN$ layers where the $f$th \santi{$f$ no es un buen nombre para una coordenada. ¿Qué tal $i,j,k,r,s,u,v$?}vector will only attend to itself.
 We can achieve this making it ignore all the others vectors except itself, then its attention score to itself will be $1$.
 
 The first layer will compute the result of the transformation and store it in new coordinates added to the embedding to be used as memory.
@@ -89,6 +89,8 @@ Therefore, we define $W_Q$ ans $W_K$ using the strategy of the previous section.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% START: FIRST LAYER %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\santi{dividir claramente en primera y segunda layer. Podés usar itemize o paragrph.}
 
 Let's remember from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
 Let's analyze what $h'_f$ looks by now:

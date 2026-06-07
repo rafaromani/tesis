@@ -1,4 +1,14 @@
 We will find very useful to be able for some vectors to ignore others in the $\ATTN$ layers.
+
+\bigsanti{Otro ejemplo de redacción rara: 
+
+"We will find very useful to be able for some vectors to ignore others in the $\ATTN$ layers."
+
+$\to$
+
+We show how to make some vectors ignore others in the $\ATTN$ layers, which will be very useful for our constructions.}
+
+
 For a vector to ignore other, we will need for the attention score to be $\minrep$ so the $\softmax$ make it zero.
 
 Let's say we want for the $l$th vector to ignore a set of vectors $M$.
@@ -10,7 +20,7 @@ We will make $(k_i)_{d-1}$ and $(k_i)_d$ to be $\minrep$ when $i \in M$, and $(q
 With these values the only attention scores modified are the ones of the $l$th vector since every other will have $0$ in the last two coordinates of the query thus making the last two terms of the internal product $0$ and therefore not affecting the score.
 
 For getting those values in the keys and queries vectors we can just flag them and adjust the query and key matrix to have what we want in those coordinates.
-
+\santi{parece muy informal ("to have what we want"). ¿Hay una mejor manera de describirlo?}
 
 
 
