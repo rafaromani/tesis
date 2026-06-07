@@ -4,15 +4,16 @@ This notion will specify properties of the $\OUTPUT$ matrix and of the vector co
 \begin{definition}[Normalized transformer]
     We will say a transformer is normalized when it meets two conditions. First, the matrix of the $\OUTPUT$ has to be a projection, i.e. it's a diagonal matrix with only ones in its diagonal. Second, the last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$. The non projected coordinates are free to be any value.
 \end{definition}
+\bigsanti{veo que más adelante se habla de la "first condition" y la "second condition". Sería bueno numerarlas o darles in nombre para que sea más fácil referirse a ellas.}
 
 The motivation for this definition is to simplify the $\OUTPUT$ layer (first constraint) and to have more control over the probability distribution generated (second constraint). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
 
-
+\bigsanti{Decí que lo que sigue es la implementación de un algoritmo para normalizar cualquier transformer.}
 
 \subsection*{Algorithm for normalizing} {\color{orange} not sure about title}
 
 Let's see how to normalize any transformer.
-Let's take a transformer and modify it to meet the first constraint.
+Let's take a transformer and modify it to meet the first constraint.\santi{"first constraint" se puede cambiar por el número o nombre que le hayas dado a la primera condición en la definición. Lo mismo para la segunda.}
 
 \smallskip
 
@@ -29,7 +30,7 @@ Every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Si
 \noindent where $v \in \mathbb{R}^{d-|\Sigma|}$ can have any values.
 
 Let's $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
-Using the decomposition just presented, and the strategy defined in the previous section for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
+Using the decomposition just presented, and the strategy defined in the previous section for applying linear transformations \santi{acá podés ser más preciso, si ponés números a secciones}, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
 The linear transformation has to be applied to the last vector.
 
 \medskip
