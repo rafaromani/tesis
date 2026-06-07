@@ -3,20 +3,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-As mentioned in chapter 1, there is a theoretical gap in the area. {\color{orange} está bien dicho theoretical gap?}
+As mentioned in chapter 1, there is a theoretical gap in the area. {\color{orange} está bien dicho theoretical gap?}\santi{no, theoretical gap no me suena bien acá. ¿A qué te referís?}
 A study of non-determinism in transformers is missing.
 
 When $\TF$ is a deterministic transformer, $\TF^i(\alpha)$ is an exact symbol for all $\alpha \in \Sigma^*$ and $i \in \mathbb{N}$.
-In counterpart, when the token selection process of the transformer samples the distribution, it becomes a random variable.
+On the contrary, when the token selection process of the transformer samples the distribution, it becomes a random variable.
 Therefore, we introduce the following definition.
 
 
 \begin{definition}[Probabilistic transformer]
-    We call probabilistic transformers to the transformers that sample the distribution for selecting the next token.
-    We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ recognize a language $\gL$ when: 
+    We call probabilistic transformer to the transformer that samples the distribution for selecting the next token.
+    We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ recognizes a language $\gL$ when: 
     \[
     \alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3
     \]
 \end{definition}
 
+\bigsanti{¿Dónde quedó el budget en estas definiciones?}
 
