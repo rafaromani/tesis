@@ -25,11 +25,18 @@ During this work we will analyze and compare two different options for token sel
 For a more realistic analysis of the transformers, we don't allow an infinite tape.\santi{de hecho, no habías dicho que era infinita, pero es importante remarcarlo}
 The transformers studied in this work will have, for each input size $n$, a tape of size $\budget(n) + n$.
 It's important to remark that, since in every step of the transformer \santi{los pasos son del cómputo, nodel transformer. Revisar en todo el texto}a symbol is written, the maximum number of steps a transformer can do for an input of length $n$ is $\budget(n)$.
+\bigsanti{mejorar esta última oración, no se entiende}
 
 \medskip
 
 The process of distribution generation is dependent on many parameters.
 These parameters, in the real models, are the ones calculated during the training.
+\bigsanti{Revisar casos como estos:
+These parameters, in the real models, are the ones calculated during the training.
+$\to$
+In the real models, these parameters  are the ones calculated during the training.
+}
+
 We refer to them as $\theta$.
 We consider the parameters as part of the definition of a transformer.
 
@@ -44,7 +51,7 @@ The autoregressive token generation is defined recursively. The token outputted 
 In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
 
 We note $\TF^*(\alpha)$ for the token written by the transformer when it halts, i.e. at the end of the computation, when the input is $\alpha$.
-As was said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
+As said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 
@@ -63,7 +70,7 @@ This algorithm consists of four parts: a token embedding layer ($\TE$), a positi
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
-The algorithm works over vectors of certain dimension $d$.
+The algorithm works over vectors \santi{of reals?} of certain dimension $d$.
 Let's define each component.
 
 %Each part
@@ -71,7 +78,7 @@ Let's define each component.
 
 \textbf{Position Encoding:} It's a mapping from the positions of the tape to vectors in $\Rd$. This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
-\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^a$ to $(\Rd)^a$. Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer it's defined by the algorithm \ref{alg:def_attn}. This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers. \cite{cookbook}
+\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^a$ to $(\Rd)^a$. \santi{¿qué es $a$?}Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers. \cite{cookbook}
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
@@ -84,13 +91,15 @@ Let's define each component.
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, it's defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, defined by $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+\bigsanti{Too many it's it's... Cambié algunos. Mejorar}
 
 \textbf{Output Layer: } It's a mapping from $\Rd$ to a probability distribution over $\Sigma$. Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, it's defined as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
 
 
 All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.
 
+\santi{sería mejor llamarlos "input" y "output"?}
 \begin{algorithm}
 \caption{Distribution generator}\label{alg:def_p_gen}
 \begin{algorithmic}[1]
@@ -108,6 +117,20 @@ All these parts come together for the distribution generator process in the algo
 The $\OUTPUT$ layer and the $\ATTN$ layer uses a $\softmax$ function.
 It is defined from $\mathbb{R}^n$ to $\mathbb{R}^n$ for all $n$ as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
 
+\bigsanti{Ejemplo de cómo mejorar la presentación para repetir menos y ser más claro:
+
+
+The $\OUTPUT$ layer and the $\ATTN$ layer uses a $\softmax$ function.
+It is defined from $\mathbb{R}^n$ to $\mathbb{R}^n$ for all $n$ as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
+
+$\to$
+
+The $\OUTPUT$ layer and the $\ATTN$ layer use a function $\mathbb{R}^n\to\mathbb{R}^n$ defined by $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
+
+\medskip
+
+Independientemente de la presentación, no sé si queda claro el tema del $n$ ("for all $n$"). ¿Es una familia de funciones $\softmax_n$?}
+
 \medskip
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,11 +140,10 @@ It is defined from $\mathbb{R}^n$ to $\mathbb{R}^n$ for all $n$ as $\softmax(x)_
 The second component of a transformer is the \textbf{token selector}.
 This algorithm consumes the probability distribution computed by the distribution generator and returns a token.
 
-Lets $p : \Sigma \to [0,1]$ be the output of the distribution generator.
+Let $p : \Sigma \to [0,1]$ \santi{$\Sigma^*?$ }be the output of the distribution generator.
 In this work we will study two selectors.
 The first one always returns the token with the largest probability ($\argmax$ over $p$, where $p$ is the output of the distribution generator).
-The other, works non-deterministically.
-It returns the token $\sigma \in \Sigma$ with probability $p(\sigma)$.
+The other works non-deterministically returning a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
 
 
 \todo{Add an image representing the transformer architecture}
