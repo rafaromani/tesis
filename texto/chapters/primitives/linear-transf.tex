@@ -7,7 +7,7 @@ After applying this process we will have corrupted \santi{corrputed?}all vectors
 
 The strategy we will use is the following.
 For having a clearer notation, we will say that the vector to which we are applying the linear transformation is the $f$th and the matrix of the linear transformation is $M$.
-We will do use two consecutive $\ATTN$ layers where the $f$th \santi{$f$ no es un buen nombre para una coordenada. ¿Qué tal $i,j,k,r,s,u,v$?}vector will only attend to itself.
+We will do use two consecutive $\ATTN$ layers where the $f$th \santi{Podés no dar bola, pero $f$ no es un buen nombre para una coordenada. ¿Qué tal $i,j,k,r,s,u,v$?}vector will only attend to itself.
 We can achieve this making it ignore all the others vectors except itself, then its attention score to itself will be $1$.
 
 The first layer will compute the result of the transformation and store it in new coordinates added to the embedding to be used as memory.

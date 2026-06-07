@@ -1,4 +1,4 @@
-There are going to be constructions were we would like to be able to, once the transformer prints a token, repeat it indefinitely.
+There are going to be constructions were we would like to be able to, once the transformer prints a token, repeat it indefinitely.\santi{de nuevo, redacción recargada. Otra cosa: ¿"indefinitely" qué quiere decir? ¿Es una cantidad fija pero arbitraria de veces?}
 We can achieve this easily, making use of some of the tools that we had defined.
 First, we need to normalize the transformer. {\color{orange} i know i define normalization later on, but i think this is the place in the text where i should write this primitive.}
 Second, we need to flag the token with the $\TE$.
@@ -11,4 +11,4 @@ Notice that this only works if the token does not appear in the input word.
 That case can be solved using the non-uniformity of the model.
 If the input word is of size $n$, with the $\PE$ we can flag the first $n$ vectors.
 Then, we can use that flag to make them $0$ in the coordinate used by the $\TE$ for flagging the token to repeat.
-We make them $0$ using a constant function as described in a previous section.
+We make them $0$ using a constant function as described in a previous section.\santi{aca, ser más preciso. Se puede dar el número de sección (si les ponés números)}
