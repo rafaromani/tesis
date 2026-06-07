@@ -1,0 +1,9 @@
+We will see that a useful operation will be to move values from a vector $v_i$ to a vector $v_j$.
+This can only be done if $i < j$ since the attention mechanism does not allow for a vector to attend to other that is to the right, i.e, $v_k$ can attend to $v_l$ iff $k \leq l$.
+
+We will copy values from $v_i$ to $v_j$ in two steps.
+First, we will make $0$ the coordinates of $v_j$ that will receive the values.
+Second, we will make $v_j$ only attend to $v_i$ in an attention layer.
+In said attention layer, we will have a $W_V = id$ and $W_O$ such that it outputs the desire coordinates of $v_i$ in the coordinates we want to copy them.
+For example if we were looking for copying the $k$th coordinate of $v_i$ to the $l$th coordinate of $v_j$, $W_O$ will have $0$ en every coordinate and $1$ in the row $l$, column $k$.
+Then the vector coming out of the $\ATTN$ layer will have $0$ in every coordinate, except in the $l$th, where it will be $(v_i)_k$.

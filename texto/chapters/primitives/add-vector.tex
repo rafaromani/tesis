@@ -1,0 +1,52 @@
+Let's define a mechanism for adding one specific vector to a flagged one.
+This technique works even when there are more than one flagged vector.
+
+The flag used for the vectors should have $f_{\ON} = 1$ and $f_{\OFF} = 0$.
+We will assume the flag is in the last coordinate.
+
+Let's call $v$ the vector that we want to add. 
+We will do it with one $\FF$ layer. 
+We will construct a layer such that $FF(h) = \mathbb{I}(h \text{ is flagged})*v$.
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0         &\dots  &0      & v_1       \\
+        \vdots    &\ddots &\vdots & \vdots    \\
+        0         &\dots  &0      & v_d       \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0      \\
+        \vdots \\
+        0      \\
+    \end{matrix}\right) 
+\end{align*}
+
+Notice that if the coordinate for the flag had been the $k$th instead of the last one, then $v$ would have appeared in the $k$th column of $W_2$ instead of the last.
+
+\medskip
+
+An interesting use of this technique is that allow us to transform any vector in whatever we want, i.e. we can apply constant functions.
+This is done exploiting the finite representation system.
+We can saturate the vector to the $\maxrep$ and then make it $0$ to finally add our objective.
+
+
+\[
+    h \leftarrow \left(\left(\left( h + 
+    \left(\begin{matrix}
+    \infty \\
+    \vdots \\
+    \infty \\
+\end{matrix}\right)\right)
+    + \left(\begin{matrix}
+    \infty \\
+    \vdots \\
+    \infty \\
+\end{matrix}\right)\right)
+    + \left(\begin{matrix}
+    -\infty \\
+    \vdots \\
+    -\infty \\
+\end{matrix}\right)\right)
+    + v
+\]

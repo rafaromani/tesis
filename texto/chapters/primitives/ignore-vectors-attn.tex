@@ -1,0 +1,17 @@
+We will find very useful to be able for some vectors to ignore others in the $\ATTN$ layers.
+For a vector to ignore other, we will need for the attention score to be $\minrep$ so the $\softmax$ make it zero.
+
+Let's say we want for the $l$th vector to ignore a set of vectors $M$.
+Therefore, what we are looking for is for $\langle q_l, k_m \rangle = \minrep$ when $m \in M$, but we don't want to modify the attention score of others pairs.
+We will use the saturation error for getting to our objective, since $\langle q_l, k_m \rangle = \sum_{x=1}^d (q_l)_x (k_m)_x$ if we make for the last two terms to be $\minrep$ when $m \in M$, we will get what we are looking for.
+Since we don't want to affect other vectors, every other pair should have $0$ as the last to terms.
+
+We will make $(k_i)_{d-1}$ and $(k_i)_d$ to be $\minrep$ when $i \in M$, and $(q_i)_{d-1}$ and $(q_i)_d$ to be $\maxrep$ when $i=l$ and $0$ otherwise.
+With these values the only attention scores modified are the ones of the $l$th vector since every other will have $0$ in the last two coordinates of the query thus making the last two terms of the internal product $0$ and therefore not affecting the score.
+
+For getting those values in the keys and queries vectors we can just flag them and adjust the query and key matrix to have what we want in those coordinates.
+
+
+
+
+

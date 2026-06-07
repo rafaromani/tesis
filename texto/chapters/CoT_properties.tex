@@ -1,0 +1,73 @@
+\chapter{General properties}
+% Capaz cambiar el titulo? General properties
+% Aca van las primitivas, propiedades de la clausura.
+
+In order to better understand $\CoTtndn$ classes, it was needed to fill a gap in the literature related to the properties of these classes.
+For that, in this section we introduce a notion of normalization for transformers and prove that $\CoTtndn$ is closed under boolean operations.
+As middle step, it was needed to build certain primitives operations which are also explained in this chapter.
+
+\section{Transformers Primitives}
+
+\subsection*{Flagging Tokens and Positions}
+
+\input{chapters/primitives/flags}
+
+\subsection*{Preserve and ignore coordinates through ATTN and FF}
+
+\input{chapters/primitives/preserve_coordinates.tex}
+
+\subsection*{Add vector and constant functions}
+
+\input{chapters/primitives/add-vector.tex}
+
+\subsection*{Make a vector ignore others in an $\ATTN$ layer}
+
+\input{chapters/primitives/ignore-vectors-attn.tex}
+
+\subsection*{Linear transformations}
+
+\input{chapters/primitives/linear-transf}
+
+\subsection*{Max coordinate}
+
+\input{chapters/primitives/max-coord.tex}
+
+\subsection*{Repeat a token once it's printed}
+
+\input{chapters/primitives/repeat-token.tex}
+
+\subsection*{Force to halt after certain number of steps of $\CoT$}
+
+With a similar strategy to the previous section, with the $\PE$ we can flag when a certain position is reached.
+Then, if the transformer is normalized, we can make the last vector what ever we want (since it will be the flagged by the $\PE$).
+Particularly, we can force it to concenter the probability in $\qaccept$ or $\qreject$.
+
+\medskip
+
+Notice that this primitive with the one before, makes us able to always assume that the transformer uses all of its budget before halting.
+If that wasn't the case, we can extend the alphabet with two dummy versions of the decision tokens and force the transformer to print those tokens instead of the real ones\footnote{This is achieved giving the probability of each decision token to its dummy version.}.
+Then, we can force it to repeat the one it printed until the last position of the budget.
+At that point, we can force it to print the real decision token corresponding to the one it was repeating (if it already printed one) or force it to choose one.
+
+
+\subsection*{Copy one vector into another with $\ATTN$}
+
+\input{chapters/primitives/copy-vector.tex}
+
+\section{Normalization}
+
+\input{chapters/normalization.tex}
+
+
+\section{Boolean Operations}
+
+The main objective of this chapter was to prove that the $\CoTtndn$ classes are closed under boolean operations.
+
+Let's show that the complement of a language in $\CoTtndn$ is in $\CoTtndn$ and that the disjunction of two language of the same class, stays in the same class.
+
+\subsection*{Complement of a language}
+\input{chapters/boolean-op/deterministic-not.tex}
+
+\subsection*{Disjunction of two languages}
+\input{chapters/boolean-op/deterministic-or.tex}
+

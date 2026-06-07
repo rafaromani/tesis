@@ -1,0 +1,142 @@
+Although it looks that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
+Applying a linear transformation to a vector is not direct since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.
+A sharp reader maybe would think that this can be solved applying the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
+This does not hold in our model since the addition and multiplication in the finite representation of the numbers used is not commutative.
+For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
+After applying this process we will have corrupted all vectors except the one we are interested in.
+
+The strategy we will use is the following.
+For having a clearer notation, we will say that the vector to which we are applying the linear transformation is the $f$th and the matrix of the linear transformation is $M$.
+We will do use two consecutive $\ATTN$ layers where the $f$th vector will only attend to itself.
+We can achieve this making it ignore all the others vectors except itself, then its attention score to itself will be $1$.
+
+The first layer will compute the result of the transformation and store it in new coordinates added to the embedding to be used as memory.
+The second layer will move the result to the right place.
+
+For doing this we will need to extend the embedding dimension with enough coordinates to store the result of the transformation.
+Therefore, if we are working with a transformer of embedding dimension $d$ and want to do a linear transformation of an entire vector, we will need to extend the dimension by a factor of $2$.
+The first $d$ coordinates will be for the original vector and the second $d$ coordinates will be the ones using as memory.
+We will assume that the $d$ coordinates used as memory are set to $0$ by the layers previous to this mechanism.
+This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in the previous section.
+
+\[
+    h_f = \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
+    \xrightarrow{\text{first $\ATTN$ layer}}
+    h_f = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mx)_1 \\ \vdots \\ (Mx)_d \end{matrix} \right)
+    \xrightarrow{\text{second $\ATTN$ layer}}
+    h_f = \left( \begin{matrix} (Mx)_1 \\ \vdots \\ (Mx)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
+\]
+
+{\color{orange} this should be an epigraph:a graphic representation of the technique}
+
+Let's construct each of the $\ATTN$ layers.
+As said before, in both layers we will need for $h_f$ to only attend to itself.
+Therefore, we define $W_Q$ ans $W_K$ using the strategy of the previous section.
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%% START: ONLY ATTEND TO ITSELF %%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Let's define the parameters of the $\ATTN$ layers for $h_f$ only attending to itself. 
+% If we take as query and key matrix as
+
+% \begin{align*}
+%     & W_Q = W_K = \left(\begin{matrix}
+%                     0      &\hdots &0      &0          \\
+%                     \vdots &\ddots &\vdots &\vdots     \\
+%                     0      &\hdots &0      &0          \\
+%                     0      &\hdots &0      &\maxrep    \\
+%                   \end{matrix}\right)
+% \end{align*}
+
+% \noindent then the keys and values of the vectors are 
+
+% \begin{align*}
+%     W_Q h_i = q_i = W_K h_i = k_i &= \begin{cases}
+%                             (0, \dots, 0, \maxrep*1)     &\text{ if } i = f    \\
+%                             (0, \dots, 0, \maxrep*-1)    &\text{ if } i \neq f \\
+%                           \end{cases}
+%                        &= \begin{cases}
+%                             (0, \dots, 0, \maxrep)    &\text{ if } i = f    \\
+%                             (0, \dots, 0, \minrep)    &\text{ if } i \neq f \\
+%                           \end{cases}
+% \end{align*}
+
+% \noindent so the attention values for $h_f$ are $1$ for itself and 0 for the rest.
+
+% \begin{align*}
+%     s_f & = \softmax (&\langle q_f, k_1 \rangle,& &\ldots,& &\langle q_f, k_{f-1}\rangle,& &\langle q_f, k_f\rangle) &&\| (0,\ldots, 0) \\
+%         & = \softmax (&\maxrep * \minrep,&        &\ldots,& &\maxrep * \minrep,          & &\maxrep*\maxrep)         &&\| (0,\ldots, 0) \\
+%         & = \softmax (&          \minrep,&        &\ldots,& &          \minrep,          & &        \maxrep)         &&\| (0,\ldots, 0) \\
+%         & =           &                0,&        &\ldots,& &                0,          & &               1,        && 0,\ldots, 0 \\
+% \end{align*}
+
+% \[
+% (s_f)_i = \begin{cases}
+%             1 &\text{ if } i = f    \\
+%             0 &\text{ if } i \neq f \\
+%           \end{cases}
+% \]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% END: ONLY ATTEND TO ITSELF %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% START: FIRST LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let's remember from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
+Let's analyze what $h'_f$ looks by now:
+
+\[
+h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V h_f)
+\]
+
+\noindent Then, defining $W_O$ and $W_V$ as follows
+
+\begin{align*}
+    W_V &= id
+    & 
+    W_O &= \left(\begin{matrix}
+                -id^{\Rdd}                 &0^{\Rdd}                   \\
+                M                          &0^{\Rdd}                   
+          \end{matrix}\right)
+\end{align*}
+
+\noindent makes us get $ h'_f = (-x_1, \dots, -x_d, (Mx)_1, \dots, (Mx)_d, 1 )$, which added to $h_f$ gives us what we were looking for after the first layer.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% END: FIRST LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% START: SECOND LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For the second $\ATTN$ layer, we can use the same mechanism for making $h_f$ only attend to itself.
+And defining $W_V$ and $W_O$ as follows
+
+\begin{align*}
+    W_V &= id
+    & 
+    W_O &= \left(\begin{matrix}
+                0^{\Rdd}                   &id^{\Rdd}                  \\
+                0^{\Rdd}                   &-id^{\Rdd}                 \\
+          \end{matrix}\right)
+\end{align*}
+
+\noindent we get $ h'_f = ((Mx)_1, \dots, -(Mx)_d, -(Mx)_1, \dots, -(Mx)_d)$, which added to $h_f$ gives us what we were looking for after the second layer.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% END: SECOND LAYER %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

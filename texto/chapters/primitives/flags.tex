@@ -1,0 +1,41 @@
+We will see later on that we will want to be able to identify when a certain token appeared in the tape.
+Also, we would like to know when a certain position is reached or if a certain vector corresponds to a specific position.
+This last task is not naturally done because of the extreme parallelism in the model.
+
+For flagging a token we use the token embedding, and in the same way, for flagging a position we use the position encoding.
+Either way, the strategy is exactly the same.
+
+For each flag that we are looking to add, we will extend the dimension embedding by $1$.
+Notice that we can add a constant number of flags to a family of transformers, and it will remain in the same $\CoTtndn$ class.
+
+The idea for flagging is straight forward.
+We will have an extra coordinate that will work as the flag.
+This coordinate will have two possible values, to be defined.
+It will have the $\ON$ value $f_{\ON}$ if the vector is flagged and the $\OFF$ value $f_{\OFF}$, in the other case.
+
+For example, let's be $\TF$ a transformer and $\theta_{TE}$ its token embedding function.
+We will define a transformer $\TF'$ with the same behavior, but it will have flagged every vector that came from the token $\sigma_f$.
+
+To have less notation noise, we will add the flag in the last coordinate of the embedding, but this can be done in any position.
+
+Let's define each component of $\TF'$ based on the components of $\TF$.
+First, let's see the token embedding function.
+It will be the same except that in the new coordinate it will put a $f_{\ON}$ if the token that is consuming is the one to be flagged and $f_{\OFF}$ otherwise.
+
+\begin{equation*}
+    (\theta'_{TE}(\sigma))_j = \begin{cases}
+        (\theta_{TE}(\sigma))_j  & \text{ if } j \neq d+1 \\
+        f_{\ON}                  & \text{ if } j = d+1  \text{ and } \sigma = \sigma_f \\
+        f_{\OFF}                 & \text{ if } j = d+1  \text{ and } \sigma \neq \sigma_f
+    \end{cases}
+\end{equation*}
+
+
+For the position encoding is enough to always put a $0$ in the new coordinate.
+Then is only necessary to extend the matrix of the other layers to the new dimension.
+This can be done with a new row or column with zeros.
+The behavior of $\TF'$ will be the same as $\TF$.
+
+\medskip
+
+If we are looking to add more coordinates to the embedding, it can be done adding a flag that has the same value for $f_{\ON}$ and $f_{\OFF}$.

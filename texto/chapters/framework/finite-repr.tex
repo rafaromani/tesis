@@ -1,0 +1,57 @@
+{\color{orange} I'm missing good symbols for $\maxrep$ y $\minrep$.}
+
+In practice, training and inference of transformers are typically done with 16- or 32-bit floating point numbers and there is active work in reducing that number.
+That's why in this thesis we follow the decision of \cite{toyota} to work on constant-precision transformers, where the output of each arithmetic operation is rounded to the closest  floating point number representable by a fixed number of digits following IEEE 754 standard.
+This analysis avoids the unrealistic infinite precision assumption made by prior works \cite{perez2019turing}.
+The definitions stated in the section are inherited from \cite{toyota}.
+
+Below we give a formal definition of the floating-point number and rounding operation. 
+We use $\phi(a) = \sum_{i=1}^k 2^{k-i}a_i$ to denote the value of binary number represented by $a\in \{0,1\}^k$ for any $k\in\mathbb{N}^+$.
+
+\begin{definition}[Floating-point Representation]
+Let $e$ be the number of bits for exponents and $s$ be the number of bits for significand. 
+A $(e+2s+1)$-bit binary string $a = (a_1, a_2, \ldots a_{e+2s+1})\in \{0,1\}^{e+2s+1}$ is a floating-point binary representation of number $\phi_{e,s}(a)\triangleq \sign(a)\cdot 2^{\exponent(a)} \cdot \significand(a)$ with $e$-bit exponent and $2s$-precision, where the sign is $\sign(a)\triangleq 2a_1-1$, the significand is $\significand(a)\triangleq 2^{-s}\phi(a_{2:2s+1})$, and the exponent is $\exponent(a)\triangleq \phi(a_{2s+2:2s+e+1})-2^{\max(0,e-1)}$.
+We define the set of numbers expressible with $e$ bits of exponent and $s$ bits of significand as $\Floating$.
+We define $\maxrep_{e,s}$ as the maximum number in $\Floating$.
+Similarly, we define $\minrep_{e,s}$ as the minimum.
+Since in this work we only analyze constant precision transformers, we will omit the subscripts of $\maxrep$ and $\minrep$.
+\end{definition}
+
+
+\begin{definition}[Correct Rounding]\label{defi:rounding} 
+For any $x\in \mathbb{R}$, we define correct rounding $\round(x, \Floating)$ as the closest number to $x$ in $\Floating$. We break the tie by picking the one with a smaller absolute value. 
+In particular, we denote the rounding operation with $e$-bit exponent, $2s$-bit precision by $\round_{e,s}(\cdot)\triangleq \round(\cdot,\Floating)$, which is also denoted by $\rdes{\cdot}$ for convenience. We extend the definition of $\round$ and $\round_{e,s}$ to vector inputs by rounding coordinate-wisely. 
+\end{definition} 
+
+
+Our notion of floating-point number simplifies the IEEE 754 Standard for Floating-point Arithmetic \cite{ieee754_2008} by removing $\infty$ and $-\infty$. When overflow happens, we always round the output to $\maxrep$, and when underflow happens to $\minrep$. For unary functions like $\exp(\cdot)$ and binary functions including addition, subtraction, multiplication, and division, we simply define their rounded version by rounding their outputs. Whenever division by $0$ happens, we define the output as $0$.\footnote{Notice that the only division is in the $\softmax$. If it's the one in the attention mechanism, it's reasonable to give an attention score of $0$ to every vector. If it's the one in the output layer it means that all symbols have an extremely small probability, therefore is reasonable to assign the same probability to all of them.}
+
+
+Next, we define finite-precision summation over more two numbers by decomposing it as a chain of rounded binary addition in a fixed order. \footnote{Technically speaking, instead of a chain, the summation could also proceed like a tree.}
+
+\begin{definition}[Summation with Iterative Rounding] For any $s,n\in\mathbb{N}^+$ and vector $x \in \mathbb{R}^n$, we define summation with iterative rounding to $e$ bit exponent and $2s$-bit precision as $\mathsf{sum}_{e,s}:\cup_{n\in\mathbb{N}^+}(\Floating)^n\to \Floating$\ , where for any $n\in\mathbb{N}^+$ and $x\in\mathbb{R}^n$, $$\mathsf{sum}_{e,s}(x)\triangleq \rdes{\rdes{\rdes{\rdes{x_1+x_2}+x_3}+\cdots x_{n-1}}+x_n}.$$
+
+We further define the following operations:
+\begin{itemize}
+	\item Finite-precision inner product: $\inner{x}{y}_{e,s}\triangleq \mathsf{sum}_{e,s}(x\odot y)$;
+	\item Finite-precision matrix product: $(A\times_{e,s} B)_{i,j} \triangleq \inner{(A_{i,:})^\top}{B_{:,j}}_{e,s}$\ ;
+	\item Finite-precision softmax: $\softmax_{e,s}(x)\triangleq \rdes{\rdes{\exp(x)}/\mathsf{sum}_{e,s}(\rdes{\exp(x)})}$\ .
+\end{itemize}
+\end{definition}
+
+
+From the saturation and the iterative rounding presented by \cite{toyota}, some properties appear that are important to remark:
+\begin{itemize}
+        \item $exp(\minrep) = 0$
+        \item $exp(\maxrep) = \maxrep$
+        \item $\minrep \cdot \maxrep = \minrep$
+        \item $\maxrep \cdot \maxrep = \maxrep$
+        \item $\forall x \in \Floating$ it holds that $x+0 = x$ 
+        \item $\forall x \in \Floating$ it holds that $x-x = 0$ 
+        \item $\forall x \in \Floating$ it holds that $x + \maxrep + \maxrep + \minrep =  0$  
+\end{itemize}
+
+
+
+
+

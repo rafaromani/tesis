@@ -1,0 +1,113 @@
+We will see later on that we will need to be able to take the maximum of a set of coordinates.
+The operation we are looking to do is the following:
+
+\begin{equation*}
+    \left( \begin{matrix} a \\ b \\ \end{matrix} \right)
+    \rightarrow 
+    \begin{cases}
+        \left( \begin{matrix} a \\ 0 \\ \end{matrix} \right) & \text{ if } a > b \\
+        \\
+        \left( \begin{matrix} 0 \\ b \\ \end{matrix} \right) & \text{ if } b > a 
+    \end{cases}
+\end{equation*}
+
+We will define it for taking the maximum between only two coordinates, but it can be extended to a larger set repeating the operation as a tournament.
+
+This operation can be done with the following primitives:
+
+\begin{align*}
+    & \left( \begin{matrix} a \\ b \\ 0 \\ 0 \\ \vdots \\ \end{matrix} \right) 
+    \xrightarrow{\FF \text{ layer}}
+    \left( \begin{matrix} a \\ b \\ \relu(a-b) \\ \relu(b-a) \\ \vdots \\ \end{matrix} \right) 
+    \xrightarrow[\text{the coordinates with the }\relu]{\text{Multiply twice by } \maxrep}
+    \left( \begin{matrix} a \\ b \\ \maxrep \cdot \mathbb{I}(a>b) \\ \maxrep \cdot \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right) \longrightarrow 
+    \\
+    & \xrightarrow[\text{\shortstack{coordinates with \\ the comparison}}]{\text{Divide by $\maxrep$ the}}
+    \left( \begin{matrix} a \\ b \\ \mathbb{I}(a>b) \\ \mathbb{I}(b>a) \\ \vdots \\ \end{matrix} \right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left( \begin{matrix} a \cdot \mathbb{I}(a>b) \\ b \cdot \mathbb{I}(b>a) \\ 0 \\ 0 \\ \vdots \\ \end{matrix} \right)
+    = \begin{cases}
+        \left( \begin{matrix} a \\ 0 \\ \vdots \\ \end{matrix} \right) & \text{ if } a > b \\
+        \\
+        \left( \begin{matrix} 0 \\ b \\ \vdots \\ \end{matrix} \right) & \text{ if } b > a 
+    \end{cases}
+\end{align*}
+
+
+\subsubsection*{Implementation of the special operation}
+
+The operation we are looking for to do it's not a linear transformation, therefore we need to  define a new technique.
+Remember that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ is a $1$ and the other is a $0$.
+Notice that $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
+
+
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a \cdot \mathbb{I}_a \\ b \cdot \mathbb{I}_b\\ 0 \\ 0
+    \end{matrix}\right)
+\end{equation*}
+
+This operation can be performed with three layers of $\FF$. 
+What we will do is the following:
+
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b 
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a            &+& \maxrep \cdot \mathbb{I}_b &+& \maxrep \cdot \mathbb{I}_b &+& \minrep \cdot \mathbb{I}_b \\
+        b            &+& \maxrep \cdot \mathbb{I}_a &+& \maxrep \cdot \mathbb{I}_a &+& \minrep \cdot \mathbb{I}_a \\ 
+        \mathbb{I}_a &+& 0                          &+& 0                          &+& -\mathbb{I}_a\\
+        \mathbb{I}_b &+& 0                          &+& 0                          &+& -\mathbb{I}_b\\
+    \end{matrix}\right)    
+\end{equation*}
+
+
+If $\mathbb{I}_a = 1$, then $\mathbb{I}_b = 0$, so the first coordinate isn't modified and the second is changed to $0$ because of the finite representation properties.
+In the same way, if $\mathbb{I}_a = 0$, then $\mathbb{I}_b = 1$, so the second coordinate isn't modified and the first is changed to $0$.
+
+As mentioned before, this operation is performed with three $\FF$ layers.
+The first two will be:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0  & 0  & 0        & \maxrep   \\
+        0  & 0  & \maxrep  & 0         \\
+        0  & 0  & 0        & 0         \\
+        0  & 0  & 0        & 0         \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+        0
+    \end{matrix}\right) 
+\end{align*}
+
+\noindent Notice that the output of this $\FF$ layer when inputted with $(a, b, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
+
+The third $\FF$ layer will be:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0  & 0  & 0        & \minrep   \\
+        0  & 0  & \minrep  & 0         \\
+        0  & 0  & -1       & 0         \\
+        0  & 0  & 0        & -1        \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+        0
+    \end{matrix}\right) 
+\end{align*}
+
+\noindent which inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, it will output $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
