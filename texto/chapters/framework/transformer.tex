@@ -25,7 +25,7 @@ During this work we will analyze and compare two different options for token sel
 In most of the literature, the transformers operate over an infinite tape.
 This is far from the real models, thus the transformers studied in this thesis work over a finite tape.
 The size of the tape is defined, for each input size $n$, as $\budget(n) + n$.
-It's important to remark that the size of the tape bounds the number of steps of $\CoT$ that the transformer makes.
+It is important to remark that the size of the tape bounds the number of steps of $\CoT$ that the transformer makes.
 For an input word of length $n$, no computation can take more than $\budget(n)$ steps because every step write a token in the tape.\santi{los pasos son del cómputo, nodel transformer. Revisar en todo el texto}
 \bigsanti{mejorar esta última oración, no se entiende}
 \bigrafa{ahí va mejor?}
@@ -71,7 +71,7 @@ Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 As stated before, the \textbf{distribution generation} is a mapping of the content of the tape to a probability distribution over $\Sigma$.
 There are different algorithms for this process in the literature.
 All the transformers considered in this work use the one presented by \cite{toyota}. 
-This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$), and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
+This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$) and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
@@ -80,44 +80,43 @@ The dimension is dependent on the size of the input word.
 We call $d(n)$ to the \textbf{embedding size} when the input word has size $n$.
 
 %Each part
-\textbf{Token Embedding:} It's a mapping from $\Sigma$ to vectors in $\Rd$. 
+\textbf{Token Embedding:} It is a mapping from $\Sigma$ to vectors in $\Rd$. 
 This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. 
 For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to the mapping of token $\sigma$.
 
-\textbf{Position Encoding:} It's a mapping from the positions of the tape to vectors in $\Rd$.
+\textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. 
 For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
-\textbf{Self Attention Layer: } It's a mapping from $(\Rd)^a$ to $(\Rd)^a$. \santi{¿qué es $a$?}\rafa{es la cantidad de elementos que hay en la cinta en ese paso. Hay un vector por cada elemento. Cada paso de $\ATTN$ consume todos los vectores y devuelve la misma cantidad de vectores. En el algoritmo aparece $a$. No se me ocurrió otra forma para notarlo.}
+\textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$. \santi{¿qué es $a$?}\rafa{es la cantidad de elementos que hay en la cinta en ese paso. Hay un vector por cada elemento. Cada paso de $\ATTN$ consume todos los vectores y devuelve la misma cantidad de vectores. En el algoritmo aparece $a$. No se me ocurrió otra forma para notarlo.}
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
 This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers\cite{cookbook}.
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
 \begin{algorithmic}[1]
-\Require  Parameter $\theta_\ATTN = (W_Q,W_K,W_V,W_O)$, Input embedding $h= (h_1,\ldots, h_a)\in\Rd \times \dots \times \Rd$.
-\Ensure Output embedding $h'= (h'_1,\ldots, h'_a) := \ATTN_{\theta_\ATTN}(h_1,\ldots, h_a)$.
+\Input Parameter $\theta_\ATTN = (W_Q,W_K,W_V,W_O)$ and embedding $h= (h_1,\ldots, h_a)\in\Rd \times \dots \times \Rd$.
+\Output Embedding $h'= (h'_1,\ldots, h'_a) := \ATTN_{\theta_\ATTN}(h_1,\ldots, h_a)$.
 \State $q_i := W_Q  h_i, \; k_i := W_K h_i, \; v_i := W_V h_i, \; \forall i\in[1, \dots, a]$
 \State $s_i := \softmax (\langle q_i, k_1 \rangle, \ldots, \langle q_i, k_i\rangle) \| (0,\ldots, 0) $
 \State $h'_i := W_O \sum_{j=1}^a (s_i)_j v_j$
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Feed Forward Network: } It's a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+\textbf{Feed Forward Network: } It is a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
 \bigsanti{Too many it's it's... Cambié algunos. Mejorar}
 
-\textbf{Output Layer: } It's a mapping from $\Rd$ to a probability distribution over $\Sigma$.
+\textbf{Output Layer: } It is a mapping from $\Rd$ to a probability distribution over $\Sigma$.
 Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, we define it as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
 
 
 All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.
 
-\santi{sería mejor llamarlos "input" y "output"?}\rafa{a qué te referís?}
 \begin{algorithm}
 \caption{Distribution generator}\label{alg:def_p_gen}
 \begin{algorithmic}[1]
-\Require   Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^*$.
-\Ensure Output distribution $p_\theta(\cdot | \alpha)$.
+\Input Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^*$.
+\Output distribution $p_\theta(\cdot | \alpha)$.
 \State $h^{(0)}_i \gets \theta_\TE(\alpha_i) + \theta_\PE(i), \; \forall 1 \leq i \leq |\alpha|$
 \For{$l = 0,\ldots,L-1$}
 \State	$( h^{(l+0.5)}_1,\ldots, h^{(l+0.5)}_{|\alpha|}) \gets (h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) +\ATTN_{\theta^{(l)}_\ATTN}(h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) $

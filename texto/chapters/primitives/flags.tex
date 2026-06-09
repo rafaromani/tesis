@@ -1,44 +1,52 @@
-We will see later on that we will want to be able to identify when a certain token appeared in the tape.
-Also, we would like to know when a certain position is reached or if a certain vector corresponds to a specific position.
-This last task is not naturally done because of the extreme parallelism in the model.
+For complex operations inside the loop of the transformer we will need to identify when a vector comes from a certain token or position.
+In this section we present how to mark the vectors with flags during the embedding.
 
-\bigsanti{Comentario general: expliar todo en futuro suena un poco raro. Yo prefiero el presente.}
+\bigskip
+
 
 For flagging a token we use the token embedding, and in the same way, for flagging a position we use the position encoding.
 Either way, the strategy is exactly the same.
+The embedding dimension is extended to allocate the flags.
+A new coordinate is added per flag.
+Therefore, using a constant number of flags only adds a constant to the embedding dimension.
+Thus, if the flagging is made in a family of transformers its $\CoTtndn$ class does not change.
 
-For each flag that we are looking to add \bigsanti{add? Explicar mejor, sobre todo porque más adelante se usa el la idea de flaguear pero no hay una explicación clara. UN ejemplo sería muy útil.}, we will extend the dimension embedding by $1$.
-Notice that we can add a constant number of flags to a family of transformers, and it will remain in the same $\CoTtndn$ class.
+For example, let $v_\sigma$ and $v_\tau$ be vectors of a transformer $\TF$ where $v_\sigma$ comes from embedding the token $\sigma$ and $v_\tau$ from the token $\tau$ (with $\sigma \neq \tau$).
+We can define a transformer $\TF'$ that behaves like $\TF$ but recognize when a vector comes from embedding the token $\sigma$.
+$\TF'$ have embedding dimension $d' = d + 1$ where $d$ is the embedding of $\TF$.
 
-The idea for flagging is straightforward.
-We will have an extra coordinate that will work as the flag.
-This coordinate will have two possible values, to be defined.
-It will have the $\ON$ value $f_{\ON}$ if the vector is flagged and the $\OFF$ value $f_{\OFF}$, in the other case.
+\begin{figure*}[h]
+    \begin{align*}
+        & v_\sigma = \left(\begin{matrix} x \\ y \\ z \\ \end{matrix}\right) \to v'_\sigma = \left(\begin{matrix} x \\ y \\ z \\ f_{\ON} \end{matrix}\right)
+        & v_\tau   = \left(\begin{matrix} i \\ j \\ k \\ \end{matrix}\right) \to v'_\tau   = \left(\begin{matrix} i \\ j \\ k \\ f_{\OFF} \end{matrix}\right)
+    \end{align*}
+    \caption{Change in a flagged and unflagged vector}
+\end{figure*}
+    
 
-For example, let's be $\TF$ \santi{ojo gramática. Dejo de corregir. Después pasale un corrector} a transformer and $\theta_{TE}$ its token embedding function.
-We will define a transformer $\TF'$ with the same behavior, but it will have flagged every vector that came from the token $\sigma_f$.
-\bigsanti{"but it will have flagged every vector that came from the token $\sigma_f$." no se entiende qué es "flagged". Relacionado con mi comentario anterior, explicar mejor qué es flaggear.}
-
-To have less notation noise, we will add the flag in the last coordinate of the embedding, but this can be done in any position.
-
-Let's define each component of $\TF'$ based on the components of $\TF$.
-First, let's see the token embedding function.
-It will be the same except that in the new coordinate it will put a $f_{\ON}$ if the token that is consuming is the one to be flagged and $f_{\OFF}$ otherwise.
+Formally, for flagging the token $\sigma$ we define the token embedding function of $\TF' : \Sigma \to \mathbb{R}^{d+1}$ as 
 
 \begin{equation*}
-    (\theta'_{TE}(\sigma))_j = \begin{cases}
-        (\theta_{TE}(\sigma))_j  & \text{ if } j \neq d+1 \\
-        f_{\ON}                  & \text{ if } j = d+1  \text{ and } \sigma = \sigma_f \\
-        f_{\OFF}                 & \text{ if } j = d+1  \text{ and } \sigma \neq \sigma_f
+    (\theta'_{TE}(\tau))_j = \begin{cases}
+        (\theta_{TE}(\tau))_j  & \text{ if } j \neq d+1 \\
+        f_{\ON}                & \text{ if } j = d+1  \text{ and } \tau = \sigma \\
+        f_{\OFF}               & \text{ if } j = d+1  \text{ and } \tau \neq \sigma
     \end{cases}
 \end{equation*}
 
+\noindent where $f_{\ON}$ is the value that marks the vector as flagged and $f_{\OFF}$ as unflagged.
+Those values can be defined arbitrary for each flag. \rafa{arbitrary no es la palabra que quiero me parece}
+In this case, the coordinate inserted for the flag is the last one, but it can be added anywhere.
 
-For the position encoding is enough to always put a $0$ in the new \santi{new es la $d+1$-esima?}coordinate.
-Then is only necessary to extend the matrix of the other layers to the new dimension.
-This can be done with a new row or column with zeros.
-The behavior of $\TF'$ will be the same as $\TF$.
+The other components of $\TF'$ ignore $d+1$ the coordinate.
+The position encoding of $\TF'$ its equal to the position encoding of $\TF$, except it puts a $0$ in the $d+1$ coordinate (not present in $\TF$) independently of the position.
+The matrix of the $\ATTN$, $\FF$ and $\OUTPUT$ layers of $\TF'$ are the ones of $\TF$ extended with $0$ in the $d+1$ rows and columns to match the change in embedding dimension.
 
-\medskip
+$\TF'$ behaves exactly as $\TF$ except it has one more coordinate in the embedding.
+Said coordinate represent the flag and in every vector has only values $v_{\ON}$ or $v_{\OFF}$.
 
-If we are looking to add more coordinates to the embedding, it can be done adding a flag that has the same value for $f_{\ON}$ and $f_{\OFF}$.\santi{no etendí esto}
+
+\bigskip
+
+This primitive works also as a mechanism to extend the embedding dimension without changing the behavior.
+If $v_{\ON}$ and $v_{\OFF}$ are defined as $0$, the resulting transformer is the same as the initial with an extra coordinate that it is always $0$.
