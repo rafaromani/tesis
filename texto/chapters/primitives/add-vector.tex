@@ -1,12 +1,15 @@
-Let's define a mechanism for adding one specific vector to a flagged one.
+In this section we develop a mechanism for adding a fixed vector to a previously flagged one.
 This technique works even when there are more than one flagged vector.
 
-The flag used for the vectors should have $f_{\ON} = 1$ and $f_{\OFF} = 0$.
-We will assume the flag is in the last coordinate.
+\medskip
 
-Let's call $v$ the vector that we want to add. 
-We will do it with one $\FF$ layer. 
-We will construct a layer such that $FF(h) = \mathbb{I}(h \text{ is flagged})\cdot v$.
+Assume there is a flag with values $f_{\ON} = 1$ and $f_{\OFF} = 0$.
+For clarity, suppose the flag is in the last coordinate.
+Let $v$ be the vector we want to add.
+We define a mechanism that for all $h$ such that $h_d = f_{\ON}$, it replaces them with $h + v$.
+
+The operation is performed with only one $\FF$ layer.
+We construct a layer such that $FF(h) = \mathbb{I}(h_d = f_{\ON})\cdot v$.
 
 \begin{align*}
     & W_1 = id
@@ -21,33 +24,61 @@ We will construct a layer such that $FF(h) = \mathbb{I}(h \text{ is flagged})\cd
         0      \\
     \end{matrix}\right) 
 \end{align*}
-\santi{me perdí. ¿Qué son $b_1, b_2$?}
 
 Notice that if the coordinate for the flag had been the $k$th instead of the last one, then $v$ would have appeared in the $k$th column of $W_2$ instead of the last.
 
 \medskip
 
-An interesting use of this technique is that allow us to transform any vector in whatever we want, i.e. we can apply constant functions.
-This is done exploiting the finite representation system.
+This technique is that it can be used to apply a constant function to the flagged vectors.
+This is achieved exploiting the finite representation system.
 We can saturate the vector to the $\maxrep$ and then make it $0$ to finally add our objective.
-\santi{explicar mejor. Poner ejemplos. La fórmula que sigue parece colgada.}
+This holds since for all $x, c \in \Floating$ it happens that $x + \maxrep + \maxrep + \minrep + c = c$.
+Because as mentioned in section \ref{repr}, $x + \maxrep + \maxrep = \maxrep$ and $\maxrep + \minrep = 0$.
 
-\[
-    h \leftarrow \left(\left(\left( h + 
+The constant function $f(h) = v$ is performed adding four vectors such that performs this trick.
+First, it is necessary to add twice the vector with only $\maxrep$, then add a vector with only $\minrep$ and finally add v.
+As is visually presented in equation \ref{fig-const-fun}.
+
+\begin{figure}[h]\label{fig-const-fun}
+    \[
+h \leftarrow  h + 
     \left(\begin{matrix}
     \infty \\
     \vdots \\
     \infty \\
-\end{matrix}\right)\right)
+\end{matrix}\right)
     + \left(\begin{matrix}
     \infty \\
     \vdots \\
     \infty \\
-\end{matrix}\right)\right)
+\end{matrix}\right)
     + \left(\begin{matrix}
     -\infty \\
     \vdots \\
     -\infty \\
-\end{matrix}\right)\right)
+\end{matrix}\right)
     + v
-\]
+    \]
+\caption{Constant function}
+\end{figure}
+
+
+% \[
+%     h \leftarrow \left(\left(\left( h + 
+%     \left(\begin{matrix}
+%     \infty \\
+%     \vdots \\
+%     \infty \\
+% \end{matrix}\right)\right)
+%     + \left(\begin{matrix}
+%     \infty \\
+%     \vdots \\
+%     \infty \\
+% \end{matrix}\right)\right)
+%     + \left(\begin{matrix}
+%     -\infty \\
+%     \vdots \\
+%     -\infty \\
+% \end{matrix}\right)\right)
+%     + v
+% \]
