@@ -13,35 +13,35 @@ We define the notion of normalized transformer and prove that $\CoTtndn$ classes
 
 \bigsanti{En esta sección se presentan las primitivas que se van a usar a lo largo de la tesis. Estas primitivas son operaciones que pueden ser implementadas por un transformer con ciertas características.... bla bla. Motivar y explicar por qué se necesita esta sección. Mencionar cuáles van a ser las primitivas y decir que la explicación de cada una de ellas se encuentra en las subsecciones correspondientes.}
 
-\subsection*{Flagging Tokens and Positions}
+\subsection{Flagging Tokens and Positions}
 
 \input{chapters/primitives/flags}
 
-\subsection*{Preserve and ignore coordinates through ATTN and FF}
+\subsection{Preserve and ignore coordinates through ATTN and FF}
 
 \input{chapters/primitives/preserve_coordinates.tex}
 
-\subsection*{Add vector and constant functions}
+\subsection{Add vector and constant functions}\label{const-fun}
 
 \input{chapters/primitives/add-vector.tex}
 
-\subsection*{Make a vector ignore others in an $\ATTN$ layer}
+\subsection{Make a vector ignore others in an $\ATTN$ layer}\label{ignore-vecs}
 
 \input{chapters/primitives/ignore-vectors-attn.tex}
 
-\subsection*{Linear transformations}
+\subsection{Linear transformations}
 
 \input{chapters/primitives/linear-transf}
 
-\subsection*{Max coordinate}
+\subsection{Max coordinate}
 
 \input{chapters/primitives/max-coord.tex}
 
-\subsection*{Repeat a token once it's printed}
+\subsection{Repeat a token once it's printed}
 
 \input{chapters/primitives/repeat-token.tex}
 
-\subsection*{Force to halt after certain number of steps of $\CoT$}
+\subsection{Force to halt after certain number of steps of $\CoT$}
 
 With a similar strategy to the previous section, with the $\PE$ we can flag when a certain position is reached.
 Then, if the transformer is normalized, we can make the last vector what ever we want (since it will be the flagged by the $\PE$).
@@ -55,7 +55,7 @@ Then, we can force it to repeat the one it printed until the last position of th
 At that point, we can force it to print the real decision token corresponding to the one it was repeating (if it already printed one) or force it to choose one.
 \santi{no entendí esta explicación}
 
-\subsection*{Copy one vector into another with $\ATTN$}
+\subsection{Copy one vector into another with $\ATTN$}
 
 \input{chapters/primitives/copy-vector.tex}
 
@@ -70,9 +70,9 @@ The main objective of this chapter \santi{section. Además, usar prsente, no pas
 
 Let's show that the complement of a language in $\CoTtndn$ is in $\CoTtndn$ and that the disjunction of two language of the same class, stays in the same class.
 
-\subsection*{Complement of a language}
+\subsection{Complement of a language}
 \input{chapters/boolean-op/deterministic-not.tex}
 
-\subsection*{Disjunction of two languages}
+\subsection{Disjunction of two languages}
 \input{chapters/boolean-op/deterministic-or.tex}
 

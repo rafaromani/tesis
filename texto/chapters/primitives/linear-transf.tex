@@ -1,37 +1,36 @@
 Although it looks that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
 Applying a linear transformation to a vector is not direct since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.
-A sharp reader maybe would think that this can be solved applying the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
-This does not hold in our model since the addition and multiplication in the finite representation of the numbers used is not commutative.
+An intuitive idea would be to apply the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
+This does not hold in our model since the addition and multiplication is not commutative in $\Floating$.
 For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
-After applying this process we will have corrupted \santi{corrputed?}all vectors except the one we are interested in.
 
-The strategy we will use is the following.
-For having a clearer notation, we will say that the vector to which we are applying the linear transformation is the $f$th and the matrix of the linear transformation is $M$.
-We will do use two consecutive $\ATTN$ layers where the $f$th \santi{Podés no dar bola, pero $f$ no es un buen nombre para una coordenada. ¿Qué tal $i,j,k,r,s,u,v$?}vector will only attend to itself.
-We can achieve this making it ignore all the others vectors except itself, then its attention score to itself will be $1$.
+\bigskip
 
-The first layer will compute the result of the transformation and store it in new coordinates added to the embedding to be used as memory.
-The second layer will move the result to the right place.
+Let $f$ be the number of a vector. \rafa{uso f porque viene de flagged}
+We show a mechanism to replace it with the result of applying the linear transformation $M$ to it.
+We perform the operation with two consecutive $\ATTN$ layers where $h_f$ only attends to itself.
+Therefore, after these two layers $h_f$ will be replaced will have value $Mh_f$.
 
-For doing this we will need to extend the embedding dimension with enough coordinates to store the result of the transformation.
-Therefore, if we are working with a transformer of embedding dimension $d$ and want to do a linear transformation of an entire vector, we will need to extend the dimension by a factor of $2$.
-The first $d$ coordinates will be for the original vector and the second $d$ coordinates will be the ones using as memory.
-We will assume that the $d$ coordinates used as memory are set to $0$ by the layers previous to this mechanism.
-This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in the previous section.
+We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
+In the first $\ATTN$ layer, we compute the transformation saving its result in the coordinates $d+1$ to $2d$.
+Then, in the second layer we move the result to the right place.
 
 \[
-    h_f = \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
+    \widetilde{h_f} = \left( \begin{matrix} (h_f)_1    \\ \vdots \\ (h_f)_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
     \xrightarrow{\text{first $\ATTN$ layer}}
-    h_f = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mx)_1 \\ \vdots \\ (Mx)_d \end{matrix} \right)
+    \widetilde{h_f} = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \end{matrix} \right)
     \xrightarrow{\text{second $\ATTN$ layer}}
-    h_f = \left( \begin{matrix} (Mx)_1 \\ \vdots \\ (Mx)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
+    \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
 \]
 
-{\color{orange} this should be an epigraph:a graphic representation of the technique}
+We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers previous to this mechanism.
+This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in the section \ref{const-fun}.
 
-Let's construct each of the $\ATTN$ layers.
-As said before, in both layers we will need for $h_f$ to only attend to itself.
-Therefore, we define $W_Q$ ans $W_K$ using the strategy of the previous section.
+\medskip
+
+Let us construct each of the $\ATTN$ layers.
+As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
+Therefore, we define $W_Q$ ans $W_K$ using the strategy of the section \ref{ignore-vecs}.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,12 +90,14 @@ Therefore, we define $W_Q$ ans $W_K$ using the strategy of the previous section.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \santi{dividir claramente en primera y segunda layer. Podés usar itemize o paragrph.}
+\rafa{estoy de acuerdo, pero no estoy seguro cómo hacerlo}
 
-Let's remember from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
-Let's analyze what $h'_f$ looks by now:
+
+Recall from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
+By this point, $h'_f$ is looking like 
 
 \[
-h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V h_f)
+h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f})
 \]
 
 \noindent Then, defining $W_O$ and $W_V$ as follows
@@ -110,7 +111,7 @@ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V h_f)
           \end{matrix}\right)
 \end{align*}
 
-\noindent makes us get $ h'_f = (-x_1, \dots, -x_d, (Mx)_1, \dots, (Mx)_d, 1 )$, which added to $h_f$ gives us what we were looking for after the first layer.
+\noindent makes us get $ h'_f = (-(h_f)_1, \dots, -(h_f)_d, (Mh_f)_1, \dots, (Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the first layer.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,7 +124,7 @@ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V h_f)
 %%%%%%%%%%%% START: SECOND LAYER %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-For the second $\ATTN$ layer, we can use the same mechanism for making $h_f$ only attend to itself.
+For the second $\ATTN$ layer, we use the same mechanism for making $\widetilde{h_f}$ only attend to itself.
 And defining $W_V$ and $W_O$ as follows
 
 \begin{align*}
@@ -135,10 +136,15 @@ And defining $W_V$ and $W_O$ as follows
           \end{matrix}\right)
 \end{align*}
 
-\noindent we get $ h'_f = ((Mx)_1, \dots, -(Mx)_d, -(Mx)_1, \dots, -(Mx)_d)$, which added to $h_f$ gives us what we were looking for after the second layer.
+\noindent we get $ h'_f = ((Mh_f)_1, \dots, -(Mh_f)_d, -(Mh_f)_1, \dots, -(Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the second layer.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% END: SECOND LAYER %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bigskip
+
+Notice that after these two layers, the values of $h_i$ for all $i \neq f$ had been modified in ways not studied in this work.
+\bigrafa{no sé cómo decir esto. El comentario anterior de que habían sido corrupted hacía referencia a esto.}
 
