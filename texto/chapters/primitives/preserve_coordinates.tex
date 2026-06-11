@@ -1,6 +1,6 @@
 When defining new transformers over existing ones we will need to extend the embedding dimension to store new information.
 For preserving the behavior of the original transformers through the attention and feed forward layers, we need to build a mechanism that ignores the extra coordinates.
-
+For example, this mechanism is used for preserving flags during $\ATTN$ and $\FF$ layers that don't use them.
 
 Let $\TF$ be a transformer of embedding dimension $d$ and assume we are constructing a transformer $\TF'$ of embedding dimension $d' = d + 1$.
 Let $W_Q, W_K, W_V, W_O$ be the matrix of an $\ATTN$ layer of $\TF$ and assume we want to perform the same layer in $\TF'$ but simulating that the $i$th coordinate does not exist.
@@ -21,3 +21,7 @@ For extending it to a set of coordinates, it is  only needed to make more rows a
 
 The same applies in the feed forward layer, making the $i$th column and row of the matrix and vectors of the layer zero, makes it ignore the value of the $i$th coordinate. 
 Also in the result of the $\FF$ will appear a zero in the $i$th coordinate, thus also preserving the value.
+
+
+\bigcifu{diagrama?}
+\bigrafa{how? pongo las matrices? Siento que a veces queda muy cargado. Quizás ahora se entiende mejor?}

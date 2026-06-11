@@ -18,7 +18,7 @@ If we are modifying $\TF$ to construct $\TF'$ such that the $l$th vector ignores
 
 
 This can be achieved saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
-If the last two terms of the summation are $\minrep$, then $\langle q'_l, k'_i \rangle = \minrep$.
+If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
 Since we don't want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
 
 \medskip
