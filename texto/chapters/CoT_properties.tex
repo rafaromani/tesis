@@ -37,23 +37,13 @@ We define the notion of normalized transformer and prove that $\CoTtndn$ classes
 
 \input{chapters/primitives/max-coord.tex}
 
-\subsection{Repeat a token once it's printed}
+\subsection{Repeat a token once it's printed}\label{repeat-token}
 
 \input{chapters/primitives/repeat-token.tex}
 
 \subsection{Force to halt after certain number of steps of $\CoT$}
 
-With a similar strategy to the previous section, with the $\PE$ we can flag when a certain position is reached.
-Then, if the transformer is normalized, we can make the last vector what ever we want (since it will be the flagged by the $\PE$).
-Particularly, we can force it to concenter the probability in $\qaccept$ or $\qreject$.
-
-\medskip
-
-Notice that this primitive with the one before, makes us able to always assume that the transformer uses all of its budget before halting.
-If that wasn't the case, we can extend the alphabet with two dummy versions of the decision tokens and force the transformer to print those tokens instead of the real ones\footnote{This is achieved giving the probability of each decision token to its dummy version.}.
-Then, we can force it to repeat the one it printed until the last position of the budget.
-At that point, we can force it to print the real decision token corresponding to the one it was repeating (if it already printed one) or force it to choose one.
-\santi{no entendí esta explicación}
+\input{chapters/primitives/force-halt.tex}
 
 \subsection{Copy one vector into another with $\ATTN$}
 
