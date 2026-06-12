@@ -1,9 +1,25 @@
-We will see that a useful operation will be to move values from a vector $v_i$ to a vector $v_j$.
-This can only be done if $i < j$ since the attention mechanism does not allow for a vector to attend to other that is to the right, i.e, $v_k$ can attend to $v_l$ iff $k \leq l$.
+For the disjunction of transformers we will need to move values from the $i$th vector to the $j$th vector, in this section we show how to do it.
+This operation can only be done if $i < j$, since the attention mechanism only allows for a vector to attend to vectors to its left, i.e, $h_k$ can attend to $h_l$ if and only if $k \leq l$.
 
-We will copy values from $v_i$ to $v_j$ in two steps.
-First, we will make $0$ the coordinates of $v_j$ that will receive the values.
-Second, we will make $v_j$ only attend to $v_i$ in an attention layer.
-In said attention layer, we will have a $W_V = id$ and $W_O$ such that it outputs the desire coordinates of $v_i$ in the coordinates we want to copy them.
-For example if we were looking for copying the $k$th coordinate of $v_i$ to the $l$th coordinate of $v_j$, $W_O$ will have $0$ en every coordinate and $1$ in the row $l$, column $k$.
-Then the vector coming out of the $\ATTN$ layer will have $0$ in every coordinate, except in the $l$th, where it will be $(v_i)_k$.
+Let $j$ be the number of the receiving vector and $i$ the number of the copied, i.e., we copy from $h_i$ to $h_j$.
+The operation is done in two steps.
+
+First, we make $0$ the coordinates of $h_j$ that will receive the values.
+This is done with a constant function.
+
+Second, we make $h_j$ only attend to $h_i$ in an attention layer.
+In said attention layer, we use $W_V = id$ and $W_O$ such that it outputs the desire coordinates of $h_i$ in the coordinates we want to copy them.
+Formally, $W_O$ has only $0$ in the row $k$ if $h_j$ is not receiving anything from $h_i$ in the $k$th coordinate.
+If $h_j$ is receiving the coordinate $l$ of $h_i$ in the position $k$, then the $k$th row of $W_O$ has $0$ in every position except the $l$th.
+
+For example if we want to copy the $2$th coordinate of $h_i$ to the $3$th coordinate of $h_j$, $W_O$ would look like \ref{example-copy}.
+Then, the vector coming out of the $\ATTN$ layer will have $0$ in every coordinate, except in the $3$th, where it will be $(h_i)_2$.
+
+\begin{align}\label{example-copy}
+    W_O = \left(\begin{matrix}
+            0 & 0 & 0 \\
+            0 & 0 & 0 \\
+            0 & 1 & 0 \\
+        \end{matrix}\right)
+\end{align}
+

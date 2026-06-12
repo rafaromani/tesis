@@ -53,7 +53,7 @@ The autoregressive token generation is defined recursively.
 The token outputted after $i$ steps is $\TF^{i}(\alpha) := \TF^{i-1}(\alpha \TF(\alpha))$ with base case $\TF^1(\alpha) := \TF(\alpha)$.
 In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
 
-We note $\TF^*(\alpha)$ for the token written by the transformer when it halts, i.e. at the end of the computation, when the input is $\alpha$.
+We note $\TF^*(\alpha)$ for the token written by the transformer when it halts, i.e., at the end of the computation, when the input is $\alpha$.
 As said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
