@@ -1,13 +1,16 @@
-Let's $\gL \in \CoTtndn$, then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
-For each of the transformers in the family we can define one that behaves exactly the same (internally and externally) but prints the flipped token.
+Let $\gL \in \CoTtndn$, then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
+For each of the transformers in the family, we define one that behaves exactly the same (internally and externally) but prints the flipped token.
 
-Let's $\TF$ be a transformer, we will construct $\TF'$ that flips the decision token of $\TF$, i.e., if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
+\bigrafa{dibujito}
 
-This can be easily done swapping the rows associated to $\qaccept$ and $\qreject$ in the matrix of the $\OUTPUT$ layer of $\TF$.
+Let $\TF$ be a transformer, we construct $\TF'$ that flips the decision token of $\TF$, i.e., if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
+This is the only change made to $\TF$, thus $\TF'^i(\sigma) = \TF^i(\sigma)$ for every $i$ when $\sigma$ is not a decision symbol.
+
+This is done swapping the rows associated to $\qaccept$ and $\qreject$ in the matrix of the $\OUTPUT$ layer of $\TF$.
 Thus, when the largest probability is associated to $\qaccept$ in $\TF$, that same number will be associated to $\qreject$ in $\TF$.
 
-Formally, $\TF'$ will be exactly the same as $\TF$ except in the $\OUTPUT$ layer, where the matrix will be different.
-If $M$ is the matrix of the $\OUTPUT$ layer of $\TF$, $i$ is the position of the token $\qaccept$ and $j$ the one of $\qreject$, then the matrix of the $\OUTPUT$ layer of $\TF$ will be $M' = PM$ where $P$ is the matrix that flips the rows $i$ and $j$.
+Formally, $\TF'$ is defined exactly the same as $\TF$ except in the $\OUTPUT$ layer, where the matrix is different.
+Let $M$ be the matrix of the $\OUTPUT$ layer of $\TF$, let $i$ be the position of the token $\qaccept$ and $j$ the one of $\qreject$, then the matrix of the $\OUTPUT$ layer of $\TF$ will be $M' = PM$ where $P$ is the matrix that flips the rows $i$ and $j$.
 
 \[
     M'_{kl} = \begin{cases}
@@ -18,8 +21,10 @@ If $M$ is the matrix of the $\OUTPUT$ layer of $\TF$, $i$ is the position of the
     \end{cases}
 \]
 
-$\TF'$ has the same budget and embedding size that $\TF$. 
+Since the $\OUTPUT$ matrix is the only difference between $\TF$ and $\TF'$, they have the same budget and embedding size that $\TF$, then they are in the same class.
 
-We can define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ where $\TF'_i$ is the negation of $\TF_i$.
+\medskip
+
+We can define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ where $\TF'_i$ is the negation of $\TF_i$ constructed as explained in this section.
 Then $\{\TF'_n\}_{n \in \mathbb{N}}$ computes the complement of $\{\TF_n\}_{n \in \mathbb{N}}$.
 Since for every $i \in \mathbb{N}$, $\TF'_i$ has the same budget and embedding size that $\TF_i$, $\bar{\gL}$ is in $\CoTtndn$.
