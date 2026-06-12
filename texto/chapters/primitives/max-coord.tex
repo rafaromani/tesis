@@ -1,19 +1,23 @@
-We will see later on that we will need to be able to take the maximum of a set of coordinates.\bigsanti{"we will see later on that we will need to be able to" es demasiado recargado. Podés decir "We show how to take the maximum of a set of coordinates, which will be useful for our constructions."}
-The operation we are looking to do is the following:
+\bigrafa{Si a = b mi construcción pone 0 en ambas. Esto lo uso para normalizar. En el paper original no dicen cómo resolver los empates del argmax. Puedo poner un footnote de que en ese caso la construction nuestra pone dos ceros pero no sé si es worth}
+
+We show how to take the maximum of a set of coordinates.
+This operation will be needed for later constructions.
+
+We give a construction for taking the maximum of two coordinates, but it can be extended to a larger set repeating the operation as a tournament.
 
 \begin{equation*}
-    \left( \begin{matrix} a \\ b \\ \end{matrix} \right)
+    \left( \begin{matrix} a \\ b \\ \vdots \\\end{matrix} \right)
     \rightarrow 
     \begin{cases}
-        \left( \begin{matrix} a \\ 0 \\ \end{matrix} \right) & \text{ if } a > b \\
+        \left( \begin{matrix} a \\ 0 \\ \vdots \end{matrix} \right) & \text{ if } a > b \\
         \\
-        \left( \begin{matrix} 0 \\ b \\ \end{matrix} \right) & \text{ if } b > a 
+        \left( \begin{matrix} 0 \\ b \\ \vdots \end{matrix} \right) & \text{ if } b > a 
     \end{cases}
 \end{equation*}
 
-We will define it for taking the maximum between only two coordinates, but it can be extended to a larger set repeating the operation as a tournament.
+\bigskip
 
-This operation can be done with the following primitives:
+The maximum of two coordinates can be computed with the following primitives:
 
 \begin{align*}
     & \left( \begin{matrix} a \\ b \\ 0 \\ 0 \\ \vdots \\ \end{matrix} \right) 
@@ -32,13 +36,13 @@ This operation can be done with the following primitives:
         \left( \begin{matrix} 0 \\ b \\ \vdots \\ \end{matrix} \right) & \text{ if } b > a 
     \end{cases}
 \end{align*}
-\bigsanti{Ok, pero esto no da exactamente lo que se buscaba, ¿no?}
+
 
 \subsubsection*{Implementation of the special operation}
 
-The operation we are looking for to do it's \santi{gramática. Pasar revisor. No marco nada de redacción o gramática}not a linear transformation, therefore we need to  define a new technique.
-Remember that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ is a $1$ and the other is a $0$.
-Notice that $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
+This operation is not a linear transformation, therefore we need to define a new technique.
+Notice that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ is a $1$ and the other is a $0$.
+Then, $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
 
 
 \begin{equation*}
@@ -51,8 +55,9 @@ Notice that $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}
     \end{matrix}\right)
 \end{equation*}
 
-This operation can be performed with three layers of $\FF$. 
-What we will do is the following:
+This operation is performed with three layers of $\FF$.
+Naturally, after each layer a new vector is added to the original.
+The vectors we add are the following:
 
 \begin{equation*}
     \left(\begin{matrix}
@@ -68,11 +73,13 @@ What we will do is the following:
 \end{equation*}
 
 
-If $\mathbb{I}_a = 1$, then $\mathbb{I}_b = 0$, so the first coordinate isn't modified and the second is changed to $0$ because of the finite representation properties.
+Note that if $\mathbb{I}_a = 1$, then $\mathbb{I}_b = 0$, so the first coordinate isn't modified and the second is changed to $0$ because of the finite representation properties.
 In the same way, if $\mathbb{I}_a = 0$, then $\mathbb{I}_b = 1$, so the second coordinate isn't modified and the first is changed to $0$.
 
-As mentioned before, this operation is performed with three $\FF$ layers.
-The first two will be:
+\medskip
+
+Let us show how to instantiate the $\FF$ layers.
+The first two have parameters:
 
 \begin{align*}
     & W_1 = id
@@ -89,10 +96,11 @@ The first two will be:
         0
     \end{matrix}\right) 
 \end{align*}
-\santi{¿qué eran $b_1$ y $b_2$? No es el mismo $b$ del $a,b$.}
-\noindent Notice that the output of this $\FF$ layer when inputted with $(a, b, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
 
-The third \santi{third?}$\FF$ layer will be:
+
+\noindent Notice that the output of these $\FF$ layer when inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
+
+The third $\FF$ layer has parameters:
 
 \begin{align*}
     & W_1 = id
@@ -111,3 +119,8 @@ The third \santi{third?}$\FF$ layer will be:
 \end{align*}
 
 \noindent which inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, it will output $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
+
+
+
+
+\bigrafa{intenté escribir cómo quedaban las $\FF$ instanciadas pero queda medio ilegible. No sé si vale la pena}
