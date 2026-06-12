@@ -9,7 +9,7 @@ For avoiding the representation error, we will extend the embedding dimension to
 Let $f$ be the number of a vector. \rafa{uso f porque viene de flagged}
 We show a mechanism to replace it with the result of applying the linear transformation $M$ to it.
 We perform the operation with two consecutive $\ATTN$ layers where $h_f$ only attends to itself.
-Therefore, after these two layers $h_f$ will be replaced will have value $Mh_f$.
+Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
 
 We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
 In the first $\ATTN$ layer, we compute the transformation saving its result in the coordinates $d+1$ to $2d$.

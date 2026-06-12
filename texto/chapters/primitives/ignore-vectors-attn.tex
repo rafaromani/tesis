@@ -3,20 +3,16 @@ A vector $h_i$ ignores vector $h_j$ when the attention score is $0$ which can be
 
 \bigskip
 
-We will extend the embedding dimension with three more coordinates so we can preserve the attention score of the other vectors (modulo $\softmax$). 
+We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors (modulo $\softmax$). 
 \bigrafa{no sé cómo decir esto sin dar muchas vueltas. Porque si ignoro un vector, naturalmente el attention score de los demás sube por la "normalización" que hace el softmax}
-If we are modifying $\TF$ to construct $\TF'$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer, we are looking for said layer to respect:
+We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer, we are looking for said layer to respect:
 \[
     \langle q_i', k_j' \rangle = \begin{cases}
         \minrep                  & \text{ if } i = l \land j \in M \\
         \langle q_i, k_j \rangle & \text{ if } i \neq l \lor j \notin M
     \end{cases}
-    \]
+\]
     
-
-
-
-
 This can be achieved saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
 If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
 Since we don't want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
