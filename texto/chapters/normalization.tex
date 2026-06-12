@@ -2,22 +2,30 @@ For an easier handling of transformers, we define a notion of normalized transfo
 This notion will specify properties of the $\OUTPUT$ matrix and of the vector consumed by this step.
 
 \begin{definition}[Normalized transformer]
-    We will say a transformer is normalized when it meets two conditions. First, the matrix of the $\OUTPUT$ has to be a projection, i.e., it's a diagonal matrix with only ones in its diagonal. Second, the last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$. The non projected coordinates are free to be any value.
+    We say a transformer is normalized when it meets two conditions. 
+    \begin{enumerate}
+        \item \projection : The matrix of the $\OUTPUT$ has to be a projection, i.e., it's a diagonal matrix with only ones in its diagonal.
+        \item \concentrated The last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$.
+        The non projected coordinates are free to be any value.
+    \end{enumerate}
 \end{definition}
-\bigsanti{veo que más adelante se habla de la "first condition" y la "second condition". Sería bueno numerarlas o darles in nombre para que sea más fácil referirse a ellas.}
+\bigrafa{to-do definir buenos nombres para las condiciones}
 
-The motivation for this definition is to simplify the $\OUTPUT$ layer (first constraint) and to have more control over the probability distribution generated (second constraint). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
+The motivation for this definition is to simplify the $\OUTPUT$ layer (\projection) and to have more control over the probability distribution generated (\concentrated). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
 
-\bigsanti{Decí que lo que sigue es la implementación de un algoritmo para normalizar cualquier transformer.}
+For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ computing the language $\gL$, there is a family ${\TF'_{n}}_{n \in \mathbb{N}}$ in the same class, computing the same language where for all $n$, $\TF'_n$ is normalized.
+In the next section we introduce an algorithm for normalizing transformers.
 
-\subsection*{Algorithm for normalizing} {\color{orange} not sure about title}
 
-Let's see how to normalize any transformer.
-Let's take a transformer and modify it to meet the first constraint.\santi{"first constraint" se puede cambiar por el número o nombre que le hayas dado a la primera condición en la definición. Lo mismo para la segunda.}
+\subsection*{Algorithm for normalizing}
+\bigrafa{no se como llamar a las subsubsections del algoritmo. Creo que es más claro separalas igual}
 
-\smallskip
+For normalizing transformers, first we make them meet \projection and then \concentrated.
 
-Every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed in two steps. \footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
+\subsubsection*{Algorithm for \projection}
+
+Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed in two steps. 
+\footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
 
 \[
     \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \end{matrix} \right) 
@@ -29,16 +37,18 @@ Every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Si
 
 \noindent where $v \in \mathbb{R}^{d-|\Sigma|}$ can have any values.
 
-Let's $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
-Using the decomposition just presented, and the strategy defined in the previous section for applying linear transformations \santi{acá podés ser más preciso, si ponés números a secciones}, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
-The linear transformation has to be applied to the last vector.
+Let $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
+Using the decomposition just presented, and the strategy defined in section \ref{lin-tranf} for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
+The linear transformation $M$ has to be applied to the last vector since it is the one going from the body of $\TF$ to the $\OUTPUT$ layer. 
 
 \medskip
 
-Let's now make it meet the second condition.
+\subsubsection*{Algorithm for \concentrated}
 
-Once $\TF$ has been modified to meet the first condition, we can use the maximum operation described in the previous section to make all the positions of the vector $0$ except the one that was the maximum before.
-Now, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ to every coordinate and multiplying by $\maxrep$ again gets us what we wanted.
+Let $\TF$ be a transformer satisfying \projection, we give an algorithm for making it also meet \concentrated.
+
+We use the maximum operation described in section \ref{maximum} to make all the positions of the last vector $0$ except the one that was the maximum before.
+Then, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ to every coordinate and multiplying by $\maxrep$ again makes $\TF$ meet \concentrated.
 
 \[
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ x_{max} \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
@@ -50,13 +60,15 @@ Now, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ 
     \left( \begin{matrix} \minrep \\ \vdots \\ \minrep \\ \maxrep \\ \minrep \\ \vdots \\ \minrep    \end{matrix} \right) 
 \]
 
-It could be the case that the maximum was negative, in that case the resulting vector won't be what we are looking for.
-Let's see how to make the maximum strictly positive so we can add this mechanism in the middle.
+It could be the case that the maximum was negative, in that case the resulting vector is not what we presented.
+We show a mechanism for making the maximum strictly positive so we can insert it in the algorithm before subtracting $1$.
 
-By this point our vector looks like $(0, \dots, 0, x_{max}, 0, \dots, 0)$, we are going to transform it to $(0, \dots, 0, |x_{max}|, 0, \dots, 0)$.
-Remember that the coordinates we are interested in are only the first $|\Sigma|$.
-Let's call $v$ to the block containing these coordinates.
-Our algorithm will do the following:
+\medskip
+
+At this point our vector looks like $(0, \dots, 0, x_{max}, 0, \dots, 0)$, we are going to transform it to $(0, \dots, 0, |x_{max}|, 0, \dots, 0)$.
+Recall that the coordinates we are interested in are only the first $|\Sigma|$.
+Let us call $v$ to the block containing these coordinates.
+Since $\relu(x) + \relu(-x) = |x|$ for all $x$, our algorithm does the following:
 
 \[
     \left(\begin{matrix}  v \\ \vdots \end{matrix}\right)
@@ -69,14 +81,16 @@ Our algorithm will do the following:
 \]
 
 \noindent where $\relu$ is applied position wise. 
-This works since for all $x$ it holds that $\relu(x) + \relu(-x) = |x|$.
 
-The first step can be done in the same way as the first half of the linear transformations.
-For the second step we can take max coordinate in $v$ and $-v$.
-This works because all the coordinates are $0$ except one, which if it is negative will become $0$ and if it is non-negative will remain the same.
-For adding both vectors we can use one $\FF$ with the following parameters.
+
+The first step is done in the same way as the first half of the linear transformations.
+For the second step, we take max coordinate (section \ref{maximum}) in $v$ and $-v$ independently.
+This works since all the coordinates of $v$ are $0$ except one thus there are only two scenarios.
+The non-zero coordinate of $v$ is positive, then it will be the maximum (so it won't be modified) and all the others will remain $0$;
+or the non-zero coordinate of $v$ is negative, then the maximum will be $0$ and all the coordinates will become $0$.
+Which ever happens in $v$, the other happens in $-v$.
+Then, for adding both vectors we can use one $\FF$ layer with the following parameters.
 Notice that this works since all the coordinates of $\relu(-v)$ are non-negative.
-
 
 \begin{align*}
     & W_1 = id^{d\times d}
@@ -88,3 +102,5 @@ Notice that this works since all the coordinates of $\relu(-v)$ are non-negative
         0^{d\times d}
     \end{matrix}\right) 
 \end{align*}
+
+\bigcifu{hacer step by step esta $\FF$}
