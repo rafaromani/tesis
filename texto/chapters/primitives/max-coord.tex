@@ -3,8 +3,10 @@
 We show how to take the maximum of a set of coordinates.
 This operation will be needed for later constructions.
 
-We give a construction for taking the maximum of two coordinates, but it can be extended to a larger set by repeating the operation as a tournament.
-\rafa{no es torneo, es solo probar todos los caso en las indicatrices}
+We give a construction for taking the maximum of two coordinates.
+This construction can be easily extended to more coordinates.
+The operation works properly when the set of coordinates has only one maximum.
+All the coordinates that are not the maximum are replaced by $0$.
 
 \begin{equation*}
     \left( \begin{matrix} a \\ b \\ \vdots \\\end{matrix} \right)
@@ -37,6 +39,8 @@ The maximum of two coordinates can be computed with the following primitives:
         \left( \begin{matrix} 0 \\ b \\ \vdots \\ \end{matrix} \right) & \text{ if } b > a 
     \end{cases}
 \end{align*}
+
+For computing the maximum of a set of coordinates it is only needed to compute a comparison for each pair of the set and multiply each coordinate $x$ by $\mathbb{I(x > y)}$ for all $y \neq x$ in the set.
 
 
 \subsubsection*{Implementation of the special operation}
