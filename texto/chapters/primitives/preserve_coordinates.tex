@@ -1,11 +1,13 @@
 When defining new transformers over existing ones we will need to extend the embedding dimension to store new information.
-For preserving the behavior of the original transformers through the attention and feed forward layers, we need to build a mechanism that ignores the extra coordinates.
+In order to preserve the behavior of the original transformers across the attention and feed-forward layers, we need to construct a mechanism that ignores the extra coordinates.
 For example, this mechanism is used for preserving flags during $\ATTN$ and $\FF$ layers that don't use them.
 
 Let $\TF$ be a transformer of embedding dimension $d$ and assume we are constructing a transformer $\TF'$ of embedding dimension $d' = d + 1$.
-Let $W_Q, W_K, W_V, W_O$ be the matrix of an $\ATTN$ layer of $\TF$ and assume we want to perform the same layer in $\TF'$ but simulating that the $i$th coordinate does not exist.
+Let $W_Q, W_K, W_V, W_O$ be the matrices of an $\ATTN$ layer of $\TF$ and assume we want to perform the same layer in $\TF'$ but simulating that the $i$th coordinate does not exist.
 Notice that the embedding dimension of $\TF'$ has one more coordinate than $\TF$'s.
-Defining the matrix of the layer $W_Q', W_K', W_V', W_O'$ as $W_Q, W_K, W_V, W_O$ but inserting a row and column of zeros in the $i$th positions gives the desired $\ATTN$ layer.
+If we define the matrices of the layer $W_Q', W_K', W_V', W_O'$ as $W_Q, W_K, W_V, W_O$ by inserting a row and column of zeros at the $i$th position, we obtain the desired $\ATTN$ layer.
+
+
 Note that because the $i$th row of $W_O'$ is zero, the output vectors of the $\ATTN$ layer are $0$ in the $i$th coordinate. 
 This is the point that makes it possible to not just ignore the value of the $i$th coordinate, but to not affect it.
 
@@ -15,13 +17,13 @@ This is the point that makes it possible to not just ignore the value of the $i$
 
 For preserving the coordinate but not ignore it, it is enough to have zeros in only its corresponding row of $W_O'$.
 This construction works for more than one coordinate.
-For extending it to a set of coordinates, it is  only needed to make more rows and columns $0$.
+To extend it to a set of coordinates, it suffices to set more rows and columns to $0$.
+
 
 \medskip
 
-The same applies in the feed forward layer, making the $i$th column and row of the matrix and vectors of the layer zero, makes it ignore the value of the $i$th coordinate. 
-Also in the result of the $\FF$ will appear a zero in the $i$th coordinate, thus also preserving the value.
-
+The same applies in the feed forward layer, making the $i$th column and row of the matrices and vectors of the layer zero, makes it ignore the value of the $i$th coordinate. 
+Furthermore, the result of the $\FF$ layer will have a zero in the $i$th coordinate, thus preserving its value.
 
 \bigcifu{diagrama?}
 \bigrafa{how? pongo las matrices? Siento que a veces queda muy cargado. Quizás ahora se entiende mejor?}

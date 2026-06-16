@@ -1,7 +1,7 @@
 {\color{orange} I'm missing good symbols for $\maxrep$ y $\minrep$.}
 
 In real models, the transformers typically work with 16- or 32-bit floating point numbers, and there is active work in reducing their size.
-That's why in this thesis we follow the decision of \cite{toyota} to work with constant-precision transformers, where the output of each arithmetic operation is rounded to the closest floating point number representable by a fixed number of digits following IEEE 754 standard.
+For this reason, in this thesis we follow the decision of \cite{toyota} to work with constant-precision transformers, where the output of each arithmetic operation is rounded to the closest floating point number representable by a fixed number of digits following IEEE 754 standard.
 This analysis avoids the unrealistic infinite precision assumption made in prior works \cite{perez2019turing}.
 The definitions stated in the section are taken from \cite{toyota}.
 
@@ -37,7 +37,7 @@ In particular, we denote the rounding operation with $e$-bit exponent, $2s$-bit 
 Our notion of floating-point number simplifies the IEEE 754 Standard for Floating-point Arithmetic \cite{ieee754_2008} by removing $\infty$ and $-\infty$. When overflow happens, we always round the output to $\maxrep$, and when underflow happens to $\minrep$. For unary functions like $\exp(\cdot)$ and binary functions including addition, subtraction, multiplication, and division, we simply define their rounded version by rounding their outputs. Whenever division by $0$ happens, we define the output as $0$.\footnote{Notice that the only division is in the $\softmax$. If it's the one in the attention mechanism, it's reasonable to give an attention score of $0$ to every vector. If it's the one in the output layer it means that all symbols have an extremely small probability, therefore is reasonable to assign the same probability to all of them.}
 
 
-Next, we define finite-precision summation over more then two numbers by decomposing it as a chain of rounded binary addition in a fixed order.
+Next, we define finite-precision summation over more than two numbers by decomposing it as a chain of rounded binary addition in a fixed order.
 
 \begin{definition}[Summation with Iterative Rounding] For any $s,n\in\mathbb{N}^+$ and vector $x \in \mathbb{R}^n$, we define summation with iterative rounding to $e$ bit exponent and $2s$-bit precision as $\mathsf{sum}_{e,s}:\cup_{n\in\mathbb{N}^+}(\Floating)^n\to \Floating$\ , where for any $n\in\mathbb{N}^+$ and $x\in\mathbb{R}^n$, $$\mathsf{sum}_{e,s}(x)\triangleq \rdes{\rdes{\rdes{\rdes{x_1+x_2}+x_3}+\cdots x_{n-1}}+x_n}.$$
 

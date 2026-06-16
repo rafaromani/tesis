@@ -13,7 +13,7 @@ Thus, if the flagging is made in a family of transformers its $\CoTtndn$ class d
 
 For example, let $v_\sigma$ and $v_\tau$ be vectors of a transformer $\TF$ where $v_\sigma$ comes from embedding the token $\sigma$ and $v_\tau$ from the token $\tau$ (with $\sigma \neq \tau$).
 We can define a transformer $\TF'$ that behaves like $\TF$ but recognize when a vector comes from embedding the token $\sigma$.
-$\TF'$ have embedding dimension $d' = d + 1$ where $d$ is the embedding of $\TF$.
+$\TF'$ has embedding dimension $d' = d + 1$ where $d$ is the embedding dimension of $\TF$.
 
 \begin{figure*}[h]
     \begin{align*}
@@ -35,18 +35,18 @@ Formally, for flagging the token $\sigma$ we define the token embedding function
 \end{equation*}
 
 \noindent where $f_{\ON}$ is the value that marks the vector as flagged and $f_{\OFF}$ as unflagged.
-Those values can be defined arbitrary for each flag. \rafa{arbitrary no es la palabra que quiero me parece}
+Those values can be defined arbitrarily for each flag. \rafa{arbitrarily no es la palabra que quiero me parece}
 In this case, the coordinate inserted for the flag is the last one, but it can be added anywhere.
 
 The other components of $\TF'$ ignore $d+1$ the coordinate.
-The position encoding of $\TF'$ its equal to the position encoding of $\TF$, except it puts a $0$ in the $d+1$ coordinate (not present in $\TF$) independently of the position.
-The matrix of the $\ATTN$, $\FF$ and $\OUTPUT$ layers of $\TF'$ are the ones of $\TF$ extended with $0$ in the $d+1$ rows and columns to match the change in embedding dimension.
+The position encoding of $\TF'$ is equal to the position encoding of $\TF$, except it puts a $0$ in the $d+1$ coordinate (not present in $\TF$) independently of the position.
+The matrices of the $\ATTN$, $\FF$ and $\OUTPUT$ layers of $\TF'$ are the ones of $\TF$ extended with $0$ in the $d+1$ rows and columns to match the change in embedding dimension.
 
 $\TF'$ behaves exactly as $\TF$ except it has one more coordinate in the embedding.
-Said coordinate represent the flag and in every vector has only values $v_{\ON}$ or $v_{\OFF}$.
+Said coordinate represents the flag and takes only the values $v_{\ON}$ or $v_{\OFF}$ in every vector.
 
 
 \bigskip
 
 This primitive works also as a mechanism to extend the embedding dimension without changing the behavior.
-If $v_{\ON}$ and $v_{\OFF}$ are defined as $0$, the resulting transformer is the same as the initial with an extra coordinate that it is always $0$.
+If $v_{\ON}$ and $v_{\OFF}$ are defined as $0$, the resulting transformer is the same as the initial with an extra coordinate that is always $0$.

@@ -3,7 +3,8 @@
 We show how to take the maximum of a set of coordinates.
 This operation will be needed for later constructions.
 
-We give a construction for taking the maximum of two coordinates, but it can be extended to a larger set repeating the operation as a tournament.
+We give a construction for taking the maximum of two coordinates, but it can be extended to a larger set by repeating the operation as a tournament.
+\rafa{no es torneo, es solo probar todos los caso en las indicatrices}
 
 \begin{equation*}
     \left( \begin{matrix} a \\ b \\ \vdots \\\end{matrix} \right)
@@ -40,8 +41,8 @@ The maximum of two coordinates can be computed with the following primitives:
 
 \subsubsection*{Implementation of the special operation}
 
-This operation is not a linear transformation, therefore we need to define a new technique.
-Notice that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ is a $1$ and the other is a $0$.
+This operation is not a linear transformation; therefore, we need to define a new technique.
+Observe that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ equals $1$ and the other equals $0$.
 Then, $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
 
 
@@ -98,7 +99,7 @@ The first two have parameters:
 \end{align*}
 
 
-\noindent Notice that the output of these $\FF$ layer when inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
+\noindent Notice that the output of these $\FF$ layer when the input is $(x, y, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
 
 The third $\FF$ layer has parameters:
 
@@ -118,7 +119,7 @@ The third $\FF$ layer has parameters:
     \end{matrix}\right) 
 \end{align*}
 
-\noindent which inputted with $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, it will output $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
+\noindent which, when the input is $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, outputs $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
 
 
 

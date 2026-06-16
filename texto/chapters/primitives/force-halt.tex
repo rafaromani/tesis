@@ -1,13 +1,12 @@
-With a similar strategy to the section \ref{repeat-token}, with the $\PE$ we flag when a certain position is reached.
+Using a strategy similar to the one in section \ref{repeat-token}, we use the $\PE$ to flag when a certain position is reached.
 Then, if the transformer is normalized, modifying the last vector we decide the outputted distribution.
-Particularly, we can force it to concenter the probability in $\qaccept$ or $\qreject$.
+Particularly, we can force it to concentrate the probability in $\qaccept$ or $\qreject$.
 We change the last vector with a constant function.
 The flag inserted by the $\PE$ is to decide if the function has to be applied or not.
 
 \medskip
 
-Notice that this primitive with the one described in section \ref{repeat-token}, 
-prove that for every transformer $\TF$ in $\CoTtndn$ there is a transformer $\TF'$ in the same class that always consumes all of its budget.
+Notice that this primitive, together with the one described in section \ref{repeat-token}, proves that for every transformer $\TF$ in $\CoTtndn$ there is a transformer $\TF'$ in the same class that always consumes all of its budget.
 
 We extend the alphabet with two dummy versions of the decision tokens and construct $\TF'$ over $\TF$.
 We make $\TF'$ work as $\TF$, but we make it print the dummy versions of the decision tokens when $\TF$ would have printed the real ones\footnote{This is achieved giving the probability of each decision token to its dummy version.}.

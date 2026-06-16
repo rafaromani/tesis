@@ -1,14 +1,14 @@
-Although it looks that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
-Applying a linear transformation to a vector is not direct since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.
+Although it may seem that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
+Applying a linear transformation to a vector is not straightforward, since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.
 An intuitive idea would be to apply the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
-This does not hold in our model since the addition and multiplication is not commutative in $\Floating$.
+This does not hold in our model since the addition and multiplication are not commutative in $\Floating$.
 For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
 
 \bigskip
 
-Let $f$ be the number of a vector. \rafa{uso f porque viene de flagged}
+Let $f$ denote the index of the flagged vector. \rafa{uso f porque viene de flagged}
 We show a mechanism to replace it with the result of applying the linear transformation $M$ to it.
-We perform the operation with two consecutive $\ATTN$ layers where $h_f$ only attends to itself.
+We perform the operation with two consecutive $\ATTN$ layers, in which $h_f$ only attends to itself.
 Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
 
 We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
@@ -23,14 +23,14 @@ Then, in the second layer we move the result to the right place.
     \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
 \]
 
-We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers previous to this mechanism.
-This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in the section \ref{const-fun}.
+We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers preceding this mechanism
+This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in section \ref{const-fun}.
 
 \medskip
 
 Let us construct each of the $\ATTN$ layers.
 As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
-Therefore, we define $W_Q$ ans $W_K$ using the strategy of the section \ref{ignore-vecs}.
+Therefore, we define $W_Q$ and $W_K$ using the strategy of section \ref{ignore-vecs}.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,6 +145,6 @@ And defining $W_V$ and $W_O$ as follows
 
 \bigskip
 
-Notice that after these two layers, the values of $h_i$ for all $i \neq f$ had been modified in ways not studied in this work.
+Notice that after these two layers, the values of $h_i$ for all $i \neq f$ have been modified in ways not studied in this work.
 \bigrafa{no sé cómo decir esto. El comentario anterior de que habían sido corrupted hacía referencia a esto.}
 

@@ -1,11 +1,11 @@
-We show how to make a vector ignore others in the $\ATTN$ layers, which will be useful for later constructions.
-A vector $h_i$ ignores vector $h_j$ when the attention score is $0$ which can be achieved making $\langle q_i, k_j\rangle = \minrep$.
+We show how to make a vector ignore others in the $\ATTN$ layers, a technique that will prove useful in later constructions.
+A vector $h_i$ ignores vector $h_j$ when the attention score is $0$, which can be achieved by making $\langle q_i, k_j\rangle = \minrep$.
 
 \bigskip
 
 We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors (modulo $\softmax$). 
 \bigrafa{no sé cómo decir esto sin dar muchas vueltas. Porque si ignoro un vector, naturalmente el attention score de los demás sube por la "normalización" que hace el softmax}
-We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer, we are looking for said layer to respect:
+We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
 \[
     \langle q_i', k_j' \rangle = \begin{cases}
         \minrep                  & \text{ if } i = l \land j \in M \\
@@ -13,9 +13,9 @@ We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vecto
     \end{cases}
 \]
     
-This can be achieved saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
+This can be achieved by saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
 If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
-Since we don't want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
+Since we do not want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
 
 \medskip
 
@@ -36,7 +36,7 @@ This can be achieved with the following flags:
     \end{cases}
 \end{align*}
 
-Now the query and key matrix are extended as:
+Now the query and key matrices are extended as:
 
 \begin{align*}
     &
@@ -56,7 +56,7 @@ Now the query and key matrix are extended as:
 \end{align*}
 
 Then, $\langle q'_i, k'_j \rangle = \minrep$ if $i = l$ and $j \in M$, but $\langle q'_i, k'_j \rangle = \langle q_i, k_j \rangle$ otherwise.
-\rafa{Como referencio que eso vale por las cuentas que tengo acá abajo?}
+\rafa{Cómo referencio que eso vale por las cuentas que tengo acá abajo?}
 
 \begin{align*}
     \langle q'_i, k'_j \rangle &= \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x = \langle q_i, k_j \rangle + (q'_l)_{d+1} (k'_i)_{d+1} + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \\

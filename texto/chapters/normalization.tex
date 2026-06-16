@@ -5,15 +5,15 @@ This notion will specify properties of the $\OUTPUT$ matrix and of the vector co
     We say a transformer is normalized when it meets two conditions. 
     \begin{enumerate}
         \item \projection : The matrix of the $\OUTPUT$ has to be a projection, i.e., it's a diagonal matrix with only ones in its diagonal.
-        \item \concentrated The last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except, one which has to be $\maxrep$.
+        \item \concentrated : The last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except one, which has to be $\maxrep$.
         The non projected coordinates are free to be any value.
     \end{enumerate}
 \end{definition}
 \bigrafa{to-do definir buenos nombres para las condiciones}
 
-The motivation for this definition is to simplify the $\OUTPUT$ layer (\projection) and to have more control over the probability distribution generated (\concentrated). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentered in only one token.
+The motivation for this definition is to simplify the $\OUTPUT$ layer (\projection) and to have more control over the probability distribution generated (\concentrated). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentrated in only one token.
 
-For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ computing the language $\gL$, there is a family ${\TF'_{n}}_{n \in \mathbb{N}}$ in the same class, computing the same language where for all $n$, $\TF'_n$ is normalized.
+For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ computing the language $\gL$, there is a family ${\TF'_{n}}_{n \in \mathbb{N}}$ in the same class, computing the same language, where for all $n$, $\TF'_n$ is normalized.
 In the next section we introduce an algorithm for normalizing transformers.
 
 
@@ -24,7 +24,7 @@ For normalizing transformers, first we make them meet \projection and then \conc
 
 \subsubsection*{Algorithm for \projection}
 
-Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed in two steps. 
+Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
 \footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
 
 \[
@@ -39,7 +39,7 @@ Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with 
 
 Let $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
 Using the decomposition just presented, and the strategy defined in section \ref{lin-tranf} for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
-The linear transformation $M$ has to be applied to the last vector since it is the one going from the body of $\TF$ to the $\OUTPUT$ layer. 
+The linear transformation $M$ has to be applied to the last vector, since it is the one going from the body of $\TF$ to the $\OUTPUT$ layer. 
 
 \medskip
 
@@ -48,13 +48,13 @@ The linear transformation $M$ has to be applied to the last vector since it is t
 Let $\TF$ be a transformer satisfying \projection, we give an algorithm for making it also meet \concentrated.
 
 We use the maximum operation described in section \ref{maximum} to make all the positions of the last vector $0$ except the one that was the maximum before.
-Then, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ to every coordinate and multiplying by $\maxrep$ again makes $\TF$ meet \concentrated.
+Then, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ from every coordinate and multiplying by $\maxrep$ again makes $\TF$ meet \concentrated.
 
 \[
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ x_{max} \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
     \xrightarrow[\maxrep]{\text{multiplying by}}
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ \maxrep \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
-    \xrightarrow{\text{substracting } 1}
+    \xrightarrow{\text{subtracting } 1}
     \left( \begin{matrix} -1 \\ \vdots \\ -1 \\ \maxrep -1 \\ -1 \\ \vdots \\ -1    \end{matrix} \right) 
     \xrightarrow[\maxrep]{\text{multiplying by}}
     \left( \begin{matrix} \minrep \\ \vdots \\ \minrep \\ \maxrep \\ \minrep \\ \vdots \\ \minrep    \end{matrix} \right) 
@@ -84,13 +84,13 @@ Since $\relu(x) + \relu(-x) = |x|$ for all $x$, our algorithm does the following
 
 
 The first step is done in the same way as the first half of the linear transformations.
-For the second step, we take max coordinate (section \ref{maximum}) in $v$ and $-v$ independently.
+For the second step, we take max-coordinate (section \ref{maximum}) in $v$ and $-v$ independently.
 This works since all the coordinates of $v$ are $0$ except one thus there are only two scenarios.
 The non-zero coordinate of $v$ is positive, then it will be the maximum (so it won't be modified) and all the others will remain $0$;
 or the non-zero coordinate of $v$ is negative, then the maximum will be $0$ and all the coordinates will become $0$.
-Which ever happens in $v$, the other happens in $-v$.
+Whichever happens in $v$, the other happens in $-v$.
 Then, for adding both vectors we can use one $\FF$ layer with the following parameters.
-Notice that this works since all the coordinates of $\relu(-v)$ are non-negative.
+Observe that this works since all the coordinates of $\relu(-v)$ are non-negative.
 
 \begin{align*}
     & W_1 = id^{d\times d}

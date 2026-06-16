@@ -2,7 +2,7 @@
 
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
-It has only one tape from where it reads the input and in an autoregressive\bigsanti{no sé bien a qué se refiere con autoregressive, pero tiene que quedar claro que solo imprime nuevos símbolos de a uno y que no puede modificar símbolos ya escritos. Quizá comparar con autómata vs TM} way writes in it more tokens.
+It has a single tape from which it reads the input and onto which it appends additional tokens in an autoregressive manner.
 There are two distinguished tokens called \textbf{decision symbols}.
 Once the transformer writes one of those, it halts.
 We say that a transformer accepts a word if, when it halts, the decision symbol printed is the accepting one ($\qaccept$).
@@ -13,18 +13,18 @@ Then, depending on this distribution, the transformer prints the next token.
 The transformer iterates this process until it halts.
 These iterations are called \textbf{chain of thought}. \rafa{Agregar una cita}
 
-We split the process of generating the next token in two separated steps.
+We split the process of generating the next token into two separate steps.
 First, the computation of the probability distribution over the alphabet which we call distribution generation.\bigsanti{así como hiciste con cot, definí nuevos términos con un estilo especial. Yo uso defstlye como comando y después decido si es itálica, negrita, etc} \bigrafa{defino distribution generation y token selection más abajo y los puse en negrita. Debería marcarlos también acá?}
-Second, the selection of the token based on the probability distribution, which we call token by a process called token selection.
+Second, the selection of a token based on the probability distribution, which we call token selection.
 In this work we analyze and compare two different algorithms for token selection.
 
 \medskip
 
-In most of the literature, the transformers operate over an infinite tape.
+Most prior work only considers transformers that operate over an infinite tape.
 This is far from the real models, thus the transformers studied in this thesis work over a finite tape.
 The size of the tape is defined, for each input size $n$, as $\budget(n) + n$.
 It is important to remark that the size of the tape bounds the number of steps of $\CoT$ that the transformer makes.
-For an input word of length $n$, no computation can take more than $\budget(n)$ steps because every step write a token in the tape.\santi{los pasos son del cómputo, nodel transformer. Revisar en todo el texto}
+For an input word of length $n$, no computation can take more than $\budget(n)$ steps because every step writes a token in the tape.\santi{los pasos son del cómputo, nodel transformer. Revisar en todo el texto}
 \bigsanti{mejorar esta última oración, no se entiende}
 \bigrafa{ahí va mejor?}
 
@@ -48,12 +48,12 @@ We refer to them as $\theta$ and consider them as part of the definition of a tr
         % Formal general def of transformer and CoT %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We note $\TF(\alpha)$ to the token outputted by one step of the transformer $\TF$ when the tape content is $\alpha \in \Sigma^*$.
+We denote by $\TF(\alpha)$ the token outputted by one step of the transformer $\TF$ when the tape content is $\alpha \in \Sigma^*$.
 The autoregressive token generation is defined recursively.
 The token outputted after $i$ steps is $\TF^{i}(\alpha) := \TF^{i-1}(\alpha \TF(\alpha))$ with base case $\TF^1(\alpha) := \TF(\alpha)$.
 In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
 
-We note $\TF^*(\alpha)$ for the token written by the transformer when it halts, i.e., at the end of the computation, when the input is $\alpha$.
+We denote by $\TF^*(\alpha)$ the token written by the transformer when it halts, i.e., at the end of the computation, when the input is $\alpha$.
 As said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
@@ -68,7 +68,7 @@ Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 As stated before, the \textbf{distribution generation} is a mapping of the content of the tape to a probability distribution over $\Sigma$.
 There are different algorithms for this process in the literature.
-All the transformers considered in this work use the one presented by \cite{toyota}. 
+All transformers considered in this work employ the one presented in \cite{toyota}.
 This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$) and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
@@ -91,7 +91,7 @@ For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$. \santi{¿qué es $a$?}\rafa{es la cantidad de elementos que hay en la cinta en ese paso. Hay un vector por cada elemento. Cada paso de $\ATTN$ consume todos los vectores y devuelve la misma cantidad de vectores. En el algoritmo aparece $a$. No se me ocurrió otra forma para notarlo.}
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
-This layer is defined only as a single head attention layer because we can simulate 1 multi-head attention layer with any constantly many heads with multiple single-head attention layers\cite{cookbook}.
+This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \cite{cookbook}.
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
@@ -104,8 +104,8 @@ This layer is defined only as a single head attention layer because we can simul
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Feed Forward Network: } It is a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b1 ) + b2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
-\bigsanti{Too many it's it's... Cambié algunos. Mejorar}
+\textbf{Feed Forward Network: } It is a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b_1 ) + b_2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+
 
 \textbf{Output Layer: } It is a mapping from $\Rd$ to a probability distribution over $\Sigma$.
 Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, we define it as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
@@ -157,7 +157,7 @@ This algorithm consumes the probability distribution computed by the distributio
 In this work we study two selectors, we call them \textbf{deterministic selector} and \textbf{probabilistic selector}.
 Let $p : \Sigma \to [0,1]$ \santi{$\Sigma^*?$ } \rafa{No, el token selector consume la distribución que dado un token devuelve su probabilidad}be the output of the distribution generator.
 Then, the deterministic selector always returns the token with the largest probability ($\argmax$ over $p$).
-On the other hand, the probabilistic selector works non-deterministically.
+In contrast, the probabilistic selector works non-deterministically.
 It returns a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
 
 

@@ -28,7 +28,7 @@ Given two functions $T(n)$ and $d(n)$ we define the complexity class $\RCoT[T(n)
 Informally, a language $\gL$ is in $\RCoT[T(n), d(n)]$ if and only if there is a probabilistic family of transformers with constant depth, embedding size $d(n)$ and budget $T(n)$ that recognizes it.
 
 \begin{definition}[$\RCoTtndn$]
-    A language $\gL$ is in $\RCoT[T(n), d(n)]$ if and only if there is an integer $L$ and two functions $T'(n) = O(T(n)), d'(n) = O(d(n))$, such that for every positive integer $n$, there is an $L$-layer probabilistic transformer, denoted by $\TF_n$ with embedding size $d'(n)$, that output $\gL(\alpha)$ given any input $\alpha$ in $\Sigma^n$, using $T'(n)$ steps in the chain of thought with probability higher than $2/3$.
+    A language $\gL$ is in $\RCoT[T(n), d(n)]$ if and only if there is an integer $L$ and two functions $T'(n) = O(T(n)), d'(n) = O(d(n))$, such that for every positive integer $n$, there is an $L$-layer probabilistic transformer, denoted by $\TF_n$ with embedding size $d'(n)$, that outputs $\gL(\alpha)$ given any input $\alpha$ in $\Sigma^n$, using $T'(n)$ steps in the chain of thought with probability higher than $2/3$.
 \end{definition}
 
 
