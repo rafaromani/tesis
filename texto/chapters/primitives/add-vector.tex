@@ -34,7 +34,7 @@ This technique can be used to apply a constant function to the flagged vectors.
 This is achieved by exploiting the finite representation system.
 We can saturate the vector to the $\maxrep$ and then make it $0$ to finally add our objective.
 This holds since for all $x, c \in \Floating$ it happens that $x + \maxrep + \maxrep + \minrep + c = c$.
-Because as mentioned in section \ref{repr}, $x + \maxrep + \maxrep = \maxrep$ and $\maxrep + \minrep = 0$.
+Because as mentioned in Section \ref{repr}, $x + \maxrep + \maxrep = \maxrep$ and $\maxrep + \minrep = 0$.
 
 The constant function $f(h) = v$ is implemented by adding four vectors that perform this trick.
 First, it is necessary to add the vector consisting entirely of $\maxrep$ twice; then, a vector consisting entirely of $\minrep$; and finally, $v$; as shown in equation \ref{fig-const-fun}.

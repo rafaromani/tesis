@@ -17,7 +17,7 @@ For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ com
 In the next section we introduce an algorithm for normalizing transformers.
 
 
-\subsection*{Algorithm for normalizing}
+\subsection{Algorithm for normalizing}
 \bigrafa{no se como llamar a las subsubsections del algoritmo. Creo que es más claro separalas igual}
 
 For normalizing transformers, first we make them meet \projection and then \concentrated.
@@ -38,7 +38,7 @@ Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with 
 \noindent where $v \in \mathbb{R}^{d-|\Sigma|}$ can have any values.
 
 Let $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
-Using the decomposition just presented, and the strategy defined in section \ref{lin-tranf} for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
+Using the decomposition just presented, and the strategy defined in Section \ref{lin-tranf} for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
 The linear transformation $M$ has to be applied to the last vector, since it is the one going from the body of $\TF$ to the $\OUTPUT$ layer. 
 
 \medskip
@@ -47,7 +47,7 @@ The linear transformation $M$ has to be applied to the last vector, since it is 
 
 Let $\TF$ be a transformer satisfying \projection, we give an algorithm for making it also meet \concentrated.
 
-We use the maximum operation described in section \ref{maximum} to make all the positions of the last vector $0$ except the one that was the maximum before.
+We use the maximum operation described in Section \ref{maximum} to make all the positions of the last vector $0$ except the one that was the maximum before.
 Then, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$ from every coordinate and multiplying by $\maxrep$ again makes $\TF$ meet \concentrated.
 
 \[
@@ -84,7 +84,7 @@ Since $\relu(x) + \relu(-x) = |x|$ for all $x$, our algorithm does the following
 
 
 The first step is done in the same way as the first half of the linear transformations.
-For the second step, we take max-coordinate (section \ref{maximum}) in $v$ and $-v$ independently.
+For the second step, we take max-coordinate (Section \ref{maximum}) in $v$ and $-v$ independently.
 This works since all the coordinates of $v$ are $0$ except one thus there are only two scenarios.
 The non-zero coordinate of $v$ is positive, then it will be the maximum (so it won't be modified) and all the others will remain $0$;
 or the non-zero coordinate of $v$ is negative, then the maximum will be $0$ and all the coordinates will become $0$.
