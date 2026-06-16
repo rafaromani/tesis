@@ -34,11 +34,7 @@ For an input word of length $n$, no computation can take more than $\budget(n)$ 
 
 The process of distribution generation is dependent on many parameters.
 In the real models, these parameters are the ones calculated during the training.
-\bigsanti{Revisar casos como estos:
-These parameters, in the real models, are the ones calculated during the training.
-$\to$
-In the real models, these parameters  are the ones calculated during the training.
-}
+
 
 We refer to them as $\theta$ and consider them as part of the definition of a transformer.
 
@@ -128,22 +124,6 @@ All these parts come together for the distribution generator process in the algo
 \end{algorithm}
 
 The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
-
-\bigsanti{Ejemplo de cómo mejorar la presentación para repetir menos y ser más claro:
-
-
-The $\OUTPUT$ layer and the $\ATTN$ layer uses a $\softmax$ function.
-It is defined from $\mathbb{R}^n$ to $\mathbb{R}^n$ for all $n$ as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
-
-$\to$
-
-The $\OUTPUT$ layer and the $\ATTN$ layer use a function $\mathbb{R}^n\to\mathbb{R}^n$ defined by $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
-
-\medskip
-
-Independientemente de la presentación, no sé si queda claro el tema del $n$ ("for all $n$"). ¿Es una familia de funciones $\softmax_n$?}
-
-\bigrafa{Creo que formalmente es una familia de funciones porque es distinta para cada tamaño de vector, pero en el fondo hace siempre lo mismo. Quizás borrando el para todo $n$ queda más claro? No creo que valga la pena introducir que es una familia.}
 
 \medskip
 
