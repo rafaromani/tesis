@@ -6,7 +6,7 @@ For avoiding the representation error, we will extend the embedding dimension to
 
 \bigskip
 
-Let $f$ denote the index of the flagged vector. \rafa{uso f porque viene de flagged}
+Let $f$ denote the index of the flagged vector.
 We show a mechanism to replace it with the result of applying the linear transformation $M$ to it.
 We perform the operation with two consecutive $\ATTN$ layers, in which $h_f$ only attends to itself.
 Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
@@ -32,76 +32,12 @@ Let us construct each of the $\ATTN$ layers.
 As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
 Therefore, we define $W_Q$ and $W_K$ using the strategy of Section \ref{ignore-vecs}.
 
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %%%%%%%%%%% START: ONLY ATTEND TO ITSELF %%%%%%%%%%%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Let's define the parameters of the $\ATTN$ layers for $h_f$ only attending to itself. 
-% If we take as query and key matrix as
-
-% \begin{align*}
-%     & W_Q = W_K = \left(\begin{matrix}
-%                     0      &\hdots &0      &0          \\
-%                     \vdots &\ddots &\vdots &\vdots     \\
-%                     0      &\hdots &0      &0          \\
-%                     0      &\hdots &0      &\maxrep    \\
-%                   \end{matrix}\right)
-% \end{align*}
-
-% \noindent then the keys and values of the vectors are 
-
-% \begin{align*}
-%     W_Q h_i = q_i = W_K h_i = k_i &= \begin{cases}
-%                             (0, \dots, 0, \maxrep*1)     &\text{ if } i = f    \\
-%                             (0, \dots, 0, \maxrep*-1)    &\text{ if } i \neq f \\
-%                           \end{cases}
-%                        &= \begin{cases}
-%                             (0, \dots, 0, \maxrep)    &\text{ if } i = f    \\
-%                             (0, \dots, 0, \minrep)    &\text{ if } i \neq f \\
-%                           \end{cases}
-% \end{align*}
-
-% \noindent so the attention values for $h_f$ are $1$ for itself and 0 for the rest.
-
-% \begin{align*}
-%     s_f & = \softmax (&\langle q_f, k_1 \rangle,& &\ldots,& &\langle q_f, k_{f-1}\rangle,& &\langle q_f, k_f\rangle) &&\| (0,\ldots, 0) \\
-%         & = \softmax (&\maxrep * \minrep,&        &\ldots,& &\maxrep * \minrep,          & &\maxrep*\maxrep)         &&\| (0,\ldots, 0) \\
-%         & = \softmax (&          \minrep,&        &\ldots,& &          \minrep,          & &        \maxrep)         &&\| (0,\ldots, 0) \\
-%         & =           &                0,&        &\ldots,& &                0,          & &               1,        && 0,\ldots, 0 \\
-% \end{align*}
-
-% \[
-% (s_f)_i = \begin{cases}
-%             1 &\text{ if } i = f    \\
-%             0 &\text{ if } i \neq f \\
-%           \end{cases}
-% \]
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%% END: ONLY ATTEND TO ITSELF %%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\medskip
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% START: FIRST LAYER %%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\santi{dividir claramente en primera y segunda layer. Podés usar itemize o paragrph.}
-\rafa{estoy de acuerdo, pero no estoy seguro cómo hacerlo}
-
-
 Recall from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
-By this point, $h'_f$ is looking like 
+By this point, $h'_f$ is looking like \[ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f}) \]
 
-\[
-h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f})
-\]
-
-\noindent Then, defining $W_O$ and $W_V$ as follows
-
+\begin{itemize}
+\item For the first layer, defining $W_O$ and $W_V$ as follows
+%
 \begin{align*}
     W_V &= id
     & 
@@ -110,23 +46,13 @@ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f})
                 M                          &0^{\Rdd}                   
           \end{matrix}\right)
 \end{align*}
+%
+makes us get $ h'_f = (-(h_f)_1, \dots, -(h_f)_d, (Mh_f)_1, \dots, (Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the first layer.
 
-\noindent makes us get $ h'_f = (-(h_f)_1, \dots, -(h_f)_d, (Mh_f)_1, \dots, (Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the first layer.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% END: FIRST LAYER %%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\medskip
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% START: SECOND LAYER %%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-For the second $\ATTN$ layer, we use the same mechanism for making $\widetilde{h_f}$ only attend to itself.
+\item For the second $\ATTN$ layer, we use the same mechanism for making $\widetilde{h_f}$ only attend to itself.
 And defining $W_V$ and $W_O$ as follows
-
+%
 \begin{align*}
     W_V &= id
     & 
@@ -135,16 +61,11 @@ And defining $W_V$ and $W_O$ as follows
                 0^{\Rdd}                   &-id^{\Rdd}                 \\
           \end{matrix}\right)
 \end{align*}
+%
+we get $ h'_f = ((Mh_f)_1, \dots, -(Mh_f)_d, -(Mh_f)_1, \dots, -(Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the second layer.
 
-\noindent we get $ h'_f = ((Mh_f)_1, \dots, -(Mh_f)_d, -(Mh_f)_1, \dots, -(Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the second layer.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% END: SECOND LAYER %%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{itemize}
 
 \bigskip
 
-Notice that after these two layers, the values of $h_i$ for all $i \neq f$ have been modified in ways not studied in this work.
-\bigrafa{no sé cómo decir esto. El comentario anterior de que habían sido corrupted hacía referencia a esto.}
-
+Note that, after these two layers, the values of $h_i$ for all $i \neq f$ have changed in ways that have not been studied in this paper, but this is not relevant to the way we use the primitive.

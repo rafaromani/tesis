@@ -3,13 +3,12 @@ This notion will specify properties of the $\OUTPUT$ matrix and of the vector co
 
 \begin{definition}[Normalized transformer]
     We say a transformer is normalized when it meets two conditions. 
-    \begin{enumerate}
+    \begin{itemize}
         \item \projection : The matrix of the $\OUTPUT$ has to be a projection, i.e., it's a diagonal matrix with only ones in its diagonal.
         \item \concentrated : The last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except one, which has to be $\maxrep$.
         The non projected coordinates are free to be any value.
-    \end{enumerate}
+    \end{itemize}
 \end{definition}
-\bigrafa{to-do definir buenos nombres para las condiciones}
 
 The motivation for this definition is to simplify the $\OUTPUT$ layer (\projection) and to have more control over the probability distribution generated (\concentrated). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentrated in only one token.
 
@@ -18,7 +17,6 @@ In the next section we introduce an algorithm for normalizing transformers.
 
 
 \subsection{Algorithm for normalizing}
-\bigrafa{no se como llamar a las subsubsections del algoritmo. Creo que es más claro separalas igual}
 
 For normalizing transformers, first we make them meet \projection and then \concentrated.
 

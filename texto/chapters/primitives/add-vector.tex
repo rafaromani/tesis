@@ -39,8 +39,7 @@ Because as mentioned in Section \ref{repr}, $x + \maxrep + \maxrep = \maxrep$ an
 The constant function $f(h) = v$ is implemented by adding four vectors that perform this trick.
 First, it is necessary to add the vector consisting entirely of $\maxrep$ twice; then, a vector consisting entirely of $\minrep$; and finally, $v$; as shown in equation \ref{fig-const-fun}.
 
-\begin{figure}[h]\label{fig-const-fun}
-    \[
+\begin{equation}\label{fig-const-fun}
 h \leftarrow  h + 
     \left(\begin{matrix}
     \infty \\
@@ -58,9 +57,4 @@ h \leftarrow  h +
     -\infty \\
 \end{matrix}\right)
     + v
-    \]
-\caption{Constant function}
-\end{figure}
-
-\bigrafa{más arriba digo ecuación pero latex dice que es una figura. Tampoco estoy seguro qué caption ponerle. Quizás es mejor si directamente no la referencio?}
-
+\end{equation}

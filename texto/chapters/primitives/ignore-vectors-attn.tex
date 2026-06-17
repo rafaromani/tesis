@@ -3,8 +3,7 @@ A vector $h_i$ ignores vector $h_j$ when the attention score is $0$, which can b
 
 \bigskip
 
-We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors (modulo $\softmax$). 
-\bigrafa{no sé cómo decir esto sin dar muchas vueltas. Porque si ignoro un vector, naturalmente el attention score de los demás sube por la "normalización" que hace el softmax}
+We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors previous to taking $\softmax$. 
 We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
 \[
     \langle q_i', k_j' \rangle = \begin{cases}
@@ -24,7 +23,7 @@ We also make $(k'_i)_{d+1}$ and $(q'_i)_{d+1}$ to be $0$ for all $i$ so the thir
 With these values, the only attention scores modified are the ones of the $l$th vector since every other will have $0$ in the last three coordinates of the query thus making the last three terms of the inner product $0$ and therefore not affecting the score.
 
 This can be achieved with the following flags:
-
+%
 \begin{align*}
     & (h_i)_{d+1} = \begin{cases}
         1 & \text{ if } i = l \\
@@ -35,9 +34,9 @@ This can be achieved with the following flags:
         0 & \text{ otherwise }
     \end{cases}
 \end{align*}
-
+%
 Now the query and key matrices are extended as:
-
+%
 \begin{align*}
     &
     W_Q' = \left(\begin{matrix}
@@ -54,37 +53,37 @@ Now the query and key matrices are extended as:
         0^{\mathbb{R}^{d \times 1}} & 0^{\mathbb{R}^{1 \times 1}} & 0^{\mathbb{R}^{1 \times 1}}       & \minrep^{\mathbb{R}^{1 \times 1}} \\
     \end{matrix}\right)
 \end{align*}
-
-Then, $\langle q'_i, k'_j \rangle = \minrep$ if $i = l$ and $j \in M$, but $\langle q'_i, k'_j \rangle = \langle q_i, k_j \rangle$ otherwise.
-\rafa{Cómo referencio que eso vale por las cuentas que tengo acá abajo?}
-
-\begin{align*}
-    \langle q'_i, k'_j \rangle &= \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x = \langle q_i, k_j \rangle + (q'_l)_{d+1} (k'_i)_{d+1} + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \\
+%
+Then, 
+%
+\begin{align}
+    \langle q'_i, k'_j \rangle &= \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x = \langle q_i, k_j \rangle + (q'_l)_{d+1} (k'_i)_{d+1} + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
     &
-    = \langle q_i, k_j \rangle + 0 + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3}\\
+    = \langle q_i, k_j \rangle + 0 + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
     &
-    = \langle q_i, k_j \rangle + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3}\\
+    = \langle q_i, k_j \rangle + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
     & 
     = \begin{cases}
         \langle q_i, k_j \rangle + 1 \cdot \minrep + 1 \cdot \minrep & \text{ if } i = l    \land j \in M \\
         \langle q_i, k_j \rangle + 1 \cdot 0       + 1 \cdot 0       & \text{ if } i = l    \land j \notin M \\
         \langle q_i, k_j \rangle + 0 \cdot \minrep + 0 \cdot \minrep & \text{ if } i \neq l \land j \in M \\
         \langle q_i, k_j \rangle + 0 \cdot 0       + 0 \cdot 0       & \text{ if } i \neq l \land j \notin M \\
-    \end{cases} \\
+    \end{cases} \nonumber \\
     & 
     = \begin{cases}
         \langle q_i, k_j \rangle + \minrep + \minrep & \text{ if } i = l    \land j \in M \\
         \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i = l    \land j \notin M \\
         \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \in M \\
         \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \notin M \\
-    \end{cases}\\
+    \end{cases}\nonumber \\
     & 
     = \begin{cases}
         \minrep                  & \text{ if } i = l    \land j \in M \\
         \langle q_i, k_j \rangle & \text{ otherwise } 
-    \end{cases}
-\end{align*}
-
+    \end{cases} \nonumber
+\end{align}
+% 
+Namely, $\langle q'_i, k'_j \rangle = \minrep$ if $i = l$ and $j \in M$, but $\langle q'_i, k'_j \rangle = \langle q_i, k_j \rangle$ otherwise.
 
 
 

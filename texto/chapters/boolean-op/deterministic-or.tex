@@ -1,6 +1,4 @@
-\bigrafa{No sé como nombrar a los dos transformers que les voy a tomar el or de manera que quede claro y lindo. Quiero después usar la misma notación para sus componentes. Está todo con macros, hat y tilde quizás no fueron la mejor elección. Hay que cambiarlo.}
-
-Let $\tfone{\gL}$ and  $\tftwo{\gL}$ be languages in $\CoTtndn$, then there is a family of transformers $\{\tfone{\TF_n}\}_{n \in \mathbb{N}}$ (resp. $\{\tftwo{\TF_n}\}_{n \in \mathbb{N}}$) of embedding size $\tfone{d}(n)$ (resp. $\tftwo{d}(n)$) $\in O(d(n))$ that after $\tfone{T}(n)$ (resp. $\tftwo{T}(n)$) $\in T(n)$ steps of $\CoT$ computes $\tfone{\gL}$ (resp. $\tftwo{\gL}$).
+Let $\tfone{\gL}$ and  $\tftwo{\gL}$ be languages in $\CoTtndn$, then there is a family of transformers $\{(\tfone{\TF})_n\}_{n \in \mathbb{N}}$ (resp. $\{(\tftwo{\TF})_n\}_{n \in \mathbb{N}}$) of embedding size $\tfone{d}(n)$ (resp. $\tftwo{d}(n)$) $\in O(d(n))$ that after $\tfone{T}(n)$ (resp. $\tftwo{T}(n)$) $\in T(n)$ steps of $\CoT$ computes $\tfone{\gL}$ (resp. $\tftwo{\gL}$).
 
 We construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ that computes $\tfone{\gL} \cup \tftwo{\gL}$.
 It does it in $\tfone{T}(n) + \tftwo{T}(n) + 1 \in O(T(n))$ steps of $\CoT$ and it has embedding size $O(d(n))$.
@@ -8,9 +6,9 @@ It does it in $\tfone{T}(n) + \tftwo{T}(n) + 1 \in O(T(n))$ steps of $\CoT$ and 
 The idea behind the construction is to run first one of the transformers, then run the other and finally compute the disjunction of both results.
 
 For every input $\alpha$, the tape of the transformer, at the end of the computation, ends up looking as $\alpha \beta q$, where $q$ is the decision token printed by the transformer and $\beta$ ($\in \Sigma^*$) is the sequence of intermediate tokens printed during the chain of thought.
-We denote by $\alpha \tfone{\beta} \tfone{q}$ the content of the tape of $\tfone{\TF}$ at the end of the computation when the input word is $\alpha$.
-Similarly, we denote by $\alpha \tftwo{\beta} \tftwo{q}$ the content of the tape of $\tftwo{\TF}$ at the end of the computation when the input word is $\alpha$.
-The tape of $\TF$, computing the disjunction of $\tfone{\TF}$ and $\tftwo{\TF}$, at the end of the computation has content $\alpha \tfone{\beta} \tfone{q} \tftwo{\beta} \tftwo{q} q$, where $q$ is the decision token representing the disjunction of $\tfone{q}$ and $\tftwo{q}$.
+We denote by $\alpha \beta \tfone{q}$ the content of the tape of $\tfone{\TF}$ at the end of the computation when the input word is $\alpha$.
+Similarly, we denote by $\alpha \gamma \tftwo{q}$ the content of the tape of $\tftwo{\TF}$ at the end of the computation when the input word is $\alpha$.
+The tape of $\TF$, computing the disjunction of $\tfone{\TF}$ and $\tftwo{\TF}$, at the end of the computation has content $\alpha \beta \tfone{q} \gamma \tftwo{q} q$, where $q$ is the decision token representing the disjunction of $\tfone{q}$ and $\tftwo{q}$.
 
 \medskip
 
@@ -50,14 +48,14 @@ The transformer $\TF$ has one layer for each layer of $\tfone{\TF}$ and each of 
 The first layers correspond to the body of $\tfone{\TF}$.
 They are constructed ignoring the half of the embedding storing the coordinates used by $\tftwo{\TF}$.
 The second half of layers are the other way around, they compute the layers of $\tftwo{\TF}$ and ignore the $\tfone{\TF}$ coordinates.
-Then, all the matrices in the layers of the first part of the body of $\TF$ look like $W_1$ and the ones in the second layers will look like $W_2$ where $\tfone{W}$ and $\tftwo{W}$ are the matrices of the corresponding layers in $\tfone{\TF}$ and $\tftwo{\TF}$.
+Then, all the matrices in the layers of the first part of the body of $\TF$ look like $V_1$ and the ones in the second layers will look like $V_2$ where $\tfone{W}$ and $\tftwo{W}$ are the matrices of the corresponding layers in $\tfone{\TF}$ and $\tftwo{\TF}$.
 
 \begin{align*}
-    &W_1 = \left(\begin{matrix}
+    &V_1 = \left(\begin{matrix}
         \tfone{W} & 0 \\
         0  & 0 \\
     \end{matrix}\right)
-    &W_2 = \left(\begin{matrix}
+    &V_2 = \left(\begin{matrix}
         0 & 0 \\
         0  & \tftwo{W} \\
     \end{matrix}\right)
@@ -66,16 +64,16 @@ Then, all the matrices in the layers of the first part of the body of $\TF$ look
 It is important to notice that the values of the coordinates corresponding to one transformer do not affect the values of the other.
 Thus, if the tape of the transformer has content $\gamma$, then at the end of the body of $\TF$, the last vector would look like $(x, y, \text{flags})$ where $x$ is the last vector at the end of the body of $\tfone{\TF}$ when its tape content is $\gamma$, and $y$ the one at the end of $\tftwo{\TF}$ when its tape content is $\gamma$.
 Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$, then $\TF$ will produce the same tape as $\tfone{\TF}$.
-This works for generating the first $\tfone{T}(|\alpha|)$ tokens which are $\tfone{\beta} \tfone{q}$.
+This works for generating the first $\tfone{T}(|\alpha|)$ tokens which are $\beta \tfone{q}$.
 Thus, we would like to apply this transformation only to the vectors generating them.
 Therefore, we need to flag them with the position embedding.
 Since $h_{|\alpha| + i}$ carries the distribution to output in the $(i+1)$-th step, i.e., the $(|\alpha| + i + 1)$-th token of the tape, the vectors that we need to flag will be $h_{|\alpha|}, h_{|\alpha|+1}, \dots, h_{|\alpha|+\tfone{T}(|\alpha|)-1}$.
 
 \smallskip
 
-After running $\tfone{T}(|\alpha|)$ steps of this construction, the tape will be $\alpha \tfone{\beta} \tfone{q}$.
-At this point, we want to start generating $\tftwo{\beta}$, i.e., the tape of $\tftwo{\TF}$.
-Just changing what we choose before the $\OUTPUT$ layer does not work, since what the construction will produce would be $\tftwo{\TF}(\alpha \tfone{\beta} \tfone{q})$, and we need $\tftwo{\TF}(\alpha)$.
+After running $\tfone{T}(|\alpha|)$ steps of this construction, the tape will be $\alpha \beta \tfone{q}$.
+At this point, we want to start generating $\gamma$, i.e., the tape of $\tftwo{\TF}$.
+Just changing what we choose before the $\OUTPUT$ layer does not work, since what the construction will produce would be $\tftwo{\TF}(\alpha \beta \tfone{q})$, and we need $\tftwo{\TF}(\alpha)$.
 
 \medskip
 
