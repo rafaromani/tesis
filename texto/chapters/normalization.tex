@@ -1,10 +1,10 @@
 For an easier handling of transformers, we define a notion of normalized transformer.
 This notion will specify properties of the $\OUTPUT$ matrix and of the vector consumed by this step.
 
-\begin{definition}[Normalized transformer]
-    We say a transformer is normalized when it meets two conditions. 
+\begin{definition}[Normalized deterministic transformer]
+    We say a deterministic transformer is normalized if it satisfies two conditions. 
     \begin{itemize}
-        \item \projection : The matrix of the $\OUTPUT$ has to be a projection, i.e., it's a diagonal matrix with only ones in its diagonal.
+        \item \projection : The matrix of the $\OUTPUT$ has to be a projection, i.e., it is a diagonal matrix with ones on its diagonal.
         \item \concentrated : The last vector after the last iteration has to only be composed of $\minrep$ in every projected coordinate except one, which has to be $\maxrep$.
         The non projected coordinates are free to be any value.
     \end{itemize}
@@ -16,7 +16,7 @@ For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ com
 In the next section we introduce an algorithm for normalizing transformers.
 
 
-\subsection{Algorithm for normalizing}
+\subsection{Algorithm for normalizing}\label{normalization}
 
 For normalizing transformers, first we make them meet \projection\ and then \concentrated.
 
