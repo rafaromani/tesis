@@ -1,0 +1,23 @@
+We showed in Section \ref{det-bool} that deterministic transformers can perform boolean operations with only a constant overhead; thus, $\CoTtndn$ classes are closed under boolean operations.
+The same constructions apply to probabilistic transformers; thus, $\RCoTtndn$ classes are also closed under boolean operations.
+
+\begin{theorem}[$\RCoTtndn$ is closed under complement]
+    $\gL \in \RCoTtndn \implies \gL^c \in \RCoTtndn$
+\end{theorem}
+
+Let $\gL \in \RCoTtndn$ and let $\{\TF_n\}_{n \in \mathbb{N}}$ be the family of probabilistic transformers that computes $\gL$.
+Let us assume all the transformers in the family are normalized.
+Then, similarly to the deterministic case, we define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ as $\{\TF_n\}_{n \in \mathbb{N}}$, except the $\OUTPUT$ matrices have the rows corresponding to $\qaccept$ and $\qreject$ swapped.
+
+Next, for all $\alpha \in \Sigma^*$, if $\Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3$, then $\Pr[\TF'^*_{|\alpha|}(\alpha) = \qreject] > 2/3$, since every time $\TF_{|\alpha|}$ prints $\qaccept$, $\TF'_{|\alpha|}$ prints $\qreject$.
+Therefore, $\{\TF'_n\}_{n \in \mathbb{N}}$ computes $\gL^c$ using the same number of $\CoT$ steps and the same embedding size $O(d(n))$ as $\{\TF_n\}_{n \in \mathbb{N}}$ to compute $\gL$.
+Thus, $\gL \in \RCoTtndn$ implies $\gL^c \in \RCoTtndn$.
+
+
+\bigskip
+
+\begin{theorem}[$\RCoTtndn$ is closed under disjunction]
+    $\gL_1, \gL_2 \in \RCoTtndn \implies \gL_1 \cup \gL_2 \in \RCoTtndn$
+\end{theorem}
+
+
