@@ -22,7 +22,7 @@ For normalizing transformers, first we make them meet \projection\ and then \con
 
 \subsubsection*{Algorithm for \projection}
 
-Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
+Notice that every linear transformation $M: \Rd \to \Floating^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
 \footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
 
 \[
@@ -33,7 +33,7 @@ Notice that every linear transformation $M: \Rd \to \mathbb{R}^{|\Sigma|}$ with 
     \left( \begin{matrix} (Mx)_1 \\ \vdots \\ (Mx)_{|\Sigma|} \end{matrix} \right)
 \]
 
-\noindent where $v \in \mathbb{R}^{d-|\Sigma|}$ can have any values.
+\noindent where $v \in \Floating^{d-|\Sigma|}$ can have any values.
 
 Let $\TF$ be a transformer and $M$ be the matrix of the $\OUTPUT$ layer.
 Using the decomposition just presented, and the strategy defined in Section \ref{lin-tranf} for applying linear transformations, we can change the matrix of the $\OUTPUT$ layer to be only a projection.
