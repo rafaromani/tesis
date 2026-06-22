@@ -1,0 +1,62 @@
+Recall the definition of language recognition by probabilistic transformers. 
+We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ recognizes a language $\gL$ when 
+\[
+    \alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3 
+\]
+The choice of the constant $2/3$ may seem somewhat arbitrary.
+We now show that we can replace $2/3$ with any constant in the interval $[1/2, 1)$.
+
+\bigskip
+
+Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $[1/2, 1)$ and show that is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
+
+For each $\TF_n$ we construct $\TF'_n$ such that for all words of length $n$, $\alpha \in \gL \iff \Pr[\TF_n'^*(\alpha) = \qaccept] > d $.
+First, if $d \leq c$, then $\TF_n = \TF'_n$.
+Let us explore the case where $c < d$.
+
+We construct $\TF'_n$ based on $\TF_n$ using a Monte Carlo simulation.
+The idea is similar to the disjunction of languages.
+$\TF'_n$ runs the transformer $\TF_n$ sequentially $r$ times and then analyzes whether the majority of the results accept.
+
+The construction presented in Section \ref{det-or} for the disjunction of two deterministic transformers can be easily extended to run a larger number of transformers sequentially.
+This construction also applies for probabilistic transformers.
+
+To compute the disjunction, we analyzed the coordinate $f_c$ at the last step of the computation.
+It worked as a counter of how many transformers accepted the word.
+We replicate this strategy to check whether the majority of the $r$ runs of $\TF_n$ accepted the word, i.e., $f_c > r/2$.
+If that is the case, we force $\TF'_n$ to accept; otherwise, we force it to reject.
+
+The question is how many runs of $\TF_n$ are needed, given that it answers correctly with probability $c > 1/2$, in order to obtain the correct answer with probability at least $d$.
+We estimate the necessary $r$ using Chernoff's bound.
+
+\begin{theorem}[Chernoff's bound]
+    Let $y_1, \dots, y_r$ be independent Boolean random variables with $\Pr[y_i = 1] = c$ for every $1 \leq i \leq r$.
+    Let $Y = \sum_{i=1}^r y_i$ and let $\delta \in (0,1)$.
+    Then $\Pr[Y \leq (1-\delta)rc] \leq e^{-\frac{\delta^2}{4}rc}$ and $\Pr[Y \geq (1+\delta)rc] \geq e^{-\frac{\delta^2}{4}rc}$.
+\end{theorem}
+
+We need to find $\delta$ and large enough $r$ such that $\Pr[Y > r/2] > d$.
+Let us analyze how the bound applies to our case.
+Each $y_i$ represents a run of $\TF_n$.
+$y_i = 1$ indicates that the $i$th run of $\TF_n$ answered correctly, and $y_i = 0$ that it answered incorrectly.
+Since $\TF_n$ answers correctly with probability higher than $c$, we have $\Pr[y_i = 1] > c$.
+
+Applying Chernoff's bound, we require $\delta$ and $r$ such that $(1+\delta)rc > r/2$ and $e^{-\delta^2rc/4} \geq d$.
+%
+\begin{align*}
+    (1+\delta)rc &> \frac{r}{2}       &           e^{-\frac{\delta^2}{4}rc} & \geq d \\
+    (1+\delta)c  &> \frac{1}{2}       &           -\frac{\delta^2}{4}rc     & \geq \log_e (d) \\
+    c + \delta c &> \frac{1}{2}       &           r                         & \geq -4\frac{\log_e(d)}{c\delta^2}\\
+    \delta       &> \frac{1/2-c}{c}   &                                     &
+\end{align*}
+%
+Since $c \geq 1/2$, we can bound $(1/2-c)/c$ by $0$; thus, choosing any $\delta \in (0,1)$ satisfies the first equation.
+Then, with a fixed $\delta$, choosing $r = -4\log_e(d)/(c\delta^2)$ makes $\Pr[Y > r/2] > d$.
+Therefore, $\TF'_n$ runs $\TF_n$ $\lceil -4\log_e(d)/(c\delta^2) \rceil$ times and accepts the word if more than half of the runs accepted; otherwise, it rejects.
+Finally, $\TF'_n$ answers correctly with probability at least $d$.
+
+\medskip
+
+For $|\alpha| = n$, let $T(n)$ be the number of steps the family $\{\TF_n\}_{n \in \mathbb{N}}$ needs to compute $\gL(\alpha)$ and $d(n)$ its embedding dimension.
+Then, the family $\{\TF'_n\}_{n \in \mathbb{N}}$ takes $O(r \cdot T(n))$ steps to compute $\gL(\alpha)$ and uses embedding size $O(r \cdot d(n))$.
+Thus, the $\RCoTtndn$ classes are invariant to the choice of the constant in the definition of language recognition by probabilistic transformers.
