@@ -1,5 +1,8 @@
 We showed in Section \ref{det-bool} that deterministic transformers can perform boolean operations with only a constant overhead; thus, $\CoTtndn$ classes are closed under boolean operations.
-The same constructions apply to probabilistic transformers; thus, $\RCoTtndn$ classes are also closed under boolean operations.
+Similar constructions apply to probabilistic transformers.
+Therefore, we show that $\RCoTtndn$ classes are closed under complement and disjunction, which together imply closure under boolean operations.
+
+\bigskip
 
 \begin{theorem}[$\RCoTtndn$ is closed under complement]
     $\gL \in \RCoTtndn \implies \gL^c \in \RCoTtndn$
@@ -20,4 +23,104 @@ Thus, $\gL \in \RCoTtndn$ implies $\gL^c \in \RCoTtndn$.
     $\gL_1, \gL_2 \in \RCoTtndn \implies \gL_1 \cup \gL_2 \in \RCoTtndn$
 \end{theorem}
 
+Let $\{\TF^1_n\}_{n \in \mathbb{N}}$ be the family of probabilistic transformers recognizing $\gL_1$ and $\{\TF^2_n\}_{n \in \mathbb{N}}$ the one recognizing $\gL_2$.
+We construct the family $\{\TF_n\}_{n \in \mathbb{N}}$ following the same construction as for the disjunction of deterministic transformers (Section \ref{det-or}).
+By the result of Section \ref{error-reduction}, we can assume that the probability of error of each family is arbitrary small.
+Let $p_1$ be the probability of $\{\TF^1_n\}_{n \in \mathbb{N}}$ answering correctly and $p_2$ the probability of $\{\TF^2_n\}_{n \in \mathbb{N}}$ answering correctly.
+Then, for each word $\alpha$, we have four possible cases.
+In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accepting or rejecting $\alpha$ in each of the cases.
 
+
+\begin{figure}[htbp]
+  \centering
+
+  % Fila 1
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tabular}{|r|c|c|}
+      \hline
+                      & $\TF^1$ accepts   & $\TF^1$ rejects \\
+      \hline
+      $\TF^2$ accepts & $p_1p_2$          & $(1-p_1)p_2$ \\
+      \hline
+      $\TF^2$ rejects & $p_1(1-p_2)$      & $(1-p_1)(1-p_2)$ \\
+      \hline
+    \end{tabular}
+    \captionsetup{labelformat=empty}
+    \caption{Case 1: $\alpha \in \gL_1 \land \alpha \in \gL_2$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tabular}{|r|c|c|}
+      \hline
+                      & $\TF^1$ accepts   & $\TF^1$ rejects \\
+      \hline
+      $\TF^2$ accepts & $p_1(1-p_2)$      & $(1-p_1)(1-p_2)$ \\
+      \hline
+      $\TF^2$ rejects & $p_1p_2$          & $(1-p_1)p_2$ \\
+      \hline
+    \end{tabular}
+    \captionsetup{labelformat=empty}
+    \caption{Case 2: $\alpha \in \gL_1 \land \alpha \notin \gL_2$}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  % Fila 2
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tabular}{|r|c|c|}
+      \hline
+                      & $\TF^1$ accepts       & $\TF^1$ rejects \\
+      \hline
+      $\TF^2$ accepts & $(1-p_1)p_2$          & $p_1p_2$ \\
+      \hline
+      $\TF^2$ rejects & $(1-p_1)(1-p_2)$      & $p_1(1-p_2)$ \\
+      \hline
+    \end{tabular}
+    \captionsetup{labelformat=empty}
+    \caption{Case 3: $\alpha \notin \gL_1 \land \alpha \in \gL_2$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tabular}{|r|c|c|}
+      \hline
+                      & $\TF^1$ accepts       & $\TF^1$ rejects \\
+      \hline
+      $\TF^2$ accepts & $(1-p_1)(1-p_2)$      & $p_1(1-p_2)$ \\
+      \hline
+      $\TF^2$ rejects & $(1-p_1)p_2$          & $p_1p_2$ \\
+      \hline
+    \end{tabular}
+    \captionsetup{labelformat=empty}
+    \caption{Case 4: $\alpha \notin \gL_1 \land \alpha \notin \gL_2$}
+  \end{subfigure}
+
+  \caption{Probabilities of all possible behaviors of $\TF^1$ and $\TF^2$}
+  \label{fig:cases}
+\end{figure}
+
+$\TF$ accepts whenever $\TF^1$ or $\TF^2$ accepts.
+Let us analyze case by case the probability of $\TF$ answering correctly.
+%
+\begin{itemize}
+    \item Case 1: $p_1 + p_2 - p_1p_2 = p_1p_2 + (1-p_1)p_2 + p_1(1-p_2)$
+    \item Case 2: $1 - p_2 + p_1p_2  = p_1(1-p_2) + (1-p_1)(1-p_2) + p_1p_2$
+    \item Case 3: $1 - p_1 + p_1p_2  = (1-p_1)p_2 + p_1p_2 + (1-p_1)(1-p_2)$
+    \item Case 4: $p_1p_2$
+\end{itemize}
+%
+Then, if $p_1 = p_2 = 4/5$, the probability of $\TF$ answering correctly in each case is larger than 1/2.
+%
+\begin{itemize}
+    \item Case 1: $24/25 > 1/2$
+    \item Case 2: $21/25 > 1/2$
+    \item Case 3: $21/25 > 1/2$
+    \item Case 4: $16/25 > 1/2$
+\end{itemize}
+
+
+Thus, the probability of $\{\TF_n\}_{n \in \mathbb{N}}$ answering $\gL_1 \cup \gL_2$ correctly is at least $1/2$.
+Therefore, by the construction in Section \ref{error-reduction}, there is a family of transformers in $\RCoTtndn$ that recognizes $\gL_1 \cup \gL_2$ in $\RCoTtndn$.
