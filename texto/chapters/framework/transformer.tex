@@ -1,7 +1,5 @@
 % The introduction has to say that transformers have a tape where they recibe the input and write its output
 
-\bigrafa{decir que los determ no pueden tener dos maximos}
-
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
 It has a single tape from which it reads the input and onto which it appends additional tokens in an autoregressive manner.
@@ -27,9 +25,6 @@ This is far from the real models, thus the transformers studied in this thesis w
 The size of the tape is defined, for each input size $n$, as $\budget(n) + n$.
 It is important to remark that the size of the tape bounds the number of steps of $\CoT$ that the transformer makes.
 For an input word of length $n$, no computation can take more than $\budget(n)$ steps because every step writes a token in the tape.
-\bigsanti{mejorar esta última oración, no se entiende}
-\bigrafa{ahí va mejor?}
-
 
 
 \medskip
@@ -71,7 +66,7 @@ This algorithm consists of four parts: a token embedding layer ($\TE$), a positi
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
-The algorithm works over vectors of numbers \santi{of reals?}\rafa{son $\Floating$. Puedo decir simplemente que son números por ahora?} of certain dimension $d$.
+The algorithm works over vectors of numbers of certain dimension $d$.
 The dimension is dependent on the size of the input word.
 We call $d(n)$ to the \textbf{embedding size} when the input word has size $n$.
 
