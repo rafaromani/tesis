@@ -1,0 +1,32 @@
+\bigrafa{vale la pena poner una intuición de por qué ac0 es un buen bound?}
+
+\cite{toyota} expands on the work of \cite{merrill2023parallelism}.
+\cite{merrill2023parallelism} have shown that one step of a constant-depth, polynomial-embedding-dimension and log-precision transformer can be simulated in a small parallel time, i.e., using $\TC^0$ circuits.
+This result is built on the fact that multiplication and division of $n$-bit binary numbers are in $\TC^0$ \cite{hesse2001division}, as well as the iterated addition over $n$ different $n$-bit binary integers.
+
+However, such $\TC^0$ expressiveness upper bounds may be unrealistic for transformers operating with floating-point numbers. 
+In \cite{merrill2023parallelism}, it is implicitly assumed that when adding more than one floating-point number that the algorithm first computes the exact answer without rounding, using arbitrarily higher precision, and only performs rounding only at the end.
+However, in practice, rounding occurs after each addition of two numbers, and it remains open whether such $\TC^0$ upper bounds still hold.
+Immediate rounding makes iterated addition over floating-point numbers no longer associative \cite{goldberg1991every}.
+The associativity of integer addition is essential for the result that iterated addition over $n$ different $n$-bit binary integers is in $\TC^0$.
+
+The abstraction for transformers presented by \cite{toyota} uses the numeric representation presented in Section \ref{repr}.
+Their model rounds after every numerical operation and represents numbers with a constant number of bits for the significand and the exponent.
+
+\cite{toyota} prove that $\mathsf{sum}_{e,s}:\Floating^n \to \Floating$ has an $\AC^0$ circuit when $e,s$ are both constants.
+Then, composing circuits, they simulate one step of a deterministic constant-depth, polynomial-embedding-dimension transformer with a circuit in $\AC^0$ (Theorem \ref{det-upper-bound}).
+
+\begin{theorem}[Upper bound for deterministic transformers]\label{det-upper-bound}
+    $\CoT[0, \poly(n)] \subseteq \AC^0$
+\end{theorem}
+
+
+Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$ (Corollary \ref{det-upper-bound-log-steps}). 
+This is because a transformer with $T$ steps of $\CoT$ can be interpreted as an $\mathsf{OR}$ of $|\Sigma|^T$ disjoint subcircuits, where each of them enumerates all possible sequences of $T$ chain-of-thought tokens and outputs the value of the token in the branch where all the intermediate token values are consistent. 
+This enumeration can be done in parallel and thus only takes constant depth. 
+When $T = O(\log(n))$, this only leads to a $\poly(n)$ factor of explosion in circuit size.
+Therefore, it follows from Theorem~\ref{det-upper-bound} that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
+
+\begin{corollary}\label{det-upper-bound-log-steps}
+    $\CoT[\log(n), \poly(n)] \subseteq \AC^0$
+\end{corollary}
