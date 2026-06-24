@@ -2,7 +2,7 @@ In this section, we show that one forward pass of constant-depth, polynomial-emb
 
 
 \begin{theorem}
-    $\RCoT[0, \poly(n)] \subseteq \AC^0$
+    $\RCoT[0, \poly(n)] \subseteq \RAC^0[1] = \AC^0$
 \end{theorem}
 
 For this proof, we build upon on \cite{toyota}'s proof for Theorem \ref{det-upper-bound}.
@@ -46,8 +46,31 @@ Observe that once the ranges are computed, they act as a lookup table with one e
 Since $r$ is a constant, the ranges can be interpreted as a constant-size lookup table.
 
 
-Therefore, since the ranges can be computed by $\AC^0$ circuits and the lookup table has constant size, sampling from $p$ can be performed by a circuit in $\RAC^0$ using a constant number $r$ of random bits.
+Therefore, since the ranges can be computed by $\AC^0$ circuits and the lookup table has constant size, sampling from $p$ can be performed by a circuit in $\RAC^0[1]$.
 
 Thus, by Theorem \ref{const-random-in-ac0}, one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\AC^0$.
 
-\bigrafa{pensar si tenemos corolario de que log pasos tmb son $\AC^0$ (seguro si)}
+\bigskip
+
+
+\bigrafa{más de $\log(\log(n))$ pasos de cot requiere demasiado azar para $AC^0$.
+Pareciera que ya con $\log(n)$ pasos los probabilisticos son más poderosos}
+
+
+\begin{corollary}
+    $\RCoT[\log(\log(n)), \poly(n)] \subseteq \RAC^0[\log(\log(n))] = \AC^0$
+    \rafa{falta proof de este corolario}
+\end{corollary}
+
+
+\bigskip
+
+Since one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\RAC^0$.
+In the same way as Corollary \ref{det-poly-steps-in-ppoly}, stacking the circuits of $\RAC^0[1]$ for each step of $\CoT$, gives us a simulation for a constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers performing $\poly(n)$ steps of $\CoT$.
+This circuit has polynomial size and uses a polynomial number of random bits, thus we have Corollary \ref{prob-poly-steps-in-rppoly}.
+
+
+\begin{corollary}\label{prob-poly-steps-in-rppoly}
+    $\RCoT[\poly(n), \poly(n)] \subseteq \Rppoly$ 
+\end{corollary}
+
