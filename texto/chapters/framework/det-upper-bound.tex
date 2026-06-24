@@ -30,3 +30,14 @@ Therefore, it follows from Theorem~\ref{det-upper-bound} that $\CoT[\log(n), \po
 \begin{corollary}\label{det-upper-bound-log-steps}
     $\CoT[\log(n), \poly(n)] \subseteq \AC^0$
 \end{corollary}
+
+\medskip
+
+
+Since each pass of the transformer can be simulated by a circuit in $\AC^0$.
+A transformer doing a polynomial number of steps $T(n)$ of $\CoT$ can be simulated by a circuit of depth $T(n)$ (and polynomial size), just stacking the circuit for one pass.
+Then, a transformer doing a polynomial number of steps can be simulated by a circuit in $\ppoly$.
+
+\begin{theorem}
+    $\CoT[poly(n), poly(n)] \subseteq \ppoly$
+\end{theorem}
