@@ -25,7 +25,7 @@ Observe that the fact that a single forward pass of a transformer can be simulat
 This is because a transformer with $T$ steps of $\CoT$ can be interpreted as an $\mathsf{OR}$ of $|\Sigma|^T$ disjoint subcircuits, where each of them enumerates all possible sequences of $T$ chain-of-thought tokens and outputs the value of the token in the branch where all the intermediate token values are consistent. 
 This enumeration can be done in parallel and thus only takes constant depth. 
 When $T = O(\log(n))$, this only leads to a $\poly(n)$ factor of explosion in circuit size.
-Therefore, it follows from Theorem~\ref{det-upper-bound} that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
+Therefore, it follows from Theorem \ref{det-upper-bound} that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
 
 \begin{corollary}\label{det-upper-bound-log-steps}
     $\CoT[\log(n), \poly(n)] \subseteq \AC^0$
@@ -39,5 +39,5 @@ A transformer doing a polynomial number of steps $T(n)$ of $\CoT$ can be simulat
 Then, a transformer doing a polynomial number of steps can be simulated by a circuit in $\ppoly$.
 
 \begin{theorem}
-    $\CoT[poly(n), poly(n)] \subseteq \ppoly$
+    $\CoT[\poly(n), \poly(n)] \subseteq \ppoly$
 \end{theorem}
