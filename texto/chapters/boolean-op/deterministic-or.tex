@@ -66,7 +66,7 @@ Thus, if the tape of the transformer has content $\gamma$, then at the end of th
 Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$, then $\TF$ will produce the same tape as $\tfone{\TF}$.
 This works for generating the first $\tfone{T}(|\alpha|)$ tokens which are $\beta \tfone{q}$.
 Thus, we would like to apply this transformation only to the vectors generating them.
-Therefore, we need to flag them with the position embedding.
+Therefore, we need to flag them with the position encoding.
 Since $h_{|\alpha| + i}$ carries the distribution to output in the $(i+1)$-th step, i.e., the $(|\alpha| + i + 1)$-th token of the tape, the vectors that we need to flag will be $h_{|\alpha|}, h_{|\alpha|+1}, \dots, h_{|\alpha|+\tfone{T}(|\alpha|)-1}$.
 
 \smallskip
