@@ -1,11 +1,11 @@
 In this section, we show that one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by shallow Boolean circuits.
 
 
-\begin{theorem}
+\begin{theorem}\label{prob-upper-bound}
     $\RCoT[0, \poly(n)] \subseteq \RAC^0[1] = \AC^0$
 \end{theorem}
 
-For this proof, we build upon on \cite{toyota}'s proof for Theorem \ref{det-upper-bound}.
+For this proof, we build upon \cite{toyota}'s proof of Theorem \ref{det-upper-bound}.
 They already showed that the distribution generator can be simulated by $\AC^0$ circuits.
 Thus, we only show that the probabilistic token selector can be simulated by $\AC^0$ circuits.
 
@@ -23,7 +23,7 @@ For example, if $\Sigma = \{t_1, t_2, t_3\}$ and $p$ is such that $p(t_1) = 0.33
 Observe that although the numbers $p(\sigma_j)$ are representable in $\Floating$, the summations are not performed with iterative rounding.
 They are computed with the maximum precision needed to avoid rounding error; this precision can be bounded as a function of $e$ and $s$ alone, independently of the values of $p(\sigma_i)$.
 
-Since the precision for the numbers is fixed and the numbers of term of the summations are bounded by the size of the alphabet, the ranges can be computed by circuits in $\AC^0$. \rafa{quizás agregar ref a seccion 2.4}
+Since the precision for the numbers is fixed and the number of terms of the summations are bounded by the size of the alphabet, the ranges can be computed by circuits in $\AC^0$. \rafa{quizás agregar ref a seccion 2.4}
 
 \medskip
 
@@ -52,22 +52,32 @@ Thus, by Theorem \ref{const-random-in-ac0}, one forward pass of constant-depth, 
 
 \bigskip
 
+As in Corollary \ref{det-upper-bound-log-steps}, we now prove that a logarithm number of $\CoT$ steps are not sufficient to go beyond $\AC^0$, even in a probabilistic transformer.
 
-\bigrafa{más de $\log(\log(n))$ pasos de cot requiere demasiado azar para $AC^0$.
-Pareciera que ya con $\log(n)$ pasos los probabilisticos son más poderosos}
+Since we need a constant number of bits from the seed to simulate each $\CoT$ step, we need $O(\log(n))$ random bits to simulate $\log(n)$ steps.
+Thus, we can enumerate all possible chain-of-thought token sequences $(|\Sigma|^{O(log(n))} = O(n))$ and seeds $2^{O(\log(n)) = O(n)}$ and check when they are consistent.
+Observe that we need to check each seed with each sequence; thus, we check consistency of $O(n^2)$ pairs (sequence, seed).
 
+In the deterministic transformers it was enough to perform an $\OR$ of all the consistent sequences.
+In the probabilistic setting, that idea does not work, since there could be false positives.
+Instead, our circuit computes $\MAJORITY$ of the consistent runs and outputs its result.
+
+The circuit is clearly in $\AC^0$, except for the $\MAJORITY$.
+The $\MAJORITY$ problem can be solved in $\AC^0$ only when there is a promise that more than a fraction $c$ of the bits are $1$s (or $0$s), for a fixed $c \in (1/2, 1]$.
+Since the probabilistic transformer outputs the correct answer $2/3$ of the time, i.e., for $2/3$ of the seeds, we know that at least $2/3$ of the consistent runs agree.
+Thus, instead of $\MAJORITY$, we compute $\MAJORITY_{2/3}$, which can be done in $\AC^0$.
+
+Finally, since there is an $\AC^0$ circuit simulating one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers (Theorem \ref{prob-upper-bound}), there is an $\AC^0$ circuit simulating $O(\log(n))$ steps of $\CoT$ of the same set-up.
 
 \begin{corollary}
-    $\RCoT[\log(\log(n)), \poly(n)] \subseteq \RAC^0[\log(\log(n))] = \AC^0$
-    \rafa{falta proof de este corolario}
+    $\RCoT[\log(n), \poly(n)] \subseteq \AC^0$
 \end{corollary}
 
 
 \bigskip
 
-Since one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\RAC^0$.
-In the same way as Corollary \ref{det-poly-steps-in-ppoly}, stacking the circuits of $\RAC^0[1]$ for each step of $\CoT$, gives us a simulation for a constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers performing $\poly(n)$ steps of $\CoT$.
-This circuit has polynomial size and uses a polynomial number of random bits, thus we have Corollary \ref{prob-poly-steps-in-rppoly}.
+Since one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\RAC^0$, stacking the circuits of $\RAC^0[1]$ for each $\CoT$ step gives a simulation for $\poly(n)$ steps (as in Corollary \ref{det-poly-steps-in-ppoly}).
+This circuit has polynomial size and uses a polynomial number of random bits; thus, we obtain Corollary \ref{prob-poly-steps-in-rppoly}.
 
 
 \begin{corollary}\label{prob-poly-steps-in-rppoly}
