@@ -1,0 +1,57 @@
+From Corollary \ref{det-poly-steps-in-ppoly} and Theorem \ref{det-lower-bound}, we know that $\CoT[\poly(n), \poly(n)] = \ppoly$.
+In the same way, from Corollary~\ref{prob-poly-steps-in-rppoly} and Theorem \ref{prob-lower-bound}, it follows that $\RCoT[\poly(n), \poly(n)] = \Rppoly$.
+Thus, we obtain the following theorem.
+%
+\begin{theorem}\label{ppoly-rppoly-iff-cot-rcot}
+    $\ppoly = \Rppoly \iff \CoT[\poly(n), \poly(n)] = \RCoT[\poly(n), \poly(n)]$.
+\end{theorem}
+%
+This means that randomness boosts the power of transformers if and only if it also does for polynomial-size circuits, which is not known, as probabilistic circuits have not been deeply studied.
+
+\bigskip
+
+A more interesting question arises when we require the transformers to be efficiently constructible.
+
+Observe that the proof of Theorem \ref{det-lower-bound} yields a polynomial algorithm that, for each circuit, constructs its corresponding deterministic transformer.
+This motivates the definition of $\UCoT[T(n), d(n)]$, which is $\CoTtndn$ restricted to families of transformers such that there exists a deterministic Turing machine that runs in polynomial time and, given the input length $1^{n}$, outputs the transformer $\TF_n$.
+Since $\ppoly$ restricted to uniform circuits coincides with $\Ptime$ \rafa{agregar ref a \ref{uppoly-equals-p}}, we obtain the following corollary.
+%
+\begin{corollary}\label{p-UCoT}
+    $\Ptime \subseteq \UCoT[\poly(n), \poly(n)]$
+\end{corollary}
+%
+Observe that Corollary \ref{p-UCoT} and Corollary \ref{det-poly-steps-in-ppoly} together imply Theorem \ref{p-equals-ucot}.
+%
+\begin{theorem}\label{p-equals-ucot}
+    $\Ptime = \UCoT[\poly(n), \poly(n)]$
+\end{theorem}
+
+
+\medskip
+
+
+These results have their analogous in the probabilistic setting.
+In the same way as in the proof of Theorem \ref{det-lower-bound}, the proof of Theorem \ref{prob-lower-bound} yields a polynomial algorithm that, for each randomized circuit, constructs its corresponding probabilistic transformer.
+Next, we define $\URCoT[T(n), d(n)]$, which is $\RCoTtndn$ restricted to families of transformers such that there exists a deterministic Turing machine that runs in polynomial time and, given the input length $1^{n}$, outputs the transformer $\TF_n$.
+Since $\Rppoly$ restricted to uniform circuits coincides with $\BPP$ \rafa{agregar ref a \ref{urppoly-equals-bpp}}, we obtain the following corollary.
+%
+\begin{corollary}\label{p-URCoT}
+    $\BPP \subseteq \URCoT[\poly(n), \poly(n)]$
+\end{corollary}
+%
+Observe that Corollaries~\ref{p-URCoT} and~\ref{prob-poly-steps-in-rppoly} together imply the following theorem.
+%
+\begin{theorem}\label{bpp-equals-urcot}
+    $\BPP = \URCoT[\poly(n), \poly(n)]$
+\end{theorem}
+
+\bigskip
+
+Therefore, we deduce the uniform version of Theorem \ref{ppoly-rppoly-iff-cot-rcot}.
+%
+\begin{theorem}\label{p-bpp-iff-ucot-urcot}
+    $\Ptime = \BPP \iff \CoT[\poly(n), \poly(n)] = \RCoT[\poly(n), \poly(n)]$.
+\end{theorem}
+
+Although $\Ptime = \BPP$ is an open question in complexity theory, this theorem is an interesting result.
+It implies that, when restricted to uniform families of transformers, the constrained access to randomness that transformers have is equivalent in expressive power to the unrestricted access allowed to probabilistic polynomial-time Turing machines.

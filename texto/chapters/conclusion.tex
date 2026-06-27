@@ -1,3 +1,17 @@
 \chapter{Conclusions}
 
-\bigrafa{vale la pena poner una intuición de por qué ac0 es un buen bound?}
+In this work, we studied the expressive power of constant-depth, constant-precision deterministic and probabilistic transformers.
+We proved that Boolean operations between languages can be computed in both settings without a blow-up in resources (Sections \ref{det-bool} and \ref{prob-bool}); and we were able to extend known expressiveness results from a deterministic setting (Section \ref{det-bounds}) to a randomized one (Section \ref{section-prob-upper-bound} and \ref{section-prob-lower-bound}).
+
+One of the main results of this work relates the expressive power of deterministic and probabilistic transformers (Section \ref{relations}).
+It is widely believed that $\Ptime = \BPP$; thus, Theorem \ref{p-bpp-iff-ucot-urcot} seems to indicate that, if we are only interested in uniform transformers, it is enough to study the deterministic ones.
+A deeper understanding of the classes $\ppoly$ and $\Rppoly$ and their relationship would be necessary to determine whether the same conclusion holds in the non-uniform case (Theorem~\ref{ppoly-rppoly-iff-cot-rcot}).
+Furthermore, there is no consensus in the community as to whether the best abstraction of real-life transformers is given by uniform or non-uniform families.
+
+
+Theorems \ref{det-upper-bound-log-steps} and \ref{prob-upper-bound-log-steps} show that $O(\log(n))$ steps of $\CoT$ are insufficient to separate the expressive power of probabilistic and deterministic transformers, both in the uniform and non-uniform cases.
+We are confident that their power is the same, since $\AC^0$ should be a tight upper bound for one pass of a transformer.
+We do not believe the $\ATTN$ mechanism can be simulated in $\NC^0 \subsetneq \AC^0$, since it involves a linear number of variables across a constant number of operations.
+
+It remains an open question whether deterministic transformers can simulate probabilistic ones.
+Determining whether such a simulation is possible, and characterizing its overhead, would provide insight into the relationship between the expressive power of the two models.

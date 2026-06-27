@@ -1,6 +1,6 @@
 Building upon Theorem \ref{det-lower-bound}, we prove that constant-depth, constant-precision probabilistic transformers using $T$ steps of $\CoT$ with $O(\log(n))$ embedding size can simulate a randomized circuit of size $T$.
 
-\begin{theorem}
+\begin{theorem}\label{prob-lower-bound}
     For any polynomial function $T:\mathbb{N}^+\to \mathbb{N}^+$, $\RSIZE(T(n)) \subseteq \RCoT [T(n), \log(n)]$.
     In particular, $\Rppoly \subseteq \RCoT[\poly(n), \log(n)]$.
 \end{theorem}
@@ -50,7 +50,3 @@ $\TF_n$ uses randomness only to generate the first $f(n)$ tokens.
 It generates them following a uniform distribution.
 Then, $\Pr[\TF_n(\alpha) = 1] = \Pr_{r}[\TF'_n(\alpha r) = 1] = \Pr_{r}[C'(\alpha, r) = 1] = \Pr[C_n(\alpha) = 1]$.
 Therefore, $\Pr[\TF_n(\alpha) = 1] > 2/3$ if and only if $\Pr[C_n(\alpha) = 1] > 2/3$.
-
-
-
-
