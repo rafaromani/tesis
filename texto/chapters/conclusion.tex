@@ -1,17 +1,31 @@
 \chapter{Conclusions}
 
 In this work, we studied the expressive power of constant-depth, constant-precision deterministic and probabilistic transformers.
-We proved that Boolean operations between languages can be computed in both settings without a blow-up in resources (Sections \ref{det-bool} and \ref{prob-bool}); and we were able to extend known expressiveness results from a deterministic setting (Section \ref{det-bounds}) to a randomized one (Section \ref{section-prob-upper-bound} and \ref{section-prob-lower-bound}).
+We proved that Boolean operations between languages can be computed in both settings without a blow-up in resources (Sections \ref{det-bool} and \ref{prob-bool}); and we were able to extend known expressiveness results from a deterministic setting (Section \ref{det-bounds}) to a randomized one (Sections \ref{section-prob-upper-bound} and \ref{section-prob-lower-bound}).
 
-One of the main results of this work relates the expressive power of deterministic and probabilistic transformers (Section \ref{relations}).
-It is widely believed that $\Ptime = \BPP$; thus, Theorem \ref{p-bpp-iff-ucot-urcot} seems to indicate that, if we are only interested in uniform transformers, it is enough to study the deterministic ones.
-A deeper understanding of the classes $\ppoly$ and $\Rppoly$ and their relationship would be necessary to determine whether the same conclusion holds in the non-uniform case (Theorem~\ref{ppoly-rppoly-iff-cot-rcot}).
-Furthermore, there is no consensus in the community as to whether the best abstraction of real-life transformers is given by uniform or non-uniform families.
+\smallskip
 
+One of the main results of this work relates the expressive power of deterministic and probabilistic transformers, between them and with other models of computation (Section \ref{relations}).
+Although it is an open question, it is widely believed that $\Ptime = \BPP$; thus, Theorem \ref{p-bpp-iff-ucot-urcot} seems to indicate that, if we are only interested in uniform transformers, it is enough to study the deterministic ones.
+A deeper understanding of the classes $\ppoly$ and $\Rppoly$ and their relationship would be necessary to determine whether the same conclusion holds in the non-uniform case (Theorem \ref{ppoly-rppoly-iff-cot-rcot}).
+
+\smallskip
+
+There is no consensus in the community as to whether the best abstraction of real-life transformers is given by uniform or non-uniform families.
+We agree with Lance Fortnow \rafa{cite: https://blog.computationalcomplexity.org/2025/10/ai-and-power-of-nonuniform-circuits.html} that it is reasonable to allow non-uniform families.
+The uniform constraint was artificially introduced to Boolean circuits to make the power of polynomial-size circuits match the power of polynomial-time deterministic Turing machines.
+This constraint semantically says that there has to be some relation between the circuits of the same family, i.e., there has to be a polynomial-time deterministic Turing machine that computes the family.
+
+In real life, models undergo computationally intensive training in which they learn their weights.
+This extensive training is analogous to the power conferred by non-uniformity on polynomial-size circuits, which is generally believed to be slightly greater than that of $\Ptime$
+Recall that it is widely believed that $\ppoly \nsubseteq \NP$.
+
+Consistent with the accepted belief that non-uniformity gives just enough power to hide randomness, we proved that allowing non-uniformity in deterministic transformers is sufficient to simulate uniform probabilistic transformers (Theorem \ref{urcot-cot}).
+It remains an open question whether deterministic transformers can simulate probabilistic ones without the help of non-uniformity.
+Determining whether such a simulation is possible, and characterizing its overhead, would provide insight into the relationship between the expressive power of the two models and the practical implications of Theorem \ref{ppoly-rppoly-iff-cot-rcot}.
+
+\smallskip
 
 Theorems \ref{det-upper-bound-log-steps} and \ref{prob-upper-bound-log-steps} show that $O(\log(n))$ steps of $\CoT$ are insufficient to separate the expressive power of probabilistic and deterministic transformers, both in the uniform and non-uniform cases.
 We are confident that their power is the same, since $\AC^0$ should be a tight upper bound for one pass of a transformer.
 We do not believe the $\ATTN$ mechanism can be simulated in $\NC^0 \subsetneq \AC^0$, since it involves a linear number of variables across a constant number of operations.
-
-It remains an open question whether deterministic transformers can simulate probabilistic ones.
-Determining whether such a simulation is possible, and characterizing its overhead, would provide insight into the relationship between the expressive power of the two models.
