@@ -1,3 +1,5 @@
+\bigrafa{revisar negritas en las defs}
+
 In this section, we define the standard notions of complexity theory used throughout this thesis.
 
 \begin{definition}[Language]
@@ -100,7 +102,7 @@ This theorem motivates the study of threshold circuits, circuits allowed to have
 Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ began to be studied.
 
 \begin{definition}[$\MAJORITY$ with promise]
-    For every $e \in (1/2, 1]$ we define the problem Majority with promise ($\PROMISEDMAJORITY{e}$) as $\MAJORITY$ but restricted to words where there are at least $e$ $0$s or $e$ 1s.
+    For every $e \in (1/2, 1]$ we define the problem \textbf{Majority with promise} ($\PROMISEDMAJORITY{e}$) as $\MAJORITY$ but restricted to words where there are at least $e$ $0$s or $e$ 1s.
 \end{definition}
 
 An interesting result from descriptive complexity is that for all $e$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$\rafa{agregar cita}.
@@ -114,7 +116,7 @@ This value is fixed once the evaluation of the circuit starts.
 Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought as evaluating a Boolean circuit $C'$ with input $x r$, where $r$ are the values of the random gates.
 
 \begin{definition}[Randomized Boolean circuits]
-    A randomized Boolean circuit is a directed acyclic graph with $n+r$ sources and one sink.
+    A \textbf{randomized Boolean circuit} is a directed acyclic graph with $n+r$ sources and one sink.
     All nonsource vertices are labeled as $\land$, $\lor$ or $\lnot$ (i.e., the logical operations $\OR$, $\AND$, and $\NOT$).
     The vertices labeled with $\lor$ and $\land$ have fan-in (i.e., number of incoming edges) equal to $2$ and the vertices labeled with $\lnot$ have fan-in $1$. 
     The size of $C$, denoted by $|C|$, is the number of vertices in it.
@@ -129,7 +131,7 @@ Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought a
 In general, we say that a family of random circuits recognizes a language $\gL$ when $\Pr[C_{|x|}(x) = \gL(x)]$ is high.
 
 \begin{definition}[Randomized circuit families and language recognition] 
-    Let $T : \mathbb{N} \to \mathbb{N}$ be a function. 
+    Let $T : \mathbb{N} \to \mathbb{N}$ be a function.
     A $T(n)$-size randomized circuit family is a sequence $\{C_n\}_{n\in\mathbb{N}}$ of randomized Boolean circuits, where $C_n$ has $n$ inputs and a single output, and its size $|C_n| \leq T(n)$ for every $n$.
     We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size randomized circuit family $\{C_n\}_{n\in\mathbb{N}}$ with $O(f(n))$ random gates such that for every $x\in\{0,1\}^n$, $\Pr[C_n(x) = 1] \geq 2/3 \iff \gL(x)$.
 \end{definition}
