@@ -3,7 +3,17 @@ Let $\tfone{\gL}$ and  $\tftwo{\gL}$ be languages in $\CoTtndn$, then there is a
 We construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ that computes $\tfone{\gL} \cup \tftwo{\gL}$.
 It does it in $\tfone{T}(n) + \tftwo{T}(n) + 1 \in O(T(n))$ steps of $\CoT$ and it has embedding size $O(d(n))$.
 
-The idea behind the construction is to run first one of the transformers, then run the other and finally compute the disjunction of both results.
+The idea behind the construction is to run first one of the transformers, then run the other and finally compute the disjunction of both results as represented in Figure \ref{fig:or}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{chapters/diagrams/diagram-or.png}
+    \caption{Visual representation of the construction for disjunction}
+    \label{fig:or}
+\end{figure}
+
+
+
 
 For every input $\alpha$, the tape of the transformer, at the end of the computation, ends up looking as $\alpha \beta q$, where $q$ is the decision token printed by the transformer and $\beta$ ($\in \Sigma^*$) is the sequence of intermediate tokens printed during the chain of thought.
 We denote by $\alpha \beta \tfone{q}$ the content of the tape of $\tfone{\TF}$ at the end of the computation when the input word is $\alpha$.
@@ -138,8 +148,3 @@ The embedding dimension of $\TF$ is the same as the dimension of $\tfone{\TF}$ p
 
 Therefore, the language computed by the family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ is in $\CoTtndn$.
 Thus, $\gL1 \cup \gL2 \in \CoTtndn$.
-
-
-\bigcifu{agregar un diagrama}
-
-

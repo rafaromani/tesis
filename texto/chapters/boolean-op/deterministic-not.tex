@@ -1,8 +1,13 @@
 Let $\gL \in \CoTtndn$. 
 Then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
-For each transformer in the family, we construct a corresponding transformer that behaves identically (internally and externally) but prints the flipped decision token.
+For each transformer in the family, we construct a corresponding transformer that behaves identically (internally and externally) but prints the flipped decision token as represented in Figure \ref{fig:not}.
 
-\bigrafa{dibujito}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{chapters/diagrams/diagram-not.png}
+    \caption{Visual representation of the construction for complement}
+    \label{fig:not}
+\end{figure}
 
 Let $\TF$ be a transformer, we construct $\TF'$ that flips the decision token of $\TF$, i.e., if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
 This is the only change made to $\TF$, thus $\TF'^i(\sigma) = \TF^i(\sigma)$ for every $i$ when $\sigma$ is not a decision symbol.
