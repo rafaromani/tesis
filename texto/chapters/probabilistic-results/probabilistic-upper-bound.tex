@@ -2,7 +2,7 @@ In this section, we show that one forward pass of constant-depth, polynomial-emb
 
 
 \begin{theorem}\label{prob-upper-bound}
-    $\RCoT[0, \poly(n)] \subseteq \RAC^0[1] = \AC^0$
+    $\RCoT[0, \poly(n)] \subseteq \BPAC^0[1] = \AC^0$
 \end{theorem}
 
 For this proof, we build upon \cite{toyota}'s proof of Theorem \ref{det-upper-bound}.
@@ -46,7 +46,7 @@ Observe that once the ranges are computed, they act as a lookup table with one e
 Since $r$ is a constant, the ranges can be interpreted as a constant-size lookup table.
 
 
-Therefore, since the ranges can be computed by $\AC^0$ circuits and the lookup table has constant size, sampling from $p$ can be performed by a circuit in $\RAC^0[1]$.
+Therefore, since the ranges can be computed by $\AC^0$ circuits and the lookup table has constant size, sampling from $p$ can be performed by a circuit in $\BPAC^0[1]$.
 
 Thus, by Theorem \ref{const-random-in-ac0}, one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\AC^0$.
 
@@ -76,11 +76,11 @@ Finally, since there is an $\AC^0$ circuit simulating one forward pass of consta
 
 \bigskip
 
-Since one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\RAC^0$, stacking the circuits of $\RAC^0[1]$ for each $\CoT$ step gives a simulation for $\poly(n)$ steps (as in Corollary \ref{det-poly-steps-in-ppoly}).
+Since one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by a circuit in $\BPAC^0$, stacking the circuits of $\BPAC^0[1]$ for each $\CoT$ step gives a simulation for $\poly(n)$ steps (as in Corollary \ref{det-poly-steps-in-ppoly}).
 This circuit has polynomial size and uses a polynomial number of random bits; thus, we obtain Corollary \ref{prob-poly-steps-in-rppoly}.
 
 
 \begin{corollary}\label{prob-poly-steps-in-rppoly}
-    $\RCoT[\poly(n), \poly(n)] \subseteq \Rppoly$ 
+    $\RCoT[\poly(n), \poly(n)] \subseteq \BPppoly$ 
 \end{corollary}
 

@@ -1,0 +1,226 @@
+In this section, we define the standard notions of complexity theory used throughout this thesis.
+
+\begin{definition}[Language]
+    In this work we consider the following notion of problems: given a sequence of input tokens, output a token as the answer. 
+    Mathematically, given a vocabulary $\Sigma$, we call a mapping $\gL:\cup_{k\in\mathbb{N}^+}\Sigma^k\to\Sigma$ a problem. 
+    If the correct answer is always $\qaccept$ or $\qreject$, we call $\gL$ a decision problem.
+    In circuit complexity, such $\gL$ is also called a \textbf{language}.
+\end{definition}
+
+\subsection{Boolean circuits}
+
+The Boolean circuits are a model of computation generalizing Boolean formulas.
+It is a simpliﬁed model of the silicon chips used to make modern computers. 
+It is a natural model for nonuniform computation, as is the case for transformers; thus, most of our results on the expressiveness of transformers are stated in the language of circuit theory.
+
+
+A Boolean circuit is a procedural diagram showing how to derive an output from a binary input string by applying a sequence of basic Boolean operations $\OR$ ($\lor$), $\AND$ ($\land$), and $\NOT$ ($\lnot$) on the input bits.
+
+Though the standard definition of circuit complexity only deals with binary strings, given any finite vocabulary $\Sigma$, we can always replace each token in $\Sigma$ by its binary representation, and the length of the input only blows up by a constant factor. 
+Therefore, we can extend existing complexity classes to arbitrary finite vocabulary naturally. 
+
+\begin{definition}[Boolean circuits] 
+    For every $n \in \mathbb{N}$, an $n$-input, single-output Boolean circuit is a directed acyclic graph with $n$ sources (vertices with no incoming edges) and one sink (vertex with no outgoing edges). 
+    All nonsource vertices are called gates and are labeled with one of $\land$, $\lor$ or $\lnot$ (i.e., the logical operations $\OR$, $\AND$, and $\NOT$).
+    The vertices labeled with $\lor$ and $\land$ have fan-in (i.e., number of incoming edges) equal to $2$ and the vertices labeled with $\lnot$ have fan-in $1$. 
+    The size of $C$, denoted by $|C|$, is the number of vertices in it.
+
+    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is deﬁned in the natural way. 
+    More formally, for every vertex $v$ of $C$, we give it a value $val(v)$ as follows: 
+    If $v$ is the $i$-th input vertex then $val(v) = x_i$ and otherwise $val(v)$ is deﬁned recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
+    The output $C(x)$ is the value of the output vertex.
+\end{definition}
+
+
+\begin{definition}[Circuit families and language recognition] 
+    Let $T : \mathbb{N} \to \mathbb{N}$ be a function. 
+    A $T(n)$-size circuit family is a sequence $\{C_n\}_{n\in\mathbb{N}}$ of Boolean circuits, where $C_n$ has $n$ inputs and a single output, and its size $|C_n| \leq T(n)$ for every $n$.
+    We say that a language $\gL$ is in $\SIZE(T(n))$ if there exists a $T(n)$-size circuit family $\{C_n\}_{n\in\mathbb{N}}$ such that for every $x\in\{0,1\}^n$, $x \in \gL \iff C_n(x)=1$.
+\end{definition}
+
+Interesting complexity classes arise when we consider “small” circuits, such as the class of languages recognized by all polynomial-size families.
+
+\begin{definition}[$\ppoly$]
+    $\ppoly$ is the class of languages that are decidable by polynomial-sized circuit families.
+    That is, $\ppoly = \cup_c \SIZE(n^c)$.
+\end{definition}
+
+The class $\ppoly$ ﬁts rather awkwardly in the complexity world since it contains undecidable languages such as the language Unary halt\footnote{UHALT = \{$1^n$ : $n$'s binary expansion encodes a pair $\langle M, x \rangle$ such that $M$ halts on input $x$\}}. 
+The root of the problem is that for a language $\gL$ to be in $\ppoly$, it sufﬁces that a circuit family for $\gL$ exists even if we have no way of actually constructing the circuits.
+Thus, it may be fruitful to try to restrict attention to circuits that can actually be built, say using a fairly efﬁcient Turing machine.
+
+\begin{definition}[$\Ptime$-uniform circuit families]
+    A circuit family $\{C_n\}_{n\in\mathbb{N}}$ is $\Ptime$-uniform if there is a polynomial-time Turing machine that on input $1^n$ outputs the description of the circuit $C_n$.
+\end{definition}
+
+\bigskip
+
+Boolean circuits are a good model to represent parallel computation.
+The \textbf{depth} of a circuit is the length of the longest directed path from an input node to the output node.
+
+\begin{definition}[$\NC$]
+    For every $d$, a language $\gL$ is in $\NC^d$ if $\gL$ can be decided by a family of circuits $\{C_n\}_{n\in\mathbb{N}}$ where $C_n$ has $\poly(n)$ size and depth $O(\log^d(n))$. 
+    The class $\NC$ is $\cup_{i \geq 1}\NC^i$.
+\end{definition}
+
+When studying the depth of a circuit, the fan-in of the gates becomes of interest.
+A polynomial fan-in can be simulated with a logarithmic blow-up in depth.
+This motivates the study of circuits with unbounded fan-in.
+
+\begin{definition}[$\AC$]
+    The class $\AC^i$ is deﬁned similarly to $\NC^i$ except gates are allowed to have unbounded fan-in (i.e., the $\OR$ and $\AND$ gates can be applied to more than two bits). 
+    The class $\AC$ is $\cup_{i \geq 0}\AC^i$.
+\end{definition}
+
+$\AC^0$ circuits allow for an interesting number of operations.
+For example, addition and multiplication of numbers of fixed precision can be done with $\AC^0$ circuits.
+Also, the equality of two strings of bits can be done in $\AC^0$.
+From the ability to compute equality it emerges that any function $f$ with $O(\log(n))$ bits as input can be computed in $\AC^0$.
+The circuit computing $f$ enumerates the result for each of the inputs and outputs the one that correspond to the branch equal to the input.
+Let $k$ be the number of bits of the input of $f$, then $f$ can be represented as the following formula: $\land_{i = 0}^{2^k} f(i) \land i = x$.
+Observe that the formula represents a circuit of constant depth.
+Also note that the formula has size $O(2^k)$; then, if $k \in O(\log(n))$ the circuit has polynomial size; and, therefore, it is in $\AC^0$.
+
+
+One of the main results of circuit complexity is that the $\MAJORITY$\footnote{$\MAJORITY = \left\{x : \frac{\sum_{i=1}^{|x|} x_i}{|x|} > \frac{1}{2}\right\}$, i.e., the words with more $1$s than $0$s} problem cannot be computed by $\AC^0$ circuits.
+\rafa{cita a algún lugar donde prueben eso o es lo suficientemente sabido?}
+
+\begin{theorem}\label{maj-notin-ac0}
+    $\MAJORITY \notin \AC^0$
+\end{theorem}
+
+This theorem motivates the study of threshold circuits, circuits allowed to have $\MAJORITY$ gates.
+
+\begin{definition}[$\TC$]
+    The class $\TC^i$ is deﬁned similarly to $\AC^i$ except the circuits can have gates $\OR$, $\AND$, $\NOT$ and $\MAJORITY$ of unbounded fan-in.
+    The class $\TC$ is $\cup_{i \geq 0}\TC^i$.
+\end{definition}
+
+
+Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ began to be studied.
+
+\begin{definition}[$\MAJORITY$ with promise]
+    For every $e \in (1/2, 1]$ we define the problem Majority with promise ($\PROMISEDMAJORITY{e}$) as $\MAJORITY$ but restricted to words where there are at least $e$ $0$s or $e$ 1s.
+\end{definition}
+
+An interesting result from descriptive complexity is that for all $e$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$\rafa{agregar cita}.
+
+\subsubsection{Randomized Boolean circuits}
+
+In this thesis we also work with randomized Boolean circuits.
+These are Boolean circuits, but they are allowed to have random gates.
+These gates have fan-in $0$, and their value is a uniformly distributed bit.
+This value is fixed once the evaluation of the circuit starts.
+Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought as evaluating a Boolean circuit $C'$ with input $x r$, where $r$ are the values of the random gates.
+
+\begin{definition}[Randomized Boolean circuits]
+    A randomized Boolean circuit is a directed acyclic graph with $n+r$ sources and one sink.
+    All nonsource vertices are labeled as $\land$, $\lor$ or $\lnot$ (i.e., the logical operations $\OR$, $\AND$, and $\NOT$).
+    The vertices labeled with $\lor$ and $\land$ have fan-in (i.e., number of incoming edges) equal to $2$ and the vertices labeled with $\lnot$ have fan-in $1$. 
+    The size of $C$, denoted by $|C|$, is the number of vertices in it.
+    The source vertices are either labeled as $\mathsf{input}$ or $\mathsf{random}$.
+    
+    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is deﬁned as random variable in the following way.
+    For every vertex $v$ of $C$, we give it a value $val(v)$ as follows: 
+    If $v$ is the $i$-th input vertex, then $val(v) = x_i$; if $v$ is labeled as $\mathsf{random}$, then $val(v)$ is a uniform random Boolean variable; and otherwise $val(v)$ is deﬁned recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
+    The output $C(x)$ is the value of the output vertex.
+\end{definition}
+
+In general, we say that a family of random circuits recognizes a language $\gL$ when $\Pr[C_{|x|}(x) = \gL(x)]$ is high.
+
+\begin{definition}[Randomized circuit families and language recognition] 
+    Let $T : \mathbb{N} \to \mathbb{N}$ be a function. 
+    A $T(n)$-size randomized circuit family is a sequence $\{C_n\}_{n\in\mathbb{N}}$ of randomized Boolean circuits, where $C_n$ has $n$ inputs and a single output, and its size $|C_n| \leq T(n)$ for every $n$.
+    We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size randomized circuit family $\{C_n\}_{n\in\mathbb{N}}$ with $O(f(n))$ random gates such that for every $x\in\{0,1\}^n$, $\Pr[C_n(x) = 1] \geq 2/3 \iff \gL(x)$.
+\end{definition}
+
+Since every random Boolean circuit can be interpreted as Boolean circuit with the random bits padded in the input, we can also define recognition in the following way:
+
+\begin{definition}
+    We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size circuit family $\{C'_n\}_{n\in\mathbb{N}}$ such that for every $x\in\{0,1\}^n$, $\Pr_{r \in \{0,1\}^{f(n)}}[C'_n(xr) = 1] \geq 2/3 \iff \gL(x)$.
+\end{definition}
+
+In general, we drop the bound for the number of random bits when it is not of interest.
+
+\begin{definition}
+    $\BPSIZE(T(n)) = \BPSIZE(T(n))[T(n)]$.
+\end{definition}
+
+\begin{definition}
+    Similar to $\ppoly$, we define $\BPppoly$ as the class of languages that are decidable by polynomial-sized random circuit families.
+    That is, $\BPppoly = \cup_c \BPSIZE(n^c)$.
+\end{definition}
+
+We extend the definition of $\NC$, $\NC^i$, $\AC$, $\AC^i$, $\TC$, $\TC^i$ uniform and not uniform to randomized Boolean circuits in the natural way.
+We denote by $\mathcal{C}[f(n)]$ the class $\mathcal{C}$ restricted to $O(f(n))$ random gates.
+
+Observe that a Boolean circuit is a random Boolean circuit without random gates.
+
+\begin{theorem}
+    Every circuit class $\mathcal{C}$ is contained in its corresponding randomized circuit class.
+    For example $\AC^0 \subseteq \BPAC^0$.
+\end{theorem}
+
+The other inclusion is not known in general.
+In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(f(n))$ random bits is enough to be make it fall inside $\AC^0$.
+This is because in $\AC^0$ we can enumerate all possible values for the random bits.
+Then, we compute the output of the random Boolean circuit for each case.
+There are $O(n)$ possible random values.
+We can run the circuit for each of them in parallel leading only to a linear blow-up in width but constant in depth.
+Then, by definition of the random circuit, at least $2/3$ of the cases have the same output.
+Therefore, we can output $\PROMISEDMAJORITY{2/3}$.
+
+\begin{theorem}\label{const-random-in-ac0}
+    $\BPAC^0[f(n)] \subseteq \AC^0$
+\end{theorem}
+
+
+\subsection{Boolean circuits and Turing machines}
+
+Most of the work in complexity theory is done over Turing machines.
+In this section, we present some known relations between circuits and Turing machines.
+
+\begin{definition}[$\DTIME$]
+    Let $T : \mathbb{N} \to \mathbb{N}$ be some function. 
+    A language $\gL$ is in $\DTIME(T(n))$ iff there is a Turing machine that runs in time $c \cdot T(n)$ for some constant $c > 0$ and decides $\gL$.
+\end{definition}
+
+\begin{definition}
+    $\Ptime = \cup_{c \geq 0} \DTIME(n^c)$.
+\end{definition}
+
+A probabilistic Turing machine is a Turing machine with access to a random coin.
+
+\begin{definition}[$\BPTIME$]
+    Let $T : \mathbb{N} \to \mathbb{N}$ be some function. 
+    A language $\gL$ is in $\BPTIME(T(n))$ iff there is a probabilistic Turing machine $M$ that runs in time $c \cdot T(n)$ for some constant $c > 0$ and for all $x \in \{0,1\}^n$, $x \in \gL \iff \Pr[M(x) = 1] \geq 2/3$
+\end{definition}
+
+\begin{definition}
+    $\BPP = \cup_{c \geq 0} \BPTIME(n^c)$.
+\end{definition}
+
+When restricting $\ppoly$ and $\BPppoly$ to only their uniform families they coincide with $\Ptime$ and $\BPP$.
+To simulate a circuit by a Turing machine, one first computes the circuit description (this can be done since we are only analyzing uniform families) and then evaluates it, both in polynomial time.
+For the simulation of Turing machines by circuits, the construction of Cook-Levin works.
+
+\begin{theorem} $\mathsf{Uniform} \cap \ppoly = \Ptime$ \end{theorem}
+
+\begin{theorem} $\mathsf{Uniform} \cap \BPppoly = \BPP$ \end{theorem}
+
+An important result relating machines with and without randomness is Adleman's theorem.
+Adleman proved that the non-uniformity of $\ppoly$ gives enough power to simulate the randomness of $\BPP$. \rafa{agregar cita a Adleman}
+
+\begin{theorem}[Adleman's theorem]\label{adleman}
+    $\BPP \subseteq \ppoly$
+\end{theorem}
+
+
+
+{\color{orange}
+Lista de cosas que voy referenciando:
+
+\begin{itemize}
+    \item $\MAJORITY_pr$ con $pr > 1/2$ se puede hacer en ac0 (https://www.ccs.neu.edu/home/viola/papers/BPvsE.pdf)
+\end{itemize}
+}
