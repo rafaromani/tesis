@@ -61,7 +61,7 @@ Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 As stated before, the \textbf{distribution generation} is a mapping of the content of the tape to a probability distribution over $\Sigma$.
 There are different algorithms for this process in the literature.
-All transformers considered in this work employ the one presented in \cite{toyota}.
+All transformers considered in this work employ the one presented in \citet{toyota}.
 This algorithm consists of four parts: a token embedding layer ($\TE$), a position encoding layer ($\PE$), an output linear layer ($\OUTPUT$) and a stack of $L$ identical decoder layers, where $L$ is also called the depth of the model. 
 Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN$) and a position-wise fully-connected feed-forward network ($\FF$). 
 Each part and layer has its own trainable parameters.
@@ -84,7 +84,7 @@ For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
-This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \cite{cookbook}.
+This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}.
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}

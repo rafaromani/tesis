@@ -1,4 +1,4 @@
-\cite{toyota} also prove a lower bound on the expressiveness of constant-depth, constant-precision deterministic transformers using $\CoT$ with $O(\log(n))$ embedding size (Theorem \ref{det-lower-bound}).
+\citet{toyota} also prove a lower bound on the expressiveness of constant-depth, constant-precision deterministic transformers using $\CoT$ with $O(\log(n))$ embedding size (Theorem \ref{det-lower-bound}).
 
 \begin{theorem}[Lower bound for deterministic transformers]\label{det-lower-bound}
     For any  polynomial function $T:\mathbb{N}^+\to \mathbb{N}^+$, $\SIZE(T(n)) \subseteq \CoT [T(n), \log(n)]$.
@@ -6,11 +6,11 @@
 \end{theorem}
 
 
-\cite{toyota} construct, for each circuit, a transformer such that at each $\CoT$ step the output of one gate of the circuit is written to the tape.
+\citet{toyota} construct, for each circuit, a transformer such that at each $\CoT$ step the output of one gate of the circuit is written to the tape.
 
 
 Let $\{C_n\}_{n\in\mathbb{N}}$ be a family of circuits of polynomial size.
-\cite{toyota} construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ such that each $\TF_n$ simulates $C_n$.
+\citet{toyota} construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ such that each $\TF_n$ simulates $C_n$.
 
 $\TF_n$ evaluates $C_n$ gate by gate, processing one gate per $\CoT$ step.
 Let us assign an index to each gate of $C_n$ in topological order, such that the input gates receive indices $1$ through $n$.
