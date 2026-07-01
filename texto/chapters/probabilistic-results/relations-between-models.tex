@@ -27,7 +27,7 @@ A more interesting question arises when we require the transformers to be effici
 
 Observe that the proof of Theorem \ref{det-lower-bound} yields a polynomial algorithm that, for each circuit, constructs its corresponding deterministic transformer.
 This motivates the definition of $\UCoT[T(n), d(n)]$, which is $\CoTtndn$ restricted to families of transformers such that there exists a deterministic Turing machine that runs in polynomial time and, given the input length $1^{n}$, outputs the transformer $\TF_n$.
-Since $\ppoly$ restricted to uniform circuits coincides with $\Ptime$ \rafa{agregar ref a \ref{uppoly-equals-p}}, we obtain the following corollary.
+Since $\ppoly$ restricted to uniform circuits coincides with $\Ptime$ (Theorem \ref{uppoly-equals-p}), we obtain the following corollary.
 %
 \begin{corollary}\label{p-UCoT}
     $\Ptime \subseteq \UCoTpoly$
@@ -46,7 +46,7 @@ Since $\ppoly$ restricted to uniform circuits coincides with $\Ptime$ \rafa{agre
 These results have their analogous in the probabilistic setting.
 In the same way as in the proof of Theorem \ref{det-lower-bound}, the proof of Theorem \ref{prob-lower-bound} yields a polynomial algorithm that, for each randomized circuit, constructs its corresponding probabilistic transformer.
 Next, we define $\URCoT[T(n), d(n)]$, which is $\RCoTtndn$ restricted to families of transformers such that there exists a deterministic Turing machine that runs in polynomial time and, given the input length $1^{n}$, outputs the transformer $\TF_n$.
-Since $\BPppoly$ restricted to uniform circuits coincides with $\BPP$ \rafa{agregar ref a \ref{urppoly-equals-bpp}}, we obtain the following corollary.
+Since $\BPppoly$ restricted to uniform circuits coincides with $\BPP$ (Theorem \ref{urppoly-equals-bpp}), we obtain the following corollary.
 %
 \begin{corollary}\label{p-URCoT}
     $\BPP \subseteq \URCoTpoly$

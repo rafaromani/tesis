@@ -12,7 +12,7 @@ In this section, we define the standard notions of complexity theory used throug
 \subsection{Boolean circuits}
 
 The Boolean circuits are a model of computation generalizing Boolean formulas.
-It is a simpliﬁed model of the silicon chips used to make modern computers. 
+It is a simplified model of the silicon chips used to make modern computers. 
 It is a natural model for nonuniform computation, as is the case for transformers; thus, most of our results on the expressiveness of transformers are stated in the language of circuit theory.
 
 
@@ -27,9 +27,9 @@ Therefore, we can extend existing complexity classes to arbitrary finite vocabul
     The vertices labeled with $\lor$ and $\land$ have fan-in (i.e., number of incoming edges) equal to $2$ and the vertices labeled with $\lnot$ have fan-in $1$. 
     The size of $C$, denoted by $|C|$, is the number of vertices in it.
 
-    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is deﬁned in the natural way. 
+    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is defined in the natural way. 
     More formally, for every vertex $v$ of $C$, we give it a value $val(v)$ as follows: 
-    If $v$ is the $i$-th input vertex then $val(v) = x_i$ and otherwise $val(v)$ is deﬁned recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
+    If $v$ is the $i$-th input vertex then $val(v) = x_i$ and otherwise $val(v)$ is defined recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
     The output $C(x)$ is the value of the output vertex.
 \end{definition}
 
@@ -47,9 +47,9 @@ Interesting complexity classes arise when we consider “small” circuits, such
     That is, $\ppoly = \cup_c \SIZE(n^c)$.
 \end{definition}
 
-The class $\ppoly$ ﬁts rather awkwardly in the complexity world since it contains undecidable languages such as the language Unary halt\footnote{UHALT = \{$1^n$ : $n$'s binary expansion encodes a pair $\langle M, x \rangle$ such that $M$ halts on input $x$\}}. 
-The root of the problem is that for a language $\gL$ to be in $\ppoly$, it sufﬁces that a circuit family for $\gL$ exists even if we have no way of actually constructing the circuits.
-Thus, it may be fruitful to try to restrict attention to circuits that can actually be built, say using a fairly efﬁcient Turing machine.
+The class $\ppoly$ fits rather awkwardly in the complexity world since it contains undecidable languages such as the language Unary halt\footnote{UHALT = \{$1^n$ : $n$'s binary expansion encodes a pair $\langle M, x \rangle$ such that $M$ halts on input $x$\}}. 
+The root of the problem is that for a language $\gL$ to be in $\ppoly$, it suffices that a circuit family for $\gL$ exists even if we have no way of actually constructing the circuits.
+Thus, it may be fruitful to try to restrict attention to circuits that can actually be built, say using a fairly efficient Turing machine.
 
 \begin{definition}[$\Ptime$-uniform circuit families]
     A circuit family $\{C_n\}_{n\in\mathbb{N}}$ is $\Ptime$-uniform if there is a polynomial-time Turing machine that on input $1^n$ outputs the description of the circuit $C_n$.
@@ -70,7 +70,7 @@ A polynomial fan-in can be simulated with a logarithmic blow-up in depth.
 This motivates the study of circuits with unbounded fan-in.
 
 \begin{definition}[$\AC$]
-    The class $\AC^i$ is deﬁned similarly to $\NC^i$ except gates are allowed to have unbounded fan-in (i.e., the $\OR$ and $\AND$ gates can be applied to more than two bits). 
+    The class $\AC^i$ is defined similarly to $\NC^i$ except gates are allowed to have unbounded fan-in (i.e., the $\OR$ and $\AND$ gates can be applied to more than two bits). 
     The class $\AC$ is $\cup_{i \geq 0}\AC^i$.
 \end{definition}
 
@@ -94,7 +94,7 @@ One of the main results of circuit complexity is that the $\MAJORITY$\footnote{$
 This theorem motivates the study of threshold circuits, circuits allowed to have $\MAJORITY$ gates.
 
 \begin{definition}[$\TC$]
-    The class $\TC^i$ is deﬁned similarly to $\AC^i$ except the circuits can have gates $\OR$, $\AND$, $\NOT$ and $\MAJORITY$ of unbounded fan-in.
+    The class $\TC^i$ is defined similarly to $\AC^i$ except the circuits can have gates $\OR$, $\AND$, $\NOT$ and $\MAJORITY$ of unbounded fan-in.
     The class $\TC$ is $\cup_{i \geq 0}\TC^i$.
 \end{definition}
 
@@ -105,7 +105,7 @@ Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ beg
     For every $e \in (1/2, 1]$ we define the problem \textbf{Majority with promise} ($\PROMISEDMAJORITY{e}$) as $\MAJORITY$ but restricted to words where there are at least $e$ $0$s or $e$ 1s.
 \end{definition}
 
-An interesting result from descriptive complexity is that for all $e$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$\rafa{agregar cita}.
+An interesting result from descriptive complexity is that for all $e$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$ \citep{viola2009approximate}.
 
 \subsubsection{Randomized Boolean circuits}
 
@@ -122,9 +122,9 @@ Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought a
     The size of $C$, denoted by $|C|$, is the number of vertices in it.
     The source vertices are either labeled as $\mathsf{input}$ or $\mathsf{random}$.
     
-    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is deﬁned as random variable in the following way.
+    If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is defined as random variable in the following way.
     For every vertex $v$ of $C$, we give it a value $val(v)$ as follows: 
-    If $v$ is the $i$-th input vertex, then $val(v) = x_i$; if $v$ is labeled as $\mathsf{random}$, then $val(v)$ is a uniform random Boolean variable; and otherwise $val(v)$ is deﬁned recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
+    If $v$ is the $i$-th input vertex, then $val(v) = x_i$; if $v$ is labeled as $\mathsf{random}$, then $val(v)$ is a uniform random Boolean variable; and otherwise $val(v)$ is defined recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
     The output $C(x)$ is the value of the output vertex.
 \end{definition}
 
@@ -206,12 +206,12 @@ When restricting $\ppoly$ and $\BPppoly$ to only their uniform families they coi
 To simulate a circuit by a Turing machine, one first computes the circuit description (this can be done since we are only analyzing uniform families) and then evaluates it, both in polynomial time.
 For the simulation of Turing machines by circuits, the construction of Cook-Levin works.
 
-\begin{theorem} $\mathsf{Uniform} \cap \ppoly = \Ptime$ \end{theorem}
+\begin{theorem}\label{uppoly-equals-p} $\mathsf{Uniform} \cap \ppoly = \Ptime$ \end{theorem}
 
-\begin{theorem} $\mathsf{Uniform} \cap \BPppoly = \BPP$ \end{theorem}
+\begin{theorem}\label{urppoly-equals-bpp} $\mathsf{Uniform} \cap \BPppoly = \BPP$ \end{theorem}
 
 An important result relating machines with and without randomness is Adleman's theorem.
-Adleman proved that the non-uniformity of $\ppoly$ gives enough power to simulate the randomness of $\BPP$. \rafa{agregar cita a Adleman}
+Adleman proved that the non-uniformity of $\ppoly$ gives enough power to simulate the randomness of $\BPP$. \rafa{hace falta agregar cita a Adleman?}
 
 \begin{theorem}[Adleman's theorem]\label{adleman}
     $\BPP \subseteq \ppoly$

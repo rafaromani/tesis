@@ -11,7 +11,7 @@ Analogously, a transformer rejects a word if the decision symbol printed is the 
 In each step, the transformer maps the content of the tape to a probability distribution over $\Sigma$.
 Then, depending on this distribution, the transformer prints the next token.
 The transformer iterates this process until it halts.
-These iterations are called \textbf{chain of thought}. \rafa{Agregar una cita}
+These iterations are called \textbf{chain of thought} \citep{wei2022chain}.
 
 We split the process of generating the next token into two separate steps.
 First, the computation of the probability distribution over the alphabet which we call distribution generation.\bigsanti{así como hiciste con cot, definí nuevos términos con un estilo especial. Yo uso defstlye como comando y después decido si es itálica, negrita, etc} \bigrafa{defino distribution generation y token selection más abajo y los puse en negrita. Debería marcarlos también acá?}
