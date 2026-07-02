@@ -23,7 +23,7 @@ Therefore, we can extend existing complexity classes to arbitrary finite vocabul
     For every $n \in \mathbb{N}$, an $n$-input, single-output \textbf{Boolean circuit} is a directed acyclic graph with $n$ sources (vertices with no incoming edges) and one sink (vertex with no outgoing edges). 
     All nonsource vertices are called gates and are labeled with one of $\land$, $\lor$ or $\lnot$ (i.e., the logical operations $\OR$, $\AND$, and $\NOT$).
     The vertices labeled with $\lor$ and $\land$ have fan-in (i.e., number of incoming edges) equal to $2$ and the vertices labeled with $\lnot$ have fan-in $1$. 
-    The size of $C$, denoted by $|C|$, is the number of vertices in it.
+    The size of $C$, denoted by $|C|$, is the number of vertices in it.\bigcifu{Robale un dibujo al Arora jaja}
 
     If $C$ is a Boolean circuit, and $x \in \{0,1\}^n$ is some input, then the output of $C$ on $x$, denoted by $C(x)$, is defined in the natural way. 
     More formally, for every vertex $v$ of $C$, we give it a value $val(v)$ as follows: 
@@ -40,13 +40,13 @@ Therefore, we can extend existing complexity classes to arbitrary finite vocabul
 
 Interesting complexity classes arise when we consider “small” circuits, such as the class of languages recognized by all polynomial-size families.
 
-\rafa{en casos como este que el subjet de mi def va en mathsf no sé cómo ponerlo en negrita quizás la jugada es sacarle el mathsf para la def?}
+\rafa{en casos como este que el subjet de mi def va en mathsf no sé cómo ponerlo en negrita quizás la jugada es sacarle el mathsf para la def?}\cifu{No se que decirte xD}
 \begin{definition}[$\ppoly$]
     $\ppoly$ is the class of languages that are decidable by polynomial-sized circuit families.
     That is, $\ppoly = \cup_c \SIZE(n^c)$.
 \end{definition}
 
-The class $\ppoly$ fits rather awkwardly in the complexity world since it contains undecidable languages such as the language Unary halt\footnote{UHALT = \{$1^n$ : $n$'s binary expansion encodes a pair $\langle M, x \rangle$ such that $M$ halts on input $x$\}}. 
+The class $\ppoly$ fits rather awkwardly in the complexity world since it contains undecidable languages such as Unary halt\footnote{UHALT = \{$1^n$ : $n$'s binary expansion encodes a pair $\langle M, x \rangle$ such that $M$ halts on input $x$\}}. 
 The root of the problem is that for a language $\gL$ to be in $\ppoly$, it suffices that a circuit family for $\gL$ exists even if we have no way of actually constructing the circuits.
 Thus, it may be fruitful to try to restrict attention to circuits that can actually be built, say using a fairly efficient Turing machine.
 
@@ -54,6 +54,8 @@ Thus, it may be fruitful to try to restrict attention to circuits that can actua
 \begin{definition}[$\Ptime$-uniform circuit families]
     A circuit family $\{C_n\}_{n\in\mathbb{N}}$ is $\Ptime$-uniform if there is a polynomial-time Turing machine that on input $1^n$ outputs the description of the circuit $C_n$.
 \end{definition}
+
+\bigcifu{Podrías poner acá que esta clase es igual a P}
 
 \bigskip
 
@@ -77,7 +79,7 @@ This motivates the study of circuits with unbounded fan-in.
 \end{definition}
 
 $\AC^0$ circuits allow for an interesting number of operations.
-For example, addition and multiplication of numbers of fixed precision can be done with $\AC^0$ circuits.
+For example, addition and multiplication of numbers of fixed precision can be done with $\AC^0$ circuits.\bigcifu{No termino de entender a qué problema te referís acá con el fixed precision.}
 Also, the equality of two strings of bits can be done in $\AC^0$.
 From the ability to compute equality it emerges that any function $f$ with $O(\log(n))$ bits as input can be computed in $\AC^0$.
 The circuit computing $f$ enumerates the result for each of the inputs and outputs the one that correspond to the branch equal to the input.
@@ -107,6 +109,7 @@ Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ beg
 \begin{definition}[$\MAJORITY$ with promise]
     For every $e \in (1/2, 1]$ we define the problem \textbf{Majority with promise} ($\PROMISEDMAJORITY{e}$) as $\MAJORITY$ but restricted to words where there are at least $e$ $0$s or $e$ 1s.
 \end{definition}
+\bigcifu{Ojo que ese $e$ de la definición tenés que usarlo multiplicativamente. Para mi lo mejor es definirlo como "La cadena tiene mas de  $(1/2 + e)n$ 1s o bien lo mismo pero con 0s. Luego, con $e= 0$ recuperás el original, y el teorema de Viola dice que para cualquier $e > 0$ el problema está en AC0.}
 
 An interesting result from descriptive complexity is that for all $e$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$ \citep{viola2009approximate}.
 
@@ -131,6 +134,8 @@ Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought a
     The output $C(x)$ is the value of the output vertex.
 \end{definition}
 
+
+\bigcifu{Idem dibujo xD. Seguro podes robarlo de algún lado. Pienso un coso que toma dos registros: uno con la entrada y otro que diga "random seed" o algo asi.}
 In general, we say that a family of random circuits recognizes a language $\gL$ when $\Pr[C_{|x|}(x) = \gL(x)]$ is high.
 
 \begin{definition}[Randomized circuit families and language recognition] 
@@ -138,6 +143,8 @@ In general, we say that a family of random circuits recognizes a language $\gL$ 
     A $T(n)$-size \textbf{randomized circuit family} is a sequence $\{C_n\}_{n\in\mathbb{N}}$ of randomized Boolean circuits, where $C_n$ has $n$ inputs and a single output, and its size $|C_n| \leq T(n)$ for every $n$.
     We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size randomized circuit family $\{C_n\}_{n\in\mathbb{N}}$ with $O(f(n))$ random gates such that for every $x\in\{0,1\}^n$, $\Pr[C_n(x) = 1] \geq 2/3 \iff \gL(x)$.
 \end{definition}
+
+\bigcifu{Se puede aclarar que la constante 2/3 acá es irrelevante, y que más adelante vamos a ver que la constante en la definición de transducers probabilísticos también lo es.}
 
 Since every random Boolean circuit can be interpreted as Boolean circuit with the random bits padded in the input, we can also define recognition in the following way:
 
@@ -165,12 +172,12 @@ Observe that a Boolean circuit is a random Boolean circuit without random gates.
 
 \begin{theorem}
     Every circuit class $\mathcal{C}$ is contained in its corresponding randomized circuit class.
-    For example $\AC^0 \subseteq \BPAC^0$.
+    For example $\AC^0 \subseteq \BPAC^0$.\bigcifu{Me parece bien este nombre, pero diría que es no estándar si es que no es estándar. Aparte, porque hay algo llamado $BP \oplus NP$ (o en general, podés poner $BP \oplus$ adelante de muchas clases) y puede mezclarse.}
 \end{theorem}
 
 The other inclusion is not known in general.
 In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(f(n))$ random bits is enough to be make it fall inside $\AC^0$.
-This is because in $\AC^0$ we can enumerate all possible values for the random bits.
+This is because in $\AC^0$ we can enumerate all possible values for the random bits.\bigcifu{Qué valor de $f$? Podés tener problemas con el espacio, no? También hay algo menor, y es que dependiendo del autor a veces se asume que el fan-in arbitrario en realidad es fan-in polinomial respecto de la entrada.}
 Then, we compute the output of the random Boolean circuit for each case.
 There are $O(n)$ possible random values.
 We can run the circuit for each of them in parallel leading only to a linear blow-up in width but constant in depth.
@@ -221,6 +228,7 @@ For the simulation of Turing machines by circuits, the construction of Cook-Levi
 
 An important result relating machines with and without randomness is Adleman's theorem.
 Adleman proved that the non-uniformity of $\ppoly$ gives enough power to simulate the randomness of $\BPP$. \rafa{hace falta agregar cita a Adleman?}
+\bigcifu{A mi me gusta que todo tenga cita, pero no hace falta creo. Btw, acá también podés poner que P/poly es igual que BPP/poly. No se si tiene nombre la demo, podés ponerla en un apéndice. Aprovecho para recordar que movamos todas las demos a los apéndices para que los jurados lean esto rápido jaja.}
 
 \begin{theorem}[Adleman's theorem]\label{adleman}
     $\BPP \subseteq \ppoly$

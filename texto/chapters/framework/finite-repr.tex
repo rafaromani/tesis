@@ -21,7 +21,7 @@ We use $\phi(a) = \sum_{i=1}^k 2^{k-i}a_i$ to denote the value of the binary num
 \begin{definition}[Floating-point Representation]
 Let $e$ be the number of bits for exponents and $s$ be the number of bits for significand. 
 A $(e+2s+1)$-bit binary string $a = (a_1, a_2, \ldots a_{e+2s+1})\in \{0,1\}^{e+2s+1}$ is a floating-point binary representation of number $\phi_{e,s}(a)\triangleq \sign(a)\cdot 2^{\exponent(a)} \cdot \significand(a)$ with $e$-bit exponent and $2s$-precision, where the sign is $\sign(a)\triangleq 2a_1-1$, the significand is $\significand(a)\triangleq 2^{-s}\phi(a_{2:2s+1})$, and the exponent is $\exponent(a)\triangleq \phi(a_{2s+2:2s+e+1})-2^{\max(0,e-1)}$.
-We define the set of numbers expressible with $e$ bits of exponent and $s$ bits of significand as $\Floating$.
+\bigcifu{Por qué usa $2s$ en vez de $s$?}We define the set of numbers expressible with $e$ bits of exponent and $s$ bits of significand as $\Floating$.
 We define $\maxrep_{e,s}$ as the maximum number in $\Floating$.
 Similarly, we define $\minrep_{e,s}$ as the minimum.
 Since in this work we only analyze constant precision transformers, we will omit the subscripts of $\maxrep$ and $\minrep$.
@@ -34,7 +34,7 @@ In particular, we denote the rounding operation with $e$-bit exponent, $2s$-bit 
 \end{definition} 
 
 
-Our notion of floating-point number simplifies the IEEE 754 Standard for Floating-point Arithmetic \citep{ieee754_2008} by removing $\infty$ and $-\infty$. When overflow happens, we always round the output to $\maxrep$, and when underflow happens to $\minrep$. For unary functions like $\exp(\cdot)$ and binary functions including addition, subtraction, multiplication, and division, we simply define their rounded version by rounding their outputs. Whenever division by $0$ happens, we define the output as $0$.\footnote{Notice that the only division is in the $\softmax$. If it's the one in the attention mechanism, it's reasonable to give an attention score of $0$ to every vector. If it's the one in the output layer it means that all symbols have an extremely small probability, therefore is reasonable to assign the same probability to all of them.}
+Our notion of floating-point number simplifies the IEEE 754 Standard for Floating-point Arithmetic \citep{ieee754_2008} by removing $\infty$ and $-\infty$. When overflow happens, we always round the output to $\maxrep$, and when underflow happens to $\minrep$. For unary functions like $\exp(\cdot)$ and binary functions including addition, subtraction, multiplication, and division, we simply define their rounded version by rounding their outputs. Whenever division by $0$ happens, we define the output as $0$.\footnote{Notice that the only division is in the $\softmax$. If it's the one in the attention mechanism, it's reasonable to give an attention score of $0$ to every vector. If it's the one in the output layer it means that all symbols have an extremely small probability, therefore is reasonable to assign the same probability to all of them.\bigcifu{Decías que esto se parcheaba en la práctica, no? Digo porque capaz es buen lugar para una refe.}}
 
 
 Next, we define finite-precision summation over more than two numbers by decomposing it as a chain of rounded binary addition in a fixed order.
@@ -50,7 +50,7 @@ We further define the following operations:
 \end{definition}
 
 
-From the saturation and the iterative rounding presented by \citet{toyota}, some properties appear that are important to remark:
+From the saturation and the iterative rounding presented by \citet{toyota}, some reasonable properties appear that are important to remark:
 \begin{itemize}
         \item $exp(\minrep) = 0$
         \item $exp(\maxrep) = \maxrep$

@@ -18,6 +18,7 @@ Then, composing circuits, they simulate one step of a deterministic, constant-de
     $\CoT[0, \poly(n)] \subseteq \AC^0$
 \end{theorem}
 
+\bigcifu{A mi me gustaría ponerle más importancia al párrafo que está abajo. Onda, me parece un primer resultado no trivial, con un argumento atractivo. Por más que no sea nuestro, es una primera aplicación real que se puede enunciar con las definciones que armaste. Con un ambiente de proof me parece que queda claro que es importante.}
 
 Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$ (Corollary \ref{det-upper-bound-log-steps}). 
 This is because a transformer with $T$ steps of $\CoT$ can be interpreted as an $\mathsf{OR}$ of $|\Sigma|^T$ disjoint subcircuits, where each of them enumerates all possible sequences of $T$ chain-of-thought tokens and outputs the value of the token in the branch where all the intermediate token values are consistent. 
