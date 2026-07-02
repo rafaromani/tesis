@@ -30,7 +30,7 @@ For an input word of length $n$, no computation can take more than $\budget(n)$ 
 \medskip
 
 The process of distribution generation is dependent on many parameters.
-In the real models, these parameters are the ones calculated during the training.
+In the real models, these parameters are the ones computed during the training.
 
 
 We refer to them as $\theta$ and consider them as part of the definition of a transformer.
@@ -67,8 +67,10 @@ Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
 The algorithm works over vectors of numbers of certain dimension $d$.
-The dimension is dependent on the size of the input word.
-We call $d(n)$ to the \textbf{embedding size} when the input word has size $n$.
+The dimension is dependent on the size of the input word. \bigcifu{Aclararía que en la vida real no es así. Es parte de nuestro modelado.}
+We use $d(n)$ to refer to the \textbf{embedding size} when the input word has size $n$.
+
+We now describe each part of the transformer's architecture on detail:
 
 %Each part
 \textbf{Token Embedding:} It is a mapping from $\Sigma$ to vectors in $\Rd$. 
@@ -77,12 +79,12 @@ For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to 
 
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. 
-For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
+For all position of the tape $1 \leq i \leq ()\budget(n) + n)$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
 \bigcifu{Intuición de todas estas capas?}
 \bigrafa{Lo hago en la intro? Me parece el mejor lugar para hacerlo}
 
-\textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
+\textbf{Self Attention Layer: } \bigcifu{Idem lo de Santi, estaria bueno una intuicion, la tipica del diccionario supongo.} It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
 This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}.
 
@@ -120,7 +122,7 @@ All these parts come together for the distribution generator process in the algo
 \end{algorithmic}
 \end{algorithm}
 
-The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
+The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$. \bigcifu{Reminder de qué hay que atajar los problemas con $-\infty$ en algún lado.}
 
 \medskip
 
@@ -135,15 +137,16 @@ In this work we study two selectors, we call them \textbf{deterministic selector
 Let $p \in \Delta(\Sigma)$ be the distribution over $\Sigma$ outputted by the distribution generator.
 Then, the deterministic selector always returns the token with the largest probability ($\argmax$ over $p$).
 In transformers with this selector, we do not allow for two or more tokens to be tied with the maximum probability, i.e., $\nexists \sigma$ s.t. $p(\argmax(p)) = p(\sigma) \land \sigma \neq \argmax(p)$.
-In contrast, the probabilistic selector works non-deterministically.
+In contrast, the probabilistic selector works non-deterministically.\bigcifu{Mejor digamos stochastic, para no pisarnos con cosas de no-determinisimo más en el sentido de complejidad.}
 It returns a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
 We allow for more than one maximum with this selector.
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{chapters/diagrams/diagram-transf.png}
-    \caption{Transformer architecture}
+    \caption{Transformer architecture\bigcifu{Buen dibujo. Agregar una referencia desde el main text.}}
 \end{figure*}
+
 
 
 
@@ -151,3 +154,4 @@ We allow for more than one maximum with this selector.
 Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ for representing them.
 The formal construction is the same, but all operations over the set of real numbers are replaced but their corresponding in the set of $\Floating$ numbers.
 \bigrafa{Toyota tiene copiado lo mismo que está en esta sección en un apéndice donde hizo ctrl +f y reemplazo $\mathbb{R}$ por $\Floating$. Vale la pena que haga lo mismo?}
+\bigcifu{No creo, asi como está se entiende. Lo que sí, falta definir con detalle ese $\Floating$. Sino, decir que lo vas a explicar más adelante en la seccion whatever.}
