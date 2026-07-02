@@ -38,7 +38,7 @@ Formally, for flagging the token $\sigma$ we define the token embedding function
 Those values can be defined chosen arbitrarily for each flag.
 In this case, the coordinate inserted for the flag is the last one, but it can be added anywhere.
 
-The other components of $\TF'$ ignore $d+1$ the coordinate.
+The other components of $\TF'$ ignor the new $d+1$-th coordinate.
 The position encoding of $\TF'$ is equal to the position encoding of $\TF$, except it puts a $0$ in the $d+1$ coordinate (not present in $\TF$) independently of the position.
 The matrices of the $\ATTN$, $\FF$ and $\OUTPUT$ layers of $\TF'$ are the ones of $\TF$ extended with $0$ in the $d+1$ rows and columns to match the change in embedding dimension.
 
