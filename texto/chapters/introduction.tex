@@ -15,19 +15,48 @@ Now there are many models competing for this market as Claude, from Anthropic, o
 
 These models can be all be grouped under the generative AI tools.
 This is a technology that is arguably the most rapid technology adopted by society.
-In the second half of 2025, roughly one in six people worldwide were using generative AI tools. {\color{orange} not sure how to cite this https://www.microsoft.com/en-us/research/wp-content/uploads/2026/01/Microsoft-AI-Diffusion-Report-2025-H2.pdf}
-
-\santi{Lo citás como miscelaneous}
+In the second half of 2025, roughly one in six people worldwide were using generative AI tools \citep{microsoft2026aidiffusion}.
 
 LLMs are being used not only as chatbots for asking small questions, but are shaping the industry and future.
 For example, \citet{liang2024mappingincreasingusellms} found that more than 17\% of the Computer Science's papers published between January 2020 and February 2024 on the \textit{arXiv}, \textit{bioRxiv}, and \textit{Nature} portfolio journals had sentences heavily edited by ChatGPT. 
-
-
-{\color{orange} Missing usage in industry}
-
-
-
 So naturally, the question about their computing power pops up. Are this kind of models really capable of doing the stuff for what they are being used?
+In this thesis we aim to formally answer that question.
+
+
+\bigskip
+
+First we need to define what an LLM is.
+We considered LLMs just as instantiations of the transformer architecture.
+Thus, we need to understand what transformers are.
+
+A transformer is a machine consistent of a tape from where it reads the input and in an autoregressive way, appends character by character the output.
+It reads the content of the tape, then computes the next character, appends it at the end and repeats.
+\citet{ATTN-all-you-need} presented a concrete structure of how to do this.
+
+First, the input text written by the user is split into tokens.
+This is a deterministic process and is done mainly as a resource optimization.
+Thus, in this thesis (and in all the papers of the area) it is assumed that the user talk in tokens, i.e., the transformers receive tokens in its input tape.
+The set of tokens can be interpreted as the language of the transformers.
+
+Then, the first real component of a transformer is the mechanism that maps the tokens of the tape into vectors of numbers.
+Each occupied position of the tape is mapped into a vector.
+Each vector is computed depending on the position from where is originated and the token that its position contains.
+Thus, we can divide the mapping of the tape to vectors in two functions: the position encoding and the token embedding.
+The dimension of the vectors is the dimension of the transformer.
+
+Then these vectors go through a fixed set of layers of a process called attention and a feed forward network.
+These mechanisms carry the information of how the vectors should relate, i.e., they say how a certain token in certain position is related to another in other position.
+The output of each layer is added to the original vectors and passed to the next layer.
+
+In the vector corresponding to the last token of the tape, after it went through all the layers, a probability distribution for the next token is encoded.
+Said probability is extracted and used to pick the new token to append in the tape.
+The token is selected, and the process is repeated.
+In this way, the LLMs like ChatGPT generate the text that they answer to our prompts.
+
+
+\bigskip
+
+The 
 
 
 
@@ -35,24 +64,10 @@ So naturally, the question about their computing power pops up. Are this kind of
 
 
 
-\begin{itemize}
-    \item well-suited to parallelism enables transformer models to take full advantage of the power and speed offered by GPUs during both training and inference. This possibility, in turn, unlocked the opportunity to train transformer models on unprecedentedly massive datasets through self-supervised learning.
-    \item chatgpt, claude, gemini, 
-    \item every day users
-        \item number of users?
-    \item use in the industry?
-    \item other uses besides the chatbots?
-    \item no usamos normalizacion porque andie lo usa, es complicado. Si se achican los bitsize empieza a tener menos sentido
-\end{itemize}
 
 
 
 
-
-
-
-
-\todo{cite this https://www.ibm.com/think/topics/transformer-model}
 
 
 
@@ -76,3 +91,21 @@ So naturally, the question about their computing power pops up. Are this kind of
 %    -> Los resultados anteriores se extienden al contexto probabilistico?
 %    -> Hay una separacion estilo P y BPP?
 %    -> La clase probabilistica de CoT se comporta bien (clausura, amplificacion)
+
+
+
+
+
+{\color{orange} Missing usage in industry}
+
+
+
+\begin{itemize}
+    \item well-suited to parallelism enables transformer models to take full advantage of the power and speed offered by GPUs during both training and inference. This possibility, in turn, unlocked the opportunity to train transformer models on unprecedentedly massive datasets through self-supervised learning.
+    \item chatgpt, claude, gemini, 
+    \item every day users
+        \item number of users?
+    \item use in the industry?
+    \item other uses besides the chatbots?
+    \item no usamos normalizacion porque andie lo usa, es complicado. Si se achican los bitsize empieza a tener menos sentido
+\end{itemize}
