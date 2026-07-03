@@ -36,22 +36,21 @@ This can be achieved with the following flags:
 \end{align*}
 %
 Now the query and key matrices are extended as:
-\bigcifu{Banco esta presentación, pero al 0 y 1 de dimensión 1 no le pondría el superíndice.}
 %
 \begin{align*}
     &
     W_Q' = \left(\begin{matrix}
         W_Q                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} \\
-        0^{\Floating^{d \times 1}} & 1^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} \\
-        0^{\Floating^{d \times 1}} & 1^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} \\
+        0^{\Floating^{d \times 1}} & 0 & 0 & 0 \\
+        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
+        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
     \end{matrix}\right)
     &
     W_K' = \left(\begin{matrix}
         W_K                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}}       & 0^{\Floating^{d \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}}       & 0^{\Floating^{1 \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0^{\Floating^{1 \times 1}} & \minrep^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0^{\Floating^{1 \times 1}} & 0^{\Floating^{1 \times 1}}       & \minrep^{\Floating^{1 \times 1}} \\
+        0^{\Floating^{d \times 1}} & 0 & 0       & 0 \\
+        0^{\Floating^{d \times 1}} & 0 & \minrep & 0 \\
+        0^{\Floating^{d \times 1}} & 0 & 0       & \minrep \\
     \end{matrix}\right)
 \end{align*}
 %

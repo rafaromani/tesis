@@ -41,17 +41,10 @@ We have some extra coordinates for flags at the end, but we will ignore them for
 \]\[
 \PE(n)_i = \begin{cases}
     \tfone{\PE}(n)_i                            &\text{ if } i \leq \tfone{d}(|\alpha|) \\
-    \tftwo{\PE}(n)_{i-\tfone{d}(|\alpha|)}      &\text{ if } \tfone{d}(|\alpha|) < i \leq \tftwo{d}(|\alpha|) \\
+    \text{shifted}\tftwo{\PE}(n)_{i-\tfone{d}(|\alpha|)}\footnote{Defined later in the construction}      &\text{ if } \tfone{d}(|\alpha|) < i \leq \tftwo{d}(|\alpha|) \\
     \text{flags}                                &\text{ if } \tftwo{d}(|\alpha|) < i\\
 \end{cases}
 \]
-
-\bigrafa{
-    Me gustaría en vez de poner $\tftwo{\PE}$ poner algo que se entienda que es más o menos $\tftwo{\PE}$.
-    Formalmente $\tftwo{\PE}$ está mal porque no está definida en el rango que se la usa.
-    Debería ser $\text{shifted}\tftwo{\PE}$ que lo defino más adelante.
-    Hacer esa explicación ahora me parece que mete mucho ruido.
-}
 
 
 The transformer $\TF$ has one layer for each layer of $\tfone{\TF}$ and each of $\tftwo{\TF}$.
