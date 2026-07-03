@@ -76,8 +76,8 @@ This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$.
 For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to the mapping of token $\sigma$.
 
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
-This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. 
-For all position of the tape $1 \leq i \leq ()\budget(n) + n)$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
+This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times (\budget(n) + n)}$. 
+For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
