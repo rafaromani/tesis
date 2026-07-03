@@ -1,5 +1,3 @@
-% The introduction has to say that transformers have a tape where they recibe the input and write its output
-
 In this work we are going to analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
 It has a single tape from which it reads the input and onto which it appends additional tokens in an autoregressive manner.
@@ -14,7 +12,7 @@ The transformer iterates this process until it halts.
 These iterations are called \textbf{chain of thought} \citep{wei2022chain}.
 
 We split the process of generating the next token into two separate steps.
-First, the computation of the probability distribution over the alphabet which we call distribution generation.\bigsanti{así como hiciste con cot, definí nuevos términos con un estilo especial. Yo uso defstlye como comando y después decido si es itálica, negrita, etc} \bigrafa{defino distribution generation y token selection más abajo y los puse en negrita. Debería marcarlos también acá?}
+First, the computation of the probability distribution over the alphabet which we call distribution generation.
 Second, the selection of a token based on the probability distribution, which we call token selection.
 In this work we analyze and compare two different algorithms for token selection.
 
@@ -67,7 +65,7 @@ Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
 The algorithm works over vectors of numbers of certain dimension $d$.
-The dimension is dependent on the size of the input word. \bigcifu{Aclararía que en la vida real no es así. Es parte de nuestro modelado.}
+The dimension is dependent on the size of the input word. \footnote{This is note the case in the real models since the same model is used for all input sizes.}
 We use $d(n)$ to refer to the \textbf{embedding size} when the input word has size $n$.
 
 We now describe each part of the transformer's architecture on detail:
@@ -81,12 +79,15 @@ For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to 
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times \budget(n) + n}$. 
 For all position of the tape $1 \leq i \leq ()\budget(n) + n)$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
 
-\bigcifu{Intuición de todas estas capas?}
-\bigrafa{Lo hago en la intro? Me parece el mejor lugar para hacerlo}
-
-\textbf{Self Attention Layer: } \bigcifu{Idem lo de Santi, estaria bueno una intuicion, la tipica del diccionario supongo.} It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
+\textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
-This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}.
+This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}. \footnote{The matrices are named Q for query, K for key, V for value and O for output.
+It is called query because $q_i$ represents a question of how much the $i$-th vector should attend the others in a specific setting (determined by $W_Q$).
+The $k_j$ vector answers said question such that $\langle q_i, k_j \rangle$ is large if the $j$-th vector is relevant to the $i$-th.
+Thus, the key matrix is for computing the relevance of the vectors.
+The value matrix has the role of extracting the information that the $j$-th vector should give to the $i$-th.
+Finally, the output matrix is just a post-processing.
+}
 
 \begin{algorithm}
 \caption{Causal Self-Attention, $\ATTN$}\label{alg:def_attn}
@@ -122,7 +123,7 @@ All these parts come together for the distribution generator process in the algo
 \end{algorithmic}
 \end{algorithm}
 
-The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$. \bigcifu{Reminder de qué hay que atajar los problemas con $-\infty$ en algún lado.}
+The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
 
 \medskip
 
@@ -137,14 +138,19 @@ In this work we study two selectors, we call them \textbf{deterministic selector
 Let $p \in \Delta(\Sigma)$ be the distribution over $\Sigma$ outputted by the distribution generator.
 Then, the deterministic selector always returns the token with the largest probability ($\argmax$ over $p$).
 In transformers with this selector, we do not allow for two or more tokens to be tied with the maximum probability, i.e., $\nexists \sigma$ s.t. $p(\argmax(p)) = p(\sigma) \land \sigma \neq \argmax(p)$.
-In contrast, the probabilistic selector works non-deterministically.\bigcifu{Mejor digamos stochastic, para no pisarnos con cosas de no-determinisimo más en el sentido de complejidad.}
+In contrast, the probabilistic selector works stochastic.
 It returns a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
 We allow for more than one maximum with this selector.
+
+\medskip
+
+In Figure \ref{diag-transf} there is a visual representation of how the token selector connects with the distribution generator and its components.
+
 
 \begin{figure*}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{chapters/diagrams/diagram-transf.png}
-    \caption{Transformer architecture\bigcifu{Buen dibujo. Agregar una referencia desde el main text.}}
+    \caption{Transformer architecture}\label{diag-transf}
 \end{figure*}
 
 
@@ -152,6 +158,4 @@ We allow for more than one maximum with this selector.
 
 
 Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ for representing them.
-The formal construction is the same, but all operations over the set of real numbers are replaced but their corresponding in the set of $\Floating$ numbers.
-\bigrafa{Toyota tiene copiado lo mismo que está en esta sección en un apéndice donde hizo ctrl +f y reemplazo $\mathbb{R}$ por $\Floating$. Vale la pena que haga lo mismo?}
-\bigcifu{No creo, asi como está se entiende. Lo que sí, falta definir con detalle ese $\Floating$. Sino, decir que lo vas a explicar más adelante en la seccion whatever.}
+The formal construction is the same, but all operations over the set of real numbers are replaced but their corresponding in the set of $\Floating$ numbers defined in Section \ref{repr}.
