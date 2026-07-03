@@ -25,6 +25,43 @@ To extend it to a set of coordinates, it suffices to set more rows and columns t
 The same applies in the feed forward layer, making the $i$th column and row of the matrices and vectors of the layer zero, makes it ignore the value of the $i$th coordinate. 
 Furthermore, the result of the $\FF$ layer will have a zero in the $i$th coordinate, thus preserving its value.
 
+
+\begin{figure*}
+    \begin{align*}
+        \left(\begin{matrix}
+            A^{i \times r} & 0^{i \times 1} & B^{i \times n-1-r} \\
+            0^{1 \times r} & 0 & 0^{1 \times n-1-r} \\
+            C^{n-1-i \times r} & 0^{n-1-i \times 1} & D^{n-1-i \times n-1-r}         
+        \end{matrix}\right)
+        \left( \begin{matrix}
+            v^{i \times 1} \\
+            x^{1 \times 1}\\
+            w^{n-1-i \times 1}
+        \end{matrix}\right)    = 
+        \left( \begin{matrix}
+            Av + Bw \\
+            x\\
+            Cv + Dw
+        \end{matrix}\right)    \sim
+        \left(\begin{matrix}
+            A & B \\
+            C & D
+        \end{matrix}\right)
+        \left(\begin{matrix}
+            v \\
+            w
+        \end{matrix}\right)
+    \end{align*}
+    \caption{Matrices for ignoring/preserving the $(i+1)$-th coordinate}
+\end{figure*}
+
+
+
+
+
+
+
 \bigcifu{diagrama?}
 \bigrafa{how? pongo las matrices? Siento que a veces queda muy cargado. Quizás ahora se entiende mejor?}
 \bigcifu{Mmm todavía no es super claro. Una duda: ese 0 nuevo que ponés, no le llega al soft max? Me refiero al attention.}
+\bigrafa{No, no afecta al attn. Esto funciona cómo diagrama?}
