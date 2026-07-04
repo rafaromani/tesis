@@ -1,5 +1,6 @@
 In this section, we show that one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by shallow Boolean circuits.
 
+\bigcifu{ste resultado se puede probar de forma más directa, no? Como que solo tenés que simular el único paso del transformer y fijarte cuál item es el más probable.}
 
 \begin{theorem}\label{prob-upper-bound}
     $\RCoT[0, \poly(n)] \subseteq \BPAC^0[1] = \AC^0$
@@ -8,6 +9,8 @@ In this section, we show that one forward pass of constant-depth, polynomial-emb
 For this proof, we build upon \citet{toyota}'s proof of Theorem \ref{det-upper-bound}.
 They already showed that the distribution generator can be simulated by $\AC^0$ circuits.
 Thus, we only show that the probabilistic token selector can be simulated by $\AC^0$ circuits.
+
+\bigcifu{Acá me parece que deberia haber un lema antes hablando de la discretización del azar. Esta prueba después queda compacta y clara.}
 
 \medskip
 
@@ -53,6 +56,8 @@ Thus, by Theorem \ref{const-random-in-ac0}, one forward pass of constant-depth, 
 \bigskip
 
 As in Corollary \ref{det-upper-bound-log-steps}, we now prove that a logarithm number of $\CoT$ steps are not sufficient to go beyond $\AC^0$, even in a probabilistic transformer.
+
+\bigcifu{Este que viene abajo me parece lo suficientemente serio como para estar debajo del corolario como una prueba. También, no me parece que esto sea un corolario de lo anterior (por más que lo use)}
 
 Since we need a constant number of bits from the seed to simulate each $\CoT$ step, we need $O(\log(n))$ random bits to simulate $\log(n)$ steps.
 Thus, we can enumerate all possible chain-of-thought token sequences $(|\Sigma|^{O(log(n))} = O(n))$ and seeds $2^{O(\log(n)) = O(n)}$ and check when they are consistent.

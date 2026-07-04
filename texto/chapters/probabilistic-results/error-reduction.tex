@@ -6,6 +6,8 @@ We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}
 The choice of the constant $2/3$ may seem somewhat arbitrary.
 We now show that we can replace $2/3$ with any constant in the interval $[1/2, 1)$.
 
+\bigcifu{ojo que es estricto, tmb hay que arrelgarlo en la demo}
+
 \bigskip
 
 Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $[1/2, 1)$ and show that is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
@@ -28,6 +30,10 @@ If that is the case, we force $\TF'_n$ to accept; otherwise, we force it to reje
 
 The question is how many runs of $\TF_n$ are needed, given that it answers correctly with probability $c > 1/2$, in order to obtain the correct answer with probability at least $d$.
 We estimate the necessary $r$ using Chernoff's bound.
+
+\bigcifu{va al apendice}
+\bigcifu{Cómo verificas dps que el counter sea mayorr a r/2? Otra cosa muy fina: la precisión tiene que al-
+canzarte para contar, pero es una cosa O(1) al final.}
 
 \begin{theorem}[Chernoff's bound]
     Let $y_1, \dots, y_r$ be independent Boolean random variables with $\Pr[y_i = 1] = c$ for every $1 \leq i \leq r$.
