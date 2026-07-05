@@ -12,34 +12,35 @@ The abstraction for transformers presented by \citet{toyota} uses the numeric re
 Their model rounds after every numerical operation and represents numbers with a constant number of bits for the significand and the exponent.
 
 \citet{toyota} prove that $\mathsf{sum}_{e,s}:\Floating^n \to \Floating$ has an $\AC^0$ circuit when $e,s$ are both constants.
-Then, composing circuits, they simulate one step of a deterministic, constant-depth, polynomial-embedding-dimension transformer with a circuit in $\AC^0$ (Theorem \ref{det-upper-bound}).
+Then, composing circuits, Theorem \ref{theo:ac0-sim-det-transf} is obtainded.
 
-\begin{theorem}[Upper bound for deterministic transformers]\label{det-upper-bound}
-    $\CoT[0, \poly(n)] \subseteq \AC^0$
+\begin{theorem}\label{theo:ac0-sim-det-transf}
+    One step of a deterministic, constant-depth, polynomial-embedding-dimension transformer can be simulated with a circuit in $\AC^0$.
 \end{theorem}
 
-\bigcifu{A mi me gustaría ponerle más importancia al párrafo que está abajo. Onda, me parece un primer resultado no trivial, con un argumento atractivo. Por más que no sea nuestro, es una primera aplicación real que se puede enunciar con las definciones que armaste. Con un ambiente de proof me parece que queda claro que es importante.}
+Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$.
+Thus, we obtain the following theorem.
 
-Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$ (Corollary \ref{det-upper-bound-log-steps}). 
-This is because a transformer with $T$ steps of $\CoT$ can be interpreted as an $\mathsf{OR}$ of $|\Sigma|^T$ disjoint subcircuits, where each of them enumerates all possible sequences of $T$ chain-of-thought tokens and outputs the value of the token in the branch where all the intermediate token values are consistent. 
-
-We say a sequence of tokens $\sigma_1, \dots, \sigma_T$ is consistent with the input $\alpha$ when it satisfies $\TF(\alpha) = \sigma_1$, $\TF(\alpha \sigma_1) = \sigma_2$, $\dots$, $\TF(\alpha \sigma_1 \dots \sigma_{T-1}) = \sigma_{T}$.
-Each of the conditions can be checked by an $\AC^0$ circuit in parallel.
-Then, for each sequence of tokens there is an $\AC^0$ circuit validating its consistency.
-Since the transformer is deterministic, there is only one consistent sequence.
-The circuit outputs the value of the last token in the consistent sequence.
-
-The enumeration of all possible sequences can be done in parallel and thus only takes constant depth.
-When $T = O(\log(n))$, this only leads to a $\poly(n)$ blow-up in circuit size.
-Therefore, it follows that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
-
-
-\begin{corollary}\label{det-upper-bound-log-steps}
+\begin{theorem}\label{theo:det-upper-bound-log-steps}
     $\CoT[\log(n), \poly(n)] \subseteq \AC^0$
-\end{corollary}
+\end{theorem}
+
+\begin{proof}
+    Theorem \ref{theo:det-upper-bound-log-steps} is sustained on the fact that a transformer with $T$ steps of $\CoT$ can be interpreted as an $\mathsf{OR}$ of $|\Sigma|^T$ disjoint subcircuits, where each of them enumerates all possible sequences of $T$ chain-of-thought tokens and outputs the value of the token in the branch where all the intermediate token values are consistent. 
+    
+    We say a sequence of tokens $\sigma_1, \dots, \sigma_T$ is consistent with the input $\alpha$ when it satisfies $\TF(\alpha) = \sigma_1$, $\TF(\alpha \sigma_1) = \sigma_2$, $\dots$, $\TF(\alpha \sigma_1 \dots \sigma_{T-1}) = \sigma_{T}$.
+    Each of the conditions can be checked by an $\AC^0$ circuit in parallel.
+    Then, for each sequence of tokens there is an $\AC^0$ circuit validating its consistency.
+    Since the transformer is deterministic, there is only one consistent sequence.
+    The circuit outputs the value of the last token in the consistent sequence.
+    
+    The enumeration of all possible sequences can be done in parallel and thus only takes constant depth.
+    When $T = O(\log(n))$, this only leads to a $\poly(n)$ blow-up in circuit size.
+    Therefore, it follows that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
+\end{proof}
+    
 
 \medskip
-
 
 Since each pass of the transformer can be simulated by a circuit in $\AC^0$, a transformer performing a polynomial number of $\CoT$ steps $T(n)$ can be simulated by a circuit of depth $T(n)$ (and polynomial size), by stacking the circuit for one pass.
 Therefore, a transformer performing a polynomial number of steps can be simulated by a circuit in $\ppoly$.

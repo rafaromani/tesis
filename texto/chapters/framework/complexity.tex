@@ -145,7 +145,10 @@ Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ beg
     Observe that $\PROMISEDMAJORITY{0} = \MAJORITY$.
 \end{definition}
 
-An interesting result from descriptive complexity is that for all $e > 0$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$ \citep{viola2009approximate}.
+\begin{theorem}[\citet{viola2009approximate}]
+    For all $e > 0$, there is a circuit in $\AC^0$ recognizing $\PROMISEDMAJORITY{e}$.
+\end{theorem}
+
 
 
 
@@ -264,16 +267,19 @@ Observe that a Boolean circuit is a random Boolean circuit without random gates.
 
 The other inclusion is not known in general.
 In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(\log(n))$ random bits is enough to be make it fall inside $\AC^0$.
-This is because in $\AC^0$ we can enumerate all possible values for the random bits.
-Then, we compute the output of the random Boolean circuit for each case.
-There are $O(n)$ possible random values.
-We can run the circuit for each of them in parallel leading only to a linear blow-up in width but constant in depth.
-Then, by definition of the random circuit, at least $2/3$ of the cases have the same output.
-Therefore, we can output $\PROMISEDMAJORITY{2/3}$.
-
 \begin{theorem}\label{const-random-in-ac0}
     $\BPAC^0[\log(n)] \subseteq \AC^0$
 \end{theorem}
+
+\begin{proof}
+    In $\AC^0$ we can enumerate all possible values for the random bits.
+    Then, we compute the output of the random Boolean circuit for each case.
+    There are $O(n)$ possible random values.
+    We can run the circuit for each of them in parallel leading only to a linear blow-up in width but constant in depth.
+    Then, by definition of the random circuit, at least $2/3$ of the cases have the same output.
+    Therefore, we can output $\PROMISEDMAJORITY{2/3}$.
+\end{proof}
+
 
 
 \subsection{Boolean circuits and Turing machines}

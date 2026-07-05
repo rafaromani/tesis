@@ -1,31 +1,31 @@
-\citet{toyota} also prove a lower bound on the expressiveness of constant-depth, constant-precision deterministic transformers using $\CoT$ with $O(\log(n))$ embedding size (Theorem \ref{det-lower-bound}).
+\begin{theorem}\label{sim-circ-by-det-transf}
+    Any family of circuits of polynomial size $T(n)$ can be simulated by a constant-depth, constant-precision deterministic transformers using $\CoT$ with $O(\log(n))$ embedding size 
+\end{theorem}
+
+\citet{toyota} construct, for each circuit, a transformer such that at each $\CoT$ step the output of one gate of the circuit is written to the tape.
+Theorem \ref{sim-circ-by-det-transf} can also be phrased with complexity classes as:
 
 \begin{theorem}[Lower bound for deterministic transformers]\label{det-lower-bound}
     For any  polynomial function $T:\mathbb{N}^+\to \mathbb{N}^+$, $\SIZE(T(n)) \subseteq \CoT [T(n), \log(n)]$.
     In particular, $\ppoly \subseteq \CoT[\poly(n), \log(n)]$.
 \end{theorem}
 
-
-\citet{toyota} construct, for each circuit, a transformer such that at each $\CoT$ step the output of one gate of the circuit is written to the tape.
-
-\bigcifu{Tenían algun dibujo bueno para robar?}
-
-
-Let $\{C_n\}_{n\in\mathbb{N}}$ be a family of circuits of polynomial size.
-\citet{toyota} construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ such that each $\TF_n$ simulates $C_n$.
-
-$\TF_n$ evaluates $C_n$ gate by gate, processing one gate per $\CoT$ step.
-Let us assign an index to each gate of $C_n$ in topological order, such that the input gates receive indices $1$ through $n$.
-Then, in the $i$-th step of $\CoT$, $\TF_n$ prints the value of the $(n+i)$-th gate, i.e., $\TF_n^i(\alpha)$ equals the value of the $(n+i)$-th gate when the input is $\alpha$.
-Thus, at the end of the computation, the $i$-th position of the tape contains the value of the $i$-th gate.
-
-
-Their construction encodes the information of each gate of the circuit into the position encoding.
-This information is encoded in binary, i.e., each coordinate takes the value $0$ or $1$.
-They store in the $i$-th vector the current gate index ($i$), the type ($\AND$, $\OR$, or $\NOT$) of the $(i+1)$-th gate, and the indices of its two input gates.
-The requirement of $d(n)=\Theta(\log(n))$ embedding size comes from the fact that there are $\poly(n)$ gates and all of their indices must be uniquely representable in binary.
-
-Then, at the $i$-th step of the computation, the attention mechanism is used to retrieve the values of the two input gates of the $(n+i)$-th gate.
-Next, a feed-forward network computes the value of the $(n+i)$-th gate based on its type and the values of its input gates retrieved in the previous step.
-Finally, in the last $\CoT$ step, $\TF_n$ outputs the value of the output gate (sink) of $C_n$.
-
+\begin{proof}    
+    Let $\{C_n\}_{n\in\mathbb{N}}$ be a family of circuits of polynomial size.
+    \citet{toyota} construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ such that each $\TF_n$ simulates $C_n$.
+    
+    $\TF_n$ evaluates $C_n$ gate by gate, processing one gate per $\CoT$ step.
+    Let us assign an index to each gate of $C_n$ in topological order, such that the input gates receive indices $1$ through $n$.
+    Then, in the $i$-th step of $\CoT$, $\TF_n$ prints the value of the $(n+i)$-th gate, i.e., $\TF_n^i(\alpha)$ equals the value of the $(n+i)$-th gate when the input is $\alpha$.
+    Thus, at the end of the computation, the $i$-th position of the tape contains the value of the $i$-th gate.
+    
+    Their construction encodes the information of each gate of the circuit into the position encoding.
+    This information is encoded in binary, i.e., each coordinate takes the value $0$ or $1$.
+    They store in the $i$-th vector the current gate index ($i$), the type ($\AND$, $\OR$, or $\NOT$) of the $(i+1)$-th gate, and the indices of its two input gates.
+    The requirement of $d(n)=\Theta(\log(n))$ embedding size comes from the fact that there are $\poly(n)$ gates and all of their indices must be uniquely representable in binary.
+    
+    Then, at the $i$-th step of the computation, the attention mechanism is used to retrieve the values of the two input gates of the $(n+i)$-th gate.
+    Next, a feed-forward network computes the value of the $(n+i)$-th gate based on its type and the values of its input gates retrieved in the previous step.
+    Finally, in the last $\CoT$ step, $\TF_n$ outputs the value of the output gate (sink) of $C_n$.
+\end{proof}
+    
