@@ -1,0 +1,304 @@
+\chapter{Primitives}
+
+\section{Construction for flagging}\label{appendix:flags}
+
+Let $\TF$ be a transformer, we define $\TF'$ that behaves like $\TF$ but recognize when a vector comes from embedding the token $\sigma$.
+$\TF'$ has embedding dimension $d' = d + 1$ where $d$ is the embedding dimension of $\TF$.
+
+Essentially, the components of $\TF'$ are the same as $\TF$.
+The main change is the token embedding function $\TE' : \TF' : \Sigma \to \Floating^{d+1}$ which is defined as
+
+\begin{equation*}
+    (\theta'_{TE}(\tau))_j = \begin{cases}
+        (\theta_{TE}(\tau))_j  & \text{ if } j \neq d+1 \\
+        f_{\ON}                & \text{ if } j = d+1  \text{ and } \tau = \sigma \\
+        f_{\OFF}               & \text{ if } j = d+1  \text{ and } \tau \neq \sigma
+    \end{cases}
+\end{equation*}
+
+\noindent where $f_{\ON}$ is the value that marks the vector as flagged and $f_{\OFF}$ as unflagged.
+Those values can be defined chosen arbitrarily for each flag.
+In this case, the coordinate inserted for the flag is the last one, but it can be added anywhere.
+
+The other components of $\TF'$ ignore the new $d+1$-th coordinate.
+The position encoding of $\TF'$ is equal to the position encoding of $\TF$, except it puts a $0$ in the $d+1$ coordinate (not present in $\TF$) independently of the position.
+The matrices of the $\ATTN$, $\FF$ and $\OUTPUT$ layers of $\TF'$ are the ones of $\TF$ extended with $0$ in the $d+1$ rows and columns to match the change in embedding dimension.
+
+$\TF'$ behaves exactly as $\TF$ except it has one more coordinate in the embedding.
+Said coordinate represents the flag and takes only the values $v_{\ON}$ or $v_{\OFF}$ in every vector.
+
+
+\section{Ignore vectors in Attention layer}\label{appendix:ignore-vectors-attn}
+
+Let $M$ be a set of indices.
+We construct an attention layer of $\TF'$ such that $h_l$ ignore all the vectors $h_i$ such that $i\in M$.
+As mentioned in the main text, we require the attention scores (previous to the $\softmax$) to satisfy the following:
+
+\[
+    \langle q_i', k_j' \rangle = \begin{cases}
+        \minrep                  & \text{ if } i = l \land j \in M \\
+        \langle q_i, k_j \rangle & \text{ if } i \neq l \lor j \notin M
+    \end{cases}
+\]
+
+We achieved this by saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
+
+\medskip
+
+We force $(k'_i)_{d+2}$ and $(k'_i)_{d+3}$ to be $\minrep$ when $i \in M$, and $(q'_i)_{d+2}$ and $(q'_i)_{d+3}$ to be $1$ when $i=l$ and $0$ otherwise.
+We also make $(k'_i)_{d+1}$ and $(q'_i)_{d+1}$ to be $0$ for all $i$ so the third to last term of the inner product is always $0$.
+With these values, the only attention scores modified are the ones of the $l$th vector since every other will have $0$ in the last three coordinates of the query thus making the last three terms of the inner product $0$ and therefore not affecting the score.
+
+This can be achieved with the following flags:
+%
+\begin{align*}
+    & (h_i)_{d+1} = \begin{cases}
+        1 & \text{ if } i = l \\
+        0 & \text{ otherwise }
+    \end{cases}
+    & (h_i)_{d+2} = (h_i)_{d+3} = \begin{cases}
+        1 & \text{ if } i \in M \\
+        0 & \text{ otherwise }
+    \end{cases}
+\end{align*}
+%
+Now the query and key matrices are extended as:
+%
+\begin{align*}
+    &
+    W_Q' = \left(\begin{matrix}
+        W_Q                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} \\
+        0^{\Floating^{d \times 1}} & 0 & 0 & 0 \\
+        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
+        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
+    \end{matrix}\right)
+    &
+    W_K' = \left(\begin{matrix}
+        W_K                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}}       & 0^{\Floating^{d \times 1}} \\
+        0^{\Floating^{d \times 1}} & 0 & 0       & 0 \\
+        0^{\Floating^{d \times 1}} & 0 & \minrep & 0 \\
+        0^{\Floating^{d \times 1}} & 0 & 0       & \minrep \\
+    \end{matrix}\right)
+\end{align*}
+%
+Then, 
+%
+\begin{align}
+    \langle q'_i, k'_j \rangle &= \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x = \langle q_i, k_j \rangle + (q'_l)_{d+1} (k'_i)_{d+1} + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
+    &
+    = \langle q_i, k_j \rangle + 0 + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
+    &
+    = \langle q_i, k_j \rangle + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
+    & 
+    = \begin{cases}
+        \langle q_i, k_j \rangle + 1 \cdot \minrep + 1 \cdot \minrep & \text{ if } i = l    \land j \in M \\
+        \langle q_i, k_j \rangle + 1 \cdot 0       + 1 \cdot 0       & \text{ if } i = l    \land j \notin M \\
+        \langle q_i, k_j \rangle + 0 \cdot \minrep + 0 \cdot \minrep & \text{ if } i \neq l \land j \in M \\
+        \langle q_i, k_j \rangle + 0 \cdot 0       + 0 \cdot 0       & \text{ if } i \neq l \land j \notin M \\
+    \end{cases} \nonumber \\
+    & 
+    = \begin{cases}
+        \langle q_i, k_j \rangle + \minrep + \minrep & \text{ if } i = l    \land j \in M \\
+        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i = l    \land j \notin M \\
+        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \in M \\
+        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \notin M \\
+    \end{cases}\nonumber \\
+    & 
+    = \begin{cases}
+        \minrep                  & \text{ if } i = l    \land j \in M \\
+        \langle q_i, k_j \rangle & \text{ otherwise } 
+    \end{cases} \nonumber
+\end{align}
+% 
+Namely, $\langle q'_i, k'_j \rangle = \minrep$ if $i = l$ and $j \in M$, but $\langle q'_i, k'_j \rangle = \langle q_i, k_j \rangle$ otherwise.
+
+
+
+\section{Linear transformations}\label{appendix:linear-transf}
+
+We show a mechanism to replace a flagged vector with the result of applying the linear transformation $M$ to it.
+Let $f$ denote the index of the flagged vector.
+We perform the operation with two consecutive $\ATTN$ layers, in which $h_f$ only attends to itself.
+Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
+
+We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
+In the first $\ATTN$ layer, we compute the transformation saving its result in the coordinates $d+1$ to $2d$.
+Then, in the second layer we move the result to the right place.
+
+\[
+    \widetilde{h_f} = \left( \begin{matrix} (h_f)_1    \\ \vdots \\ (h_f)_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
+    \xrightarrow{\text{first $\ATTN$ layer}}
+    \widetilde{h_f} = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \end{matrix} \right)
+    \xrightarrow{\text{second $\ATTN$ layer}}
+    \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
+\]
+
+We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers preceding this mechanism
+This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in Section \ref{const-fun}.
+
+\medskip
+
+Let us construct each of the $\ATTN$ layers.
+As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
+Therefore, we define $W_Q$ and $W_K$ using the strategy of Section \ref{ignore-vecs}.
+
+Recall from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
+By this point, $h'_f$ is looking like \[ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f}) \]
+
+\begin{itemize}
+\item For the first layer, defining $W_O$ and $W_V$ as follows
+%
+\begin{align*}
+    W_V &= id
+    & 
+    W_O &= \left(\begin{matrix}
+                -id^{\Rdd}                 &0^{\Rdd}                   \\
+                M                          &0^{\Rdd}                   
+          \end{matrix}\right)
+\end{align*}
+%
+makes us get $ h'_f = (-(h_f)_1, \dots, -(h_f)_d, (Mh_f)_1, \dots, (Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the first layer.
+
+
+\item For the second $\ATTN$ layer, we use the same mechanism for making $\widetilde{h_f}$ only attend to itself.
+And defining $W_V$ and $W_O$ as follows
+%
+\begin{align*}
+    W_V &= id
+    & 
+    W_O &= \left(\begin{matrix}
+                0^{\Rdd}                   &id^{\Rdd}                  \\
+                0^{\Rdd}                   &-id^{\Rdd}                 \\
+          \end{matrix}\right)
+\end{align*}
+%
+we get $ h'_f = ((Mh_f)_1, \dots, -(Mh_f)_d, -(Mh_f)_1, \dots, -(Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the second layer.
+
+\end{itemize}
+
+\bigskip
+
+Note that, after these two layers, the values of $h_i$ for all $i \neq f$ have changed in ways that have not been studied in this paper, but this is not relevant to the way we use the primitive.
+
+
+
+
+
+\section{Implementation of the special operation}\label{appendix:special-op}
+
+This operation is not a linear transformation; therefore, we need to define a new technique.
+Observe that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ equals $1$ and the other equals $0$.
+Then, $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
+
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a \cdot \mathbb{I}_a \\ b \cdot \mathbb{I}_b\\ 0 \\ 0
+    \end{matrix}\right)
+\end{equation*}
+
+This operation is performed with three layers of $\FF$.
+Naturally, after each layer a new vector is added to the original.
+The vectors we add are the following:
+
+\begin{equation*}
+    \left(\begin{matrix}
+        a \\ b \\ \mathbb{I}_a \\ \mathbb{I}_b 
+    \end{matrix}\right)
+    \xrightarrow[\text{operation}]{\text{Special}}
+    \left(\begin{matrix}
+        a            &+& \maxrep \cdot \mathbb{I}_b &+& \maxrep \cdot \mathbb{I}_b &+& \minrep \cdot \mathbb{I}_b \\
+        b            &+& \maxrep \cdot \mathbb{I}_a &+& \maxrep \cdot \mathbb{I}_a &+& \minrep \cdot \mathbb{I}_a \\ 
+        \mathbb{I}_a &+& 0                          &+& 0                          &+& -\mathbb{I}_a\\
+        \mathbb{I}_b &+& 0                          &+& 0                          &+& -\mathbb{I}_b\\
+    \end{matrix}\right)    
+\end{equation*}
+
+
+Note that if $\mathbb{I}_a = 1$, then $\mathbb{I}_b = 0$, so the first coordinate isn't modified and the second is changed to $0$ because of the finite representation properties.
+In the same way, if $\mathbb{I}_a = 0$, then $\mathbb{I}_b = 1$, so the second coordinate isn't modified and the first is changed to $0$.
+
+\medskip
+
+Let us show how to instantiate the $\FF$ layers.
+The first two have parameters:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0  & 0  & 0        & \maxrep   \\
+        0  & 0  & \maxrep  & 0         \\
+        0  & 0  & 0        & 0         \\
+        0  & 0  & 0        & 0         \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+        0
+    \end{matrix}\right) 
+\end{align*}
+
+
+\noindent Notice that the output of these $\FF$ layer when the input is $(x, y, \mathbb{I}_a, \mathbb{I}_b)$ will be $(\maxrep \cdot \mathbb{I}_b, \maxrep \cdot \mathbb{I}_a, 0, 0)$.
+
+The third $\FF$ layer has parameters:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0  & 0  & 0        & \minrep   \\
+        0  & 0  & \minrep  & 0         \\
+        0  & 0  & -1       & 0         \\
+        0  & 0  & 0        & -1        \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+        0
+    \end{matrix}\right) 
+\end{align*}
+
+\noindent which, when the input is $(x, y, \mathbb{I}_a, \mathbb{I}_b)$, outputs $(\minrep \cdot \mathbb{I}_b, \minrep \cdot \mathbb{I}_a, -\mathbb{I}_a, -\mathbb{I}_b)$
+
+
+
+
+\bigrafa{intenté escribir cómo quedaban las $\FF$ instanciadas pero queda medio ilegible. No sé si vale la pena}
+
+
+
+
+\section{Repeat tokens}\label{appendix:repeat-token}
+
+We show how to make a transformer repeat a token until we decide it to make it stop.
+This construction is needed to argue that for every transformer $\TF$ there is a transformer $\TF'$ of the same $\CoTtndn$ class that computes the same language and consumes all of its budget.
+
+Assume that $\TF$ is normalized and let us define $\TF'$.
+$\TF'$ is identical to $\TF$ except for the following modifications.
+Let $\sigma$ be the token to repeat.
+We flag the vectors coming from $\sigma$ with the token embedding.
+Since we are replicating a token that was printed, i.e., it is not part of the input, its corresponding vector is the last one.
+This is because we begin repeating it after the first time it is printed.
+
+
+Since we flag the vectors coming from the token $\sigma$ we can apply a constant function only to them.
+This function is applied in the last layer of the body of $\TF'$.
+Since we assume $\TF$ was normalized, the $\OUTPUT$ matrix is just a projection.
+Then, the value of the constant function is what is outputted as the probability distribution (after $\softmax$).
+If the constant function has value $\minrep$ in every coordinate except in the one associated with the probability of $\sigma$, where it has $\maxrep$, the distribution outputted by the distribution generator will have all the probability concentrated in $\sigma$.
+Thus, $\TF'$ prints $\sigma$.
+
+\medskip
+
+Observe that this only works if the token does not appear in the input word.
+This case can be handled by exploiting the non-uniformity of the model.
+If the input word is of size $n$, with the $\PE$ we can flag the first $n$ vectors.
+Then, we can use that flag to set to $0$ the coordinate used by the $\TE$ for flagging the token to be repeated, i.e., turning of the flag.
+We make them $0$ using a constant function as described in the Section \ref{const-fun}.
+
+

@@ -1,6 +1,7 @@
 Let $\gL \in \CoTtndn$. 
 Then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
 For each transformer in the family, we construct a corresponding transformer that behaves identically (internally and externally) but prints the flipped decision token as represented in Figure \ref{fig:not}.
+See Appendix \ref{appendix:det-not}
 
 \begin{figure}[h!]
     \centering
@@ -8,29 +9,3 @@ For each transformer in the family, we construct a corresponding transformer tha
     \caption{Visual representation of the construction for complement}
     \label{fig:not}
 \end{figure}
-
-Let $\TF$ be a transformer, we construct $\TF'$ that flips the decision token of $\TF$, i.e., if $\TF^*(\alpha) = \qaccept$, then $\TF'^*(\alpha) = \qreject$ and if $\TF^*(\alpha) = \qreject$, then $\TF'^*(\alpha) = \qaccept$.
-This is the only change made to $\TF$, thus $\TF'^i(\sigma) = \TF^i(\sigma)$ for every $i$ when $\sigma$ is not a decision symbol.
-
-This is done by swapping the rows associated with $\qaccept$ and $\qreject$ in the matrix of the $\OUTPUT$ layer of $\TF$.
-Thus, when the largest probability is associated with $\qaccept$ in $\TF$, that same number will be associated to $\qreject$ in $\TF'$.
-
-Formally, $\TF'$ is defined exactly the same as $\TF$ except in the $\OUTPUT$ layer, where the matrix is different.
-Let $M$ be the matrix of the $\OUTPUT$ layer of $\TF$, let $i$ be the position of the token $\qaccept$ and $j$ the position of $\qreject$, then the matrix of the $\OUTPUT$ layer of $\TF'$ will be $M' = PM$ where $P$ is the matrix that flips the rows $i$ and $j$.
-
-\[
-    M'_{kl} = \begin{cases}
-        1 & \text{ if } k = l \text{, } k \neq i \text{ and } k \neq j \\
-        1 & \text{ if } k = j \text{ and } l = i \\
-        1 & \text{ if } k = i \text{ and } l = j \\
-        0 & \text{ otherwise}
-    \end{cases}
-\]
-
-Since the $\OUTPUT$ matrix is the only difference between $\TF$ and $\TF'$, they have the same budget and embedding size as $\TF$, therefore, $\TF'$ belongs to the same class as $\TF$.
-
-\medskip
-
-We can define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ where $\TF'_i$ is the negation of $\TF_i$ constructed as explained in this section.
-Then $\{\TF'_n\}_{n \in \mathbb{N}}$ computes the complement of $\{\TF_n\}_{n \in \mathbb{N}}$.
-Since for every $i \in \mathbb{N}$, $\TF'_i$ has the same budget and embedding size as $\TF_i$, $\bar{\gL}$ is in $\CoTtndn$.

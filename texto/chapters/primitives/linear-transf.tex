@@ -1,71 +1,27 @@
 Although it may seem that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
 Applying a linear transformation to a vector is not straightforward, since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.\bigcifu{Viste que la gente cheta a esto lo llama ``residual vector'' o state algo asi. Capaz podés buscarlo y sonar cheto xD.}
+\bigrafa{lo llaman residual stream pero para usarlo acá siento que lo debería introducir antes y creo que no es worth.}
 An intuitive idea would be to apply the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
 This does not hold in our model since the addition and multiplication are not commutative in $\Floating$.
 For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
 
 \bigskip
 
-Let $f$ denote the index of the flagged vector.
-We show a mechanism to replace it with the result of applying the linear transformation $M$ to it.
-We perform the operation with two consecutive $\ATTN$ layers, in which $h_f$ only attends to itself.
-Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
+We give a construction that applies the linear transformation $M$ to a vector previously flagged.
+Let $h_f$ be the flagged vector.
+As mentioned, we need to double the embedding dimension (from $d$ to $2d$) so we can have coordinates to use as a temporary memory.
+Our construction works with two $\ATTN$ layers operating as shown in Figure \ref{fig:steps-linear-tranf} (see Appendix \ref{appendix:linear-transf} for the exact construction).
+The first $\ATTN$ layer, computes the transformation saving its result in the coordinates $d+1$ to $2d$.
+Then, the second layer we move the result to the right place.
 
-We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
-In the first $\ATTN$ layer, we compute the transformation saving its result in the coordinates $d+1$ to $2d$.
-Then, in the second layer we move the result to the right place.
-
-\[
-    \widetilde{h_f} = \left( \begin{matrix} (h_f)_1    \\ \vdots \\ (h_f)_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
-    \xrightarrow{\text{first $\ATTN$ layer}}
-    \widetilde{h_f} = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \end{matrix} \right)
-    \xrightarrow{\text{second $\ATTN$ layer}}
-    \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
-\]
-
-We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers preceding this mechanism
-This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in Section \ref{const-fun}.
-
-\medskip
-
-Let us construct each of the $\ATTN$ layers.
-As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
-Therefore, we define $W_Q$ and $W_K$ using the strategy of Section \ref{ignore-vecs}.
-
-Recall from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
-By this point, $h'_f$ is looking like \[ h'_f = W_O \sum_{j=1}^a (s_f)_j v_j = W_O v_f = W_O (W_V \widetilde{h_f}) \]
-
-\begin{itemize}
-\item For the first layer, defining $W_O$ and $W_V$ as follows
-%
-\begin{align*}
-    W_V &= id
-    & 
-    W_O &= \left(\begin{matrix}
-                -id^{\Rdd}                 &0^{\Rdd}                   \\
-                M                          &0^{\Rdd}                   
-          \end{matrix}\right)
-\end{align*}
-%
-makes us get $ h'_f = (-(h_f)_1, \dots, -(h_f)_d, (Mh_f)_1, \dots, (Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the first layer.
-
-
-\item For the second $\ATTN$ layer, we use the same mechanism for making $\widetilde{h_f}$ only attend to itself.
-And defining $W_V$ and $W_O$ as follows
-%
-\begin{align*}
-    W_V &= id
-    & 
-    W_O &= \left(\begin{matrix}
-                0^{\Rdd}                   &id^{\Rdd}                  \\
-                0^{\Rdd}                   &-id^{\Rdd}                 \\
-          \end{matrix}\right)
-\end{align*}
-%
-we get $ h'_f = ((Mh_f)_1, \dots, -(Mh_f)_d, -(Mh_f)_1, \dots, -(Mh_f)_d)$, which added to $\widetilde{h_f}$ gives us what we were looking for after the second layer.
-
-\end{itemize}
-
-\bigskip
-
-Note that, after these two layers, the values of $h_i$ for all $i \neq f$ have changed in ways that have not been studied in this paper, but this is not relevant to the way we use the primitive.
+\begin{figure}[h]
+    \centering    
+    \[
+        \widetilde{h_f} = \left( \begin{matrix} (h_f)_1    \\ \vdots \\ (h_f)_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
+        \xrightarrow{\text{first $\ATTN$ layer}}
+        \widetilde{h_f} = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \end{matrix} \right)
+        \xrightarrow{\text{second $\ATTN$ layer}}
+        \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
+    \]
+    \caption{Visual steps for linear transformations}\label{fig:steps-linear-tranf}
+\end{figure}

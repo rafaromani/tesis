@@ -4,7 +4,7 @@ A vector $h_i$ ignores vector $h_j$ when the attention score is $0$, which can b
 \bigskip
 
 We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors previous to taking $\softmax$. 
-We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
+We construct $\TF'$ over $\TF$ such that the $l$-th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
 \[
     \langle q_i', k_j' \rangle = \begin{cases}
         \minrep                  & \text{ if } i = l \land j \in M \\
@@ -15,79 +15,4 @@ We construct $\TF'$ over $\TF$ such that the $l$th vector ignores a set of vecto
 This can be achieved by saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
 If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
 Since we do not want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
-
-\medskip
-
-We force $(k'_i)_{d+2}$ and $(k'_i)_{d+3}$ to be $\minrep$ when $i \in M$, and $(q'_i)_{d+2}$ and $(q'_i)_{d+3}$ to be $1$ when $i=l$ and $0$ otherwise.
-We also make $(k'_i)_{d+1}$ and $(q'_i)_{d+1}$ to be $0$ for all $i$ so the third to last term of the inner product is always $0$.
-With these values, the only attention scores modified are the ones of the $l$th vector since every other will have $0$ in the last three coordinates of the query thus making the last three terms of the inner product $0$ and therefore not affecting the score.
-
-This can be achieved with the following flags:
-%
-\begin{align*}
-    & (h_i)_{d+1} = \begin{cases}
-        1 & \text{ if } i = l \\
-        0 & \text{ otherwise }
-    \end{cases}
-    & (h_i)_{d+2} = (h_i)_{d+3} = \begin{cases}
-        1 & \text{ if } i \in M \\
-        0 & \text{ otherwise }
-    \end{cases}
-\end{align*}
-%
-Now the query and key matrices are extended as:
-%
-\begin{align*}
-    &
-    W_Q' = \left(\begin{matrix}
-        W_Q                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0 & 0 & 0 \\
-        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
-        0^{\Floating^{d \times 1}} & 1 & 0 & 0 \\
-    \end{matrix}\right)
-    &
-    W_K' = \left(\begin{matrix}
-        W_K                         & 0^{\Floating^{d \times 1}} & 0^{\Floating^{d \times 1}}       & 0^{\Floating^{d \times 1}} \\
-        0^{\Floating^{d \times 1}} & 0 & 0       & 0 \\
-        0^{\Floating^{d \times 1}} & 0 & \minrep & 0 \\
-        0^{\Floating^{d \times 1}} & 0 & 0       & \minrep \\
-    \end{matrix}\right)
-\end{align*}
-%
-Then, 
-%
-\begin{align}
-    \langle q'_i, k'_j \rangle &= \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x = \langle q_i, k_j \rangle + (q'_l)_{d+1} (k'_i)_{d+1} + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
-    &
-    = \langle q_i, k_j \rangle + 0 + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
-    &
-    = \langle q_i, k_j \rangle + (q'_l)_{d+2} (k'_i)_{d+2} + (q'_l)_{d+3} (k'_i)_{d+3} \nonumber \\
-    & 
-    = \begin{cases}
-        \langle q_i, k_j \rangle + 1 \cdot \minrep + 1 \cdot \minrep & \text{ if } i = l    \land j \in M \\
-        \langle q_i, k_j \rangle + 1 \cdot 0       + 1 \cdot 0       & \text{ if } i = l    \land j \notin M \\
-        \langle q_i, k_j \rangle + 0 \cdot \minrep + 0 \cdot \minrep & \text{ if } i \neq l \land j \in M \\
-        \langle q_i, k_j \rangle + 0 \cdot 0       + 0 \cdot 0       & \text{ if } i \neq l \land j \notin M \\
-    \end{cases} \nonumber \\
-    & 
-    = \begin{cases}
-        \langle q_i, k_j \rangle + \minrep + \minrep & \text{ if } i = l    \land j \in M \\
-        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i = l    \land j \notin M \\
-        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \in M \\
-        \langle q_i, k_j \rangle + 0       + 0       & \text{ if } i \neq l \land j \notin M \\
-    \end{cases}\nonumber \\
-    & 
-    = \begin{cases}
-        \minrep                  & \text{ if } i = l    \land j \in M \\
-        \langle q_i, k_j \rangle & \text{ otherwise } 
-    \end{cases} \nonumber
-\end{align}
-% 
-Namely, $\langle q'_i, k'_j \rangle = \minrep$ if $i = l$ and $j \in M$, but $\langle q'_i, k'_j \rangle = \langle q_i, k_j \rangle$ otherwise.
-
-
-
-
-
-
-
+The explicit construction achieving this is explained in Appendix \ref{appendix:ignore-vectors-attn}

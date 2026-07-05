@@ -1,25 +1,8 @@
-We show how to make a transformer repeat a token until we decide it to make it stop.
-This construction is needed to argue that for every transformer $\TF$ there is a transformer $\TF'$ of the same $\CoTtndn$ class that computes the same language and consumes all of its budget.
+For later proof we will need to assume that a transformer consumes all of its budget.
+Thus, we will argue that for every transformer $\TF$ there is a transformer $\TF'$ of the same $\CoTtndn$ class that computes the same language and consumes all of its budget.
 
-Assume that $\TF$ is normalized and let us define $\TF'$.
-$\TF'$ is identical to $\TF$ except for the following modifications.
-Let $\sigma$ be the token to repeat.
-We flag the vectors coming from $\sigma$ with the token embedding.
-Since we are replicating a token that was printed, i.e., it is not part of the input, its corresponding vector is the last one.
-This is because we begin repeating it after the first time it is printed.
+We construct $\TF'$ as $\TF$ but once it prints a token $\sigma$, it repeats it until the budget run out (or another construction makes it stop).
+This is achieved flagging the token $\sigma$ and applying a constant function at the end of the body of the transformer to all  the vectors flagged.
+The constant function force the probability distribution to have all the probability concentrated in the token $\sigma$.
 
-
-Since we flag the vectors coming from the token $\sigma$ we can apply a constant function only to them.
-This function is applied in the last layer of the body of $\TF'$.
-Since we assume $\TF$ was normalized, the $\OUTPUT$ matrix is just a projection.
-Then, the value of the constant function is what is outputted as the probability distribution (after $\softmax$).
-If the constant function has value $\minrep$ in every coordinate except in the one associated with the probability of $\sigma$, where it has $\maxrep$, the distribution outputted by the distribution generator will have all the probability concentrated in $\sigma$.
-Thus, $\TF'$ prints $\sigma$.
-
-\medskip
-
-Observe that this only works if the token does not appear in the input word.
-This case can be handled by exploiting the non-uniformity of the model.
-If the input word is of size $n$, with the $\PE$ we can flag the first $n$ vectors.
-Then, we can use that flag to set to $0$ the coordinate used by the $\TE$ for flagging the token to be repeated, i.e., turning of the flag.
-We make them $0$ using a constant function as described in the Section \ref{const-fun}.
+We give the exact construction in appendix \ref{appendix:repeat-token}
