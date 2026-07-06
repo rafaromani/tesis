@@ -24,7 +24,7 @@ Applying Chernoff's bound, we require $\delta$ and $r$ such that $(1+\delta)rc >
     \delta       &> \frac{1/2-c}{c}   &                                     &
 \end{align*}
 %
-Since $c \geq 1/2$, we can bound $(1/2-c)/c$ by $0$; thus, choosing any $\delta \in (0,1)$ satisfies the first equation.
+Since $c > 1/2$, we can bound $(1/2-c)/c$ by $0$; thus, choosing any $\delta \in (0,1)$ satisfies the first equation.
 Then, with a fixed $\delta$, choosing $r = -4\log_e(d)/(c\delta^2)$ makes $\Pr[Y > r/2] > d$.
 Therefore, $\TF'_n$ runs $\TF_n$ $\lceil -4\log_e(d)/(c\delta^2) \rceil$ times and accepts the word if more than half of the runs accepted; otherwise, it rejects.
 Finally, $\TF'_n$ answers correctly with probability at least $d$.

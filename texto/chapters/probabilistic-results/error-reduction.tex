@@ -4,16 +4,11 @@ We say that a family of probabilistic transformers $\{\TF_n\}_{n \in \mathbb{N}}
     \alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3 
 \]
 The choice of the constant $2/3$ may seem somewhat arbitrary.
-We now show that we can replace $2/3$ with any constant in the interval $[1/2, 1)$.
-
-\bigcifu{ojo que es estricto, tmb hay que arrelgarlo en la demo}
-\bigrafa{está bien así me parece. Aceptar con proba $> 1/2$ es lo que queremos}
-\bigcifu{Pero si querés estrictamente mayor a $1/2$ no sería $(1/2, 1)$. Onda, con $1/2$ todos los problemas se pueden resolver (hasta los indecidible, solo tirás una moneda y respondés lo que dice la moneda)}
-\bigrafa{Pero mi def pide mayor estricto a la constante.}
+We now show that we can replace $2/3$ with any constant in the interval $(1/2, 1)$.
 
 \bigskip
 
-Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $[1/2, 1)$ and show that it is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
+Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $(1/2, 1)$ and show that it is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
 
 For each $\TF_n$ we construct $\TF'_n$ such that for all words of length $n$, $\alpha \in \gL \iff \Pr[\TF_n'^*(\alpha) = \qaccept] > d $.
 First, if $d \leq c$, then $\TF_n = \TF'_n$.

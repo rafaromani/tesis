@@ -70,7 +70,7 @@ We encode $\theta_{\TE}(\sigma)$ as one of the columns of $\theta_{\TE}$.
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times (\budget(n) + n)}$. 
 For all positions of the tape $1 \leq i \leq \budget(n) + n$ we denote by $\theta_{\PE}(i) \in \Rd$ the mapping of position $i$.
-As in the token embedding, we enconde $\theta_{\PE}(i)$ as the $i$-th column of $\theta_\PE$.
+As in the token embedding, we encode $\theta_{\PE}(i)$ as the $i$-th column of $\theta_\PE$.
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the Algorithm \ref{alg:def_attn}. 
@@ -93,7 +93,7 @@ Finally, the output matrix is just a post-processing.
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{Feed Forward Network: } It is a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2) \in \mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b_1 ) + b_2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
+\textbf{Feed Forward Network: } It is a mapping from $\Rd$ to $\Rd$. Given $\theta_{\FF} = (W_1 , b_1 , W_2 , b_2)$ in $\mathbb{R}^{d \times d} \times \Rd \times \mathbb{R}^{d \times d} \times \Rd$, the layer is defined as $\FF_{\theta_\FF}(h) := W_2 \; \relu(W_1 h + b_1 ) + b_2$, where $\relu: \mathbb{R}^d \to \mathbb{R}^d$ replaces each position $x_i$ by $\text{max}(0, x_i)$.
 
 
 \textbf{Output Layer: } It is a mapping from $\Rd$ to a probability distribution over $\Sigma$.
@@ -106,7 +106,7 @@ All these parts come together for the distribution generator process in the Algo
 \caption{Distribution generator}\label{alg:def_p_gen}
 \begin{algorithmic}[1]
 \Input Transformer parameter $\theta = (\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT)$ and tokens of the tape $\alpha \in \Sigma^*$.
-\Output distribution $p_\theta(\cdot | \alpha)$.
+\Output Distribution $p_\theta(\cdot | \alpha)$.
 \State $h^{(0)}_i \gets \theta_\TE(\alpha_i) + \theta_\PE(i), \; \forall 1 \leq i \leq |\alpha|$
 \For{$l = 0,\ldots,L-1$}
 \State	$( h^{(l+0.5)}_1,\ldots, h^{(l+0.5)}_{|\alpha|}) \gets (h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) +\ATTN_{\theta^{(l)}_\ATTN}(h^{(l)}_1,\ldots, h^{(l)}_{|\alpha|}) $
