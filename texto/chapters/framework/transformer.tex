@@ -16,24 +16,17 @@ First, the computation of the probability distribution over the alphabet which w
 Second, the selection of a token based on the probability distribution, which we call \textit{token selection}.
 In this work we analyze and compare two different algorithms for token selection.
 
-\medskip
-
 Most prior work only considers transformers that operate over an infinite tape.
 This is far from the real models, thus the transformers studied in this thesis work over a finite tape.
 The size of the tape is defined, for each input size $n$, as $\budget(n) + n$.
 It is important to remark that the size of the tape bounds the number of steps of $\CoT$ that the transformer makes.
 For an input word of length $n$, no computation can take more than $\budget(n)$ steps because every step writes a token in the tape.
 
-
-\medskip
-
 The process of distribution generation is dependent on many parameters.
 In the real models, these parameters are the ones computed during the training. 
 We refer to them as $\theta$ and consider them as part of the definition of a transformer.
 
-\bigcifu{No se si banco tantos renglones en blanco, pero whatever.}
-
-\bigskip
+\medskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Formal general def of transformer and CoT %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,10 +34,7 @@ We refer to them as $\theta$ and consider them as part of the definition of a tr
 We denote by $\TF(\alpha)$ the token outputted after one step of the computation of the transformer $\TF$ when the tape content is $\alpha \in \Sigma^*$.
 The autoregressive token generation is defined recursively.
 The token outputted after $i$ steps is $\TF^{i}(\alpha) := \TF^{i-1}(\alpha \TF(\alpha))$ with base case $\TF^1(\alpha) := \TF(\alpha)$.
-In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
-
-\bigcifu{Where $\sigma_j = TF^j(\alpha) \in \Sigma$ for all $1 \leq j < i$.}
-
+In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j = TF^j(\alpha) \in \Sigma$ for all $1 \leq j < i$.
 We denote by $\TF^*(\alpha)$ the token written by the transformer when it halts, i.e., at the end of the computation, when the input is $\alpha$.
 As said before, the transformer only halts when it prints a decision symbol.
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
@@ -52,7 +42,7 @@ Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 
 
-\medskip
+\smallskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Def of distribution generator %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,7 +56,7 @@ Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
 The algorithm works over vectors of numbers of certain dimension $d$.
-The dimension is dependent on the size of the input word.\footnote{This is note the case in the real models since the same model is used for all input sizes.}\bigcifu{Algún comentario más para defender la footnote? Tipo, decir que algunos resultados valen para el caso constante, o que de todas formas esta bueno tenerlo de parametro para entender tradeoffs.}
+The dimension is dependent on the size of the input word.\footnote{This is note the case in the real models since the same model is used for all input sizes. In this work, we mainly worry about a logarithmic growth in the embedding dimension in relation to input size. In practice, we were unable to train models capable of processing inputs of arbitrary length, so accepting a small increase in the embedding dimension could still yield realistic results.}
 We use $d(n)$ to refer to the \textbf{embedding size} when the input word has size $n$.
 
 We now describe each part of the transformer's architecture on detail:
@@ -74,14 +64,16 @@ We now describe each part of the transformer's architecture on detail:
 %Each part
 \textbf{Token Embedding:} It is a mapping from $\Sigma$ to vectors in $\Rd$. 
 This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. 
-For all $\sigma \in \Sigma$, we denote by $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ the mapping of token $\sigma$. \bigcifu{Capaz una aclaración de que $\theta(\sigma)$ is la columna $\sigma$ de $\theta$ (onda, como se codifica el mappeo).}
+For all $\sigma \in \Sigma$, we denote by $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ the mapping of token $\sigma$. 
+We encode $\theta_{\TE}(\sigma)$ as one of the columns of $\theta_{\TE}$.
 
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times (\budget(n) + n)}$. 
 For all positions of the tape $1 \leq i \leq \budget(n) + n$ we denote by $\theta_{\PE}(i) \in \Rd$ the mapping of position $i$.
+As in the token embedding, we enconde $\theta_{\PE}(i)$ as the $i$-th column of $\theta_\PE$.
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
-Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}\bigcifu{Cuando poner refencias a cosas suele ser en mayuscula. Tipo Algorithm 1.}. 
+Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the Algorithm \ref{alg:def_attn}. 
 This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}.\footnote{The matrices are named Q for query, K for key, V for value and O for output.
 It is called query because $q_i$ represents a question of how much the $i$-th vector should attend to the others in a specific setting (determined by $W_Q$).
 The $k_j$ vector answers said question such that $\langle q_i, k_j \rangle$ is large if the $j$-th vector is relevant to the $i$-th.
@@ -108,7 +100,7 @@ Finally, the output matrix is just a post-processing.
 Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, we define it as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
 
 
-All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.\bigcifu{Idem antes}
+All these parts come together for the distribution generator process in the Algorithm \ref{alg:def_p_gen}.
 
 \begin{algorithm}
 \caption{Distribution generator}\label{alg:def_p_gen}
@@ -126,7 +118,7 @@ All these parts come together for the distribution generator process in the algo
 
 The $\OUTPUT$ layer and the $\ATTN$ layer use a $\softmax$ function $\mathbb{R}^n$ to $\mathbb{R}^n$ defined as $\softmax(x)_i = exp(x_i) / \sum_{j=1}^n exp(x_j)$.
 
-\medskip
+\smallskip
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 % Def token selection %
@@ -154,5 +146,9 @@ We allow for more than one maximum with this selector. Figure \ref{diag-transf} 
 
 
 
-Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ \bigcifu{Agregaría una aclaración sobre qué son estos, tipo "(a finite set of representable numbers, that we will define later)"}for representing them.
+Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ (a finite set of representable numbers, that we will define later) for representing them.
 The formal construction is the same, but all operations over the set of real numbers are replaced by their corresponding in the set of $\Floating$ numbers defined in Section \ref{repr}.
+
+Our model strikes a balance between fidelity to real-world models and simplicity.
+For example, we do not model the normalization that transformers apply to vectors between layers.
+In future work, it will be interesting to demonstrate that operations such as these do not affect the power of transformer abstractions.

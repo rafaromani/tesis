@@ -184,9 +184,33 @@ Note that, after these two layers, the values of $h_i$ for all $i \neq f$ have c
 
 
 
-\section{Implementation of the special operation}\label{appendix:special-op}
+\section{Implementation of the special operation and first step of maximum algorithm}\label{appendix:special-op}
 
-This operation is not a linear transformation; therefore, we need to define a new technique.
+The $\FF$ layer needed for the first step transforms $(a, b, 0, 0)$ in $(a, b, \relu(a-b), \relu(b-a))$.
+It consumes $(a, b, 0, 0)$ and outputs $(0, 0, \relu(a-b), \relu(b-a))$ which added to $(a, b, 0, 0)$ gives what we need.
+Instantiating the matrices as follows produces the desire effect:
+
+\begin{align*}
+    & W_1 = id
+    & W_2  = \left(\begin{matrix}
+        0   & 0   & 0   & 0 \\   
+        0   & 0   & 0   & 0 \\
+        1   & -1  & 0   & 0 \\
+        -1  & 1   & 0   & 0 \\
+    \end{matrix}\right) &
+    & b_1 = b_2 = \left(\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+        0
+    \end{matrix}\right) 
+\end{align*}
+
+
+\bigskip
+
+The special operation is more complicated.
+It is not a linear transformation; therefore, we need to define a new technique.
 Observe that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ equals $1$ and the other equals $0$.
 Then, $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
 

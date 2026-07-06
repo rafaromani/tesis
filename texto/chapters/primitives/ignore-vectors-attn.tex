@@ -1,4 +1,4 @@
-We show how to make a vector ignore others in the $\ATTN$ layers, a technique that will prove useful in later constructions.
+We show how to make a vector ignore others in the $\ATTN$ layers, a technique that will prove useful in later constructions where we use one transformer to sequentially simulate more.
 A vector $h_i$ ignores vector $h_j$ when the attention score is $0$, which can be achieved by making $\langle q_i, k_j\rangle = \minrep$.
 
 \bigskip
@@ -17,5 +17,3 @@ If the last two terms of the summation are $\minrep$, then because of the iterat
 Since we do not want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
 The explicit construction achieving this is explained in Appendix \ref{appendix:ignore-vectors-attn}
 
-\bigcifu{Esta subsección es la menos clara, pero está bien. Lo único que me molesta esta operación claramente modifica el comportamiento de la capa, y me dio que se dijo que estas cosas no hacían eso.
-Capaz podés agregar un poco de intuición de cómo vas a usar eso adelante (la ejecución de múltiples transformers).}

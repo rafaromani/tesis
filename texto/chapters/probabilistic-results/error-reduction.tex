@@ -9,6 +9,7 @@ We now show that we can replace $2/3$ with any constant in the interval $[1/2, 1
 \bigcifu{ojo que es estricto, tmb hay que arrelgarlo en la demo}
 \bigrafa{está bien así me parece. Aceptar con proba $> 1/2$ es lo que queremos}
 \bigcifu{Pero si querés estrictamente mayor a $1/2$ no sería $(1/2, 1)$. Onda, con $1/2$ todos los problemas se pueden resolver (hasta los indecidible, solo tirás una moneda y respondés lo que dice la moneda)}
+\bigrafa{Pero mi def pide mayor estricto a la constante.}
 
 \bigskip
 
@@ -18,8 +19,7 @@ For each $\TF_n$ we construct $\TF'_n$ such that for all words of length $n$, $\
 First, if $d \leq c$, then $\TF_n = \TF'_n$.
 Let us explore the case where $c < d$.
 
-We construct $\TF'_n$ based on $\TF_n$ using a Monte Carlo simulation.
-\bigcifu{Siento que en vez de monte carlo deberíamos decir Majority Vote. Monte Carlo se asocia más a otras cosas ahora que pienso.}
+We construct $\TF'_n$ based on $\TF_n$ using a Majority Vote simulation.
 
 The idea is similar to the disjunction of languages.
 $\TF'_n$ runs the transformer $\TF_n$ sequentially $r$ times and then analyzes whether the majority of the results accept.
@@ -32,7 +32,9 @@ It worked as a counter of how many transformers accepted the word.
 We replicate this strategy to check whether the majority of the $r$ runs of $\TF_n$ accepted the word, i.e., $f_c > r/2$.
 If that is the case, we force $\TF'_n$ to accept; otherwise, we force it to reject.
 
-For fixed $c$ and $d$, only a constant number of runs (depending on $c$ and $d$) are needed for the construction to work properly.
+
+After calculations, it holds that $r = O(1)$ (since both $c$ and $d$ are fixed).
+Thus, only a constant number of runs are needed for the construction to work properly.
 The exact number is computed using Chernoff's bound.
 The calculations are shown in Appendix \ref{appendix:runs-error-red}.
 
@@ -42,5 +44,3 @@ The calculations are shown in Appendix \ref{appendix:runs-error-red}.
 For $|\alpha| = n$, let $T(n)$ be the number of steps the family $\{\TF_n\}_{n \in \mathbb{N}}$ needs to compute $\gL(\alpha)$ and $d(n)$ its embedding dimension.
 Then, the family $\{\TF'_n\}_{n \in \mathbb{N}}$ takes $O(r \cdot T(n))$ steps to compute $\gL(\alpha)$ and uses embedding size $O(r \cdot d(n))$.
 Thus, the $\RCoTtndn$ classes are invariant to the choice of the constant in the definition of language recognition by probabilistic transformers.
-
-\bigcifu{Genial, pero en algún lado pondría explícitamente que "after calculations it holds that $r = O(1)$ (since both $c$ and $d$ are fixed)". De paso, el hecho de que $c > 1/2$ TIENE que aparecer en la prueba de Chebyshev. No la revisé todavía, pero ese hecho tiene que aparecer, porque fijate que con $c=1/2$ el majority vote no converge a ningún lado (no hay sesgo en cada voto).}

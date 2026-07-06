@@ -1,4 +1,4 @@
-\bigcifu{Muy cabeza arrancar con el theorem jaja. Ponele un foreplay o algo xD}
+In this section we show that transformers can simulate polynomial-size circuits.
 
 \begin{theorem}\label{sim-circ-by-det-transf}
     Any family of circuits of polynomial size $T(n)$ can be simulated by a family of constant-depth, constant-precision deterministic transformers using $T(n)$ steps of $\CoT$ with $O(\log(n))$ embedding size 
@@ -30,5 +30,3 @@ Theorem \ref{sim-circ-by-det-transf} can also be phrased with complexity classes
     Next, a feed-forward network computes the value of the $(n+i)$-th gate based on its type and the values of its input gates retrieved in the previous step.
     Finally, in the last $\CoT$ step, $\TF_n$ outputs the value of the output gate (sink) of $C_n$.
 \end{proof}
-
-\bigcifu{Muy lindo resumen de la prueba. Podremos pegar el dibujo que ellos tienen? Se que es feo, pero capaz ayuda. Opinable igual.}

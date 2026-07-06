@@ -1,7 +1,5 @@
 In this section, we show that one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers can be simulated by shallow Boolean circuits.
 
-\bigcifu{ste resultado se puede probar de forma más directa, no? Como que solo tenés que simular el único paso del transformer y fijarte cuál item es el más probable.}
-
 \begin{theorem}\label{theo:ac0-sim-prob-transf}
     One step of a probabilistic, constant-depth, polynomial-embedding-dimension transformer can be simulated with a circuit in $\BPAC^0[1]$.
 \end{theorem}
@@ -27,15 +25,13 @@ Thus, we only show that the probabilistic token selector can be simulated by $\B
 By Theorem \ref{const-random-in-ac0}, one step of a probabilistic, constant-depth, polynomial-embedding-dimension transformer can also be simulated with a circuit in $\AC^0$.
 And as in Theorem \ref{theo:det-upper-bound-log-steps}, we now prove that a logarithmic number of $\CoT$ steps is not sufficient to go beyond $\AC^0$, even in a probabilistic transformer.
 
-\bigcifu{Por qué inclusión estricta acá abajo?}
-
 \begin{theorem}\label{theo:prob-upper-bound-log-steps}
-    $\RCoT[\log(n), \poly(n)] \subseteq \BPAC^0[\log(n)] \subset \AC^0$
+    $\RCoT[\log(n), \poly(n)] \subseteq \BPAC^0[\log(n)] \subseteq \AC^0$
 \end{theorem}
 
 \begin{proof}
-    Since we need a constant number of bits from the seed to simulate each $\CoT$ step, we need $O(\log(n))$ random bits to simulate $\log(n)$ steps.
-    Thus, we can enumerate all possible chain-of-thought token sequences $(|\Sigma|^{O(log(n))} = O(n))$ and seeds $2^{O(\log(n)) = O(n)}$ and check when they are consistent.
+    Since we need a constant number of bits from the seed to simulate each $\CoT$ step, we need $O(\log(n))$ random bits to simulate $O(\log(n))$ steps.
+    Thus, we can enumerate all possible chain-of-thought token sequences $(|\Sigma|^{O(log(n))} = O(n))$ and seeds $2^{O(\log(n))} = O(n)$ and check when they are consistent.
     Observe that we need to check each seed with each sequence; thus, we check consistency of $O(n^2)$ pairs (sequence, seed).
     
     In the deterministic transformers it was enough to perform an $\OR$ of all the consistent sequences.
@@ -47,7 +43,7 @@ And as in Theorem \ref{theo:det-upper-bound-log-steps}, we now prove that a loga
     Since the probabilistic transformer outputs the correct answer $2/3$ of the time, i.e., for $2/3$ of the seeds, we know that at least $2/3$ of the consistent runs agree.
     Thus, instead of $\MAJORITY$, we compute $\MAJORITY_{2/3}$, which can be done in $\AC^0$.
 
-    Finally, since there is an $\AC^0$ circuit simulating one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers, there is an $\AC^0$ circuit simulating $O(\log(n))$ steps of $\CoT$ of the same set-up.\bigcifu{Esto no lo dijiste ya al principio de la prueba?}
+    Finally, since there is an $\AC^0$ circuit simulating one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers, there is an $\AC^0$ circuit simulating $O(\log(n))$ steps of $\CoT$ of the same set-up.
 \end{proof}
 
 

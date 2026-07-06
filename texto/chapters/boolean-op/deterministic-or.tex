@@ -9,10 +9,11 @@ We construct a family $\{\TF_n\}_{n \in \mathbb{N}}$ that computes $\tfone{\gL} 
 It does it in $\tfone{T}(n) + \tftwo{T}(n) + 1 \in O(T(n))$ steps of $\CoT$ and it has embedding size $O(d(n))$.
 
 The idea behind the construction is to run first one of the transformers, then run the other and finally compute the disjunction of both results as represented in Figure \ref{fig:or}.
+$\TF$ can simulate both transformers since we assign one half of the embedding dimension to each of them; thus, the simulated transformers ignore the coordinates that are from the other.
+Also, in this construction is needed to assume that the simulated transformers consume all of their budget so $\TF$ knows in which position of the tape are written the decision tokens of $\tfone{\TF}$ and $\tftwo{\TF}$.
 The exact construction for $\TF$ is shown in appendix \ref{appendix:det-or}.
 \end{proof}
 
-\bigcifu{Me gustan estas pruebas. Lo único, agregaría un mínimo de intuición explicando donde se usan algunas de las componentes que porbaste antes. Ponele, en la de complemento podes hablar de los flags en los tokens, y en la segunda podes hablar de casi todas (tipo, decir que usar la versión de la máquina que usa todo el budget, que usas lo de ignorar attention para poder tener capaz que simulan ambas maquinas a la vez, etc).}
 
 \begin{figure}[h!]
     \centering
