@@ -1,9 +1,9 @@
 In this section we show how to simulate a deterministic transformer with a probabilistic one.
-Thus, we obtain the following theorem.
 
-\begin{theorem}
-    $\CoTtndn \subseteq \RCoTtndn$ for all $T(\cdot)$ and $d(\cdot)$
+\begin{theorem}\label{theo:prob-sim-det}
+    A constant-depth, constant-precision deterministic transformer with embedding dimension $d(n)$ and using $T(n)$ steps of $\CoT$ can be simulated by a constant-depth, constant-precision  probabilistic transformer with the same embedding dimension and using the same number of $\CoT$ steps.
 \end{theorem}
+
 
 \begin{proof}
     Let $\TF$ be a deterministic transformer.
@@ -27,14 +27,21 @@ Thus, we obtain the following theorem.
         In particular, this means that $\TF^*(\alpha) = \TF'^*(\alpha)$.
         Therefore, $\TF$ and $\TF'$ accept the same words (and in the same number of steps).
         By construction, the embedding size of $\TF$ and $\TF'$ is the same.
-        
-        \medskip
-        
-        Finally, let $\gL \in \CoTtndn$.
-        Then, there is a family of deterministic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $O(d(n))$ that after $O(T(n))$ steps of $\CoT$ computes $\gL$.
-        
-        We define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ of probabilistic transformers by applying the construction just presented to each $\TF_n$.
-        Then, the transformers in $\{\TF'_n\}_{n \in \mathbb{N}}$ have embedding size $O(d(n))$ and compute $\gL$ using $O(T(n))$ steps of $\CoT$.
-        
-        Therefore, $\gL \in \RCoTtndn$, and consequently $\CoTtndn \subseteq \RCoTtndn$.
 \end{proof}
+        
+
+By Theorem \ref{theo:prob-sim-det}, it is clearly derived the following:
+
+\begin{theorem}
+    $\CoTtndn \subseteq \RCoTtndn$ for all $T(\cdot)$ and $d(\cdot)$
+\end{theorem}
+
+
+% Finally, let $\gL \in \CoTtndn$.
+% Then, there is a family of deterministic transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $O(d(n))$ that after $O(T(n))$ steps of $\CoT$ computes $\gL$.
+
+% We define the family $\{\TF'_n\}_{n \in \mathbb{N}}$ of probabilistic transformers by applying the construction just presented to each $\TF_n$.
+% Then, the transformers in $\{\TF'_n\}_{n \in \mathbb{N}}$ have embedding size $O(d(n))$ and compute $\gL$ using $O(T(n))$ steps of $\CoT$.
+
+% Therefore, $\gL \in \RCoTtndn$, and consequently $\CoTtndn \subseteq \RCoTtndn$.
+

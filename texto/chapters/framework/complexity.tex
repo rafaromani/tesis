@@ -175,7 +175,7 @@ Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought a
 
 In general, we say that a family of random circuits recognizes a language $\gL$ when $\Pr[C_{|x|}(x) = \gL(x)]$ is high.
 
-\begin{definition}[Randomized circuit families and language recognition] 
+\begin{definition}[Randomized circuit families and language recognition]
     Let $T : \mathbb{N} \to \mathbb{N}$ be a function.
     A $T(n)$-size \textbf{randomized circuit family} is a sequence $\{C_n\}_{n\in\mathbb{N}}$ of randomized Boolean circuits, where $C_n$ has $n$ inputs and a single output, and its size $|C_n| \leq T(n)$ for every $n$.
     We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size randomized circuit family $\{C_n\}_{n\in\mathbb{N}}$ with $O(f(n))$ random gates such that for every $x\in\{0,1\}^n$, $\Pr[C_n(x) = 1] \geq 2/3 \iff \gL(x)$.\footnote{As in many probabilistic complexity classes, the constant 2/3 is arbitrary and can be changed to any constant in the range $(1/2, 1)$.}
@@ -185,8 +185,8 @@ In general, we say that a family of random circuits recognizes a language $\gL$ 
 Since every random Boolean circuit can be interpreted as Boolean circuit with the random bits padded in the input, we can also define recognition in the following way:
 
 
-\begin{definition}
-    We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size circuit family $\{C'_n\}_{n\in\mathbb{N}}$ such that for every $x\in\{0,1\}^n$, $\Pr_{r \in \{0,1\}^{f(n)}}[C'_n(xr) = 1] \geq 2/3 \iff \gL(x)$.
+\begin{definition}\label{def:accept-random-circ}
+    We say that a language $\gL$ is in $\BPSIZE(T(n))[f(n)]$ if there exists a $T(n)$-size deterministic circuit family $\{C'_n\}_{n\in\mathbb{N}}$ such that for every $x\in\{0,1\}^n$, $\Pr_{r \in \{0,1\}^{f(n)}}[C'_n(xr) = 1] \geq 2/3 \iff \gL(x)$.
 \end{definition}
 
 \begin{figure}[htbp]
@@ -330,6 +330,6 @@ The machines of $\ppoly$ can be interpreted as polynomial deterministic Turing m
 Then $(\ppoly)/\mathsf{poly}$ are the machines of $\ppoly$ with another polynomial advice.
 Clearly $(\ppoly)/\mathsf{poly} = \ppoly$; thus, from Adleman's theorem its deduced the following corollary:
 
-\begin{corollary}
+\begin{corollary}\label{coro:bpppoly-equals-ppoly}
     $\BPppoly = \ppoly$
 \end{corollary}

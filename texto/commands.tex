@@ -59,6 +59,16 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newenvironment{proofsketch}{%
+  \renewcommand{\proofname}{Proof Sketch}%
+  \proof
+}{%
+  \endproof
+}
+
+
 
 
 \algnewcommand\Input{\item[\textbf{Input:}]}
