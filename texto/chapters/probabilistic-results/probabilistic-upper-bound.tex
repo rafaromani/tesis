@@ -25,7 +25,9 @@ Thus, we only show that the probabilistic token selector can be simulated by $\B
 \bigskip
 
 By Theorem \ref{const-random-in-ac0}, one step of a probabilistic, constant-depth, polynomial-embedding-dimension transformer can also be simulated with a circuit in $\AC^0$.
-And as i Theorem \ref{theo:det-upper-bound-log-steps}, we now prove that a logarithmic number of $\CoT$ steps is not sufficient to go beyond $\AC^0$, even in a probabilistic transformer.
+And as in Theorem \ref{theo:det-upper-bound-log-steps}, we now prove that a logarithmic number of $\CoT$ steps is not sufficient to go beyond $\AC^0$, even in a probabilistic transformer.
+
+\bigcifu{Por qué inclusión estricta acá abajo?}
 
 \begin{theorem}\label{theo:prob-upper-bound-log-steps}
     $\RCoT[\log(n), \poly(n)] \subseteq \BPAC^0[\log(n)] \subset \AC^0$
@@ -45,7 +47,7 @@ And as i Theorem \ref{theo:det-upper-bound-log-steps}, we now prove that a logar
     Since the probabilistic transformer outputs the correct answer $2/3$ of the time, i.e., for $2/3$ of the seeds, we know that at least $2/3$ of the consistent runs agree.
     Thus, instead of $\MAJORITY$, we compute $\MAJORITY_{2/3}$, which can be done in $\AC^0$.
 
-    Finally, since there is an $\AC^0$ circuit simulating one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers, there is an $\AC^0$ circuit simulating $O(\log(n))$ steps of $\CoT$ of the same set-up.
+    Finally, since there is an $\AC^0$ circuit simulating one forward pass of constant-depth, polynomial-embedding-dimension, and constant-precision probabilistic transformers, there is an $\AC^0$ circuit simulating $O(\log(n))$ steps of $\CoT$ of the same set-up.\bigcifu{Esto no lo dijiste ya al principio de la prueba?}
 \end{proof}
 
 
