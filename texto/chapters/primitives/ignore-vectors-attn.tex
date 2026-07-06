@@ -16,3 +16,6 @@ This can be achieved by saturating the finite representation since $\langle q'_l
 If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
 Since we do not want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
 The explicit construction achieving this is explained in Appendix \ref{appendix:ignore-vectors-attn}
+
+\bigcifu{Esta subsección es la menos clara, pero está bien. Lo único que me molesta esta operación claramente modifica el comportamiento de la capa, y me dio que se dijo que estas cosas no hacían eso.
+Capaz podés agregar un poco de intuición de cómo vas a usar eso adelante (la ejecución de múltiples transformers).}

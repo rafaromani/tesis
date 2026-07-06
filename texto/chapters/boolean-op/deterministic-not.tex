@@ -2,10 +2,14 @@
     $\gL \in \CoTtndn \implies \gL^c \in \CoTtndn$
 \end{theorem}
 
-Let $\gL \in \CoTtndn$. 
+\begin{proof}[Sketch of the proof]
+    Let $\gL \in \CoTtndn$. 
 Then there is a family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ of embedding size $d(n)$ that after $T(n)$ steps of $\CoT$ prints $\qaccept$ or $\qreject$ depending on if the input word is in the language.
 For each transformer in the family, we construct a corresponding transformer that behaves identically (internally and externally) but prints the flipped decision token as represented in Figure \ref{fig:not}.
 See Appendix \ref{appendix:det-not}
+\end{proof}
+
+\bigcifu{No forzaría el float de las figuras asi queda mejor el texto.}
 
 \begin{figure}[h!]
     \centering

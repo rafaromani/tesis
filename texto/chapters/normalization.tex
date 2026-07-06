@@ -11,7 +11,7 @@ This notion will specify properties of the $\OUTPUT$ matrix and of the vector co
 
 The motivation for this definition is to simplify the $\OUTPUT$ layer (\projection) and to have more control over the probability distribution generated (\concentrated). The exact values of the last vectors are such that after projecting and applying $\softmax$ in the $\OUTPUT$ layer we get a deterministic distribution with $100\%$ of the probability concentrated in only one token.
 
-For every family of transformers ${\TF_{n}}_{n \in \mathbb{N}} \in \CoTtndn$ computing the language $\gL$, there is a family ${\TF'_{n}}_{n \in \mathbb{N}}$ in the same class, computing the same language, where for all $n$, $\TF'_n$ is normalized.
+For every family of transformers $\{\TF_{n}\}_{n \in \mathbb{N}} \in \CoTtndn$ computing the language $\gL$, there is a family ${\TF'_{n}}_{n \in \mathbb{N}}$ in the same class, computing the same language, where for all $n$, $\TF'_n$ is normalized.
 In Appendix \ref{appendix:alg-norm} we give an algorithm for normalizing transformers.
 
 

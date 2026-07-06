@@ -1,6 +1,7 @@
 Although it may seem that transformers are a model that should be able to perform linear transformations in a native way, it is not the case.
 Applying a linear transformation to a vector is not straightforward, since in every step of $\ATTN$ and $\FF$ the result of the layer is added to the original vector instead of replacing it.\bigcifu{Viste que la gente cheta a esto lo llama ``residual vector'' o state algo asi. Capaz podés buscarlo y sonar cheto xD.}
 \bigrafa{lo llaman residual stream pero para usarlo acá siento que lo debería introducir antes y creo que no es worth.}
+\bigcifu{Okip}
 An intuitive idea would be to apply the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
 This does not hold in our model since the addition and multiplication are not commutative in $\Floating$.
 To avoid the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.

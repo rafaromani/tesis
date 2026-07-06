@@ -13,7 +13,7 @@ In said attention layer, we use $W_V = id$ and $W_O$ such that it outputs the de
 Formally, $W_O$ has only $0$ in the row $k$ if $h_j$ is not receiving anything from $h_i$ in the $k$-th coordinate.
 If $h_j$ is receiving the coordinate $l$ of $h_i$ in the position $k$, then the $k$th row of $W_O$ has $0$ in every position except the $l$th.
 
-For example, if we want to copy the $2$nd coordinate of $h_i$ to the $3$rd coordinate of $h_j$, $W_O$ would look like \ref{example-copy}.
+For example, if we want to copy the $2$nd coordinate of $h_i$ to the $3$rd coordinate of $h_j$, $W_O$ would look like Eq.\eqref{example-copy}.
 Then, the vector coming out of the $\ATTN$ layer will have $0$ in every coordinate, except in the $3$rd, where it will be $(h_i)_2$.
 
 \begin{align}\label{example-copy}
