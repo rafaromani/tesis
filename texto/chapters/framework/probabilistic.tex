@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-As mentioned in Chapter 1, there is an unexplored area in the study of transformers expressiveness; a study of non-determinism is missing.
+As mentioned in Chapter 1, there is an unexplored area in the study of transformers expressiveness; a study of non-determinism\bigcifu{non-determinism} is missing.
 
 When $\TF$ is a deterministic transformer, $\TF^i(\alpha)$ is an exact symbol for all $\alpha \in \Sigma^*$ and $i \in \mathbb{N}$.
 On the contrary, when the token selection process of the transformer samples the distribution, it becomes a random variable.
@@ -17,3 +17,5 @@ Therefore, we introduce the following definition.
     \alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > 2/3
     \]
 \end{definition}
+
+\bigcifu{Estaría bueno agregar unas palabras comentando qué cosas no estamos modelando. Por ejemplo, la normalización de los vectores al final de cada capa interna o cosas asi. Por lo menos para que se note que sabemos que este modelo no es perfecto.}

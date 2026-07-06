@@ -3,8 +3,8 @@ In this section, we define the standard notions of complexity theory used throug
 \begin{definition}[Language]
     In this work we consider the following notion of problems: given a sequence of input tokens, output a token as the answer. 
     Mathematically, given a vocabulary $\Sigma$, we call a mapping $\gL:\cup_{k\in\mathbb{N}^+}\Sigma^k\to\Sigma$ a problem. 
-    If the correct answer is always $\qaccept$ or $\qreject$, we call $\gL$ a decision problem.
-    In circuit complexity, such $\gL$ is also called a \textbf{language}.
+    If the answer is always $\qaccept$ or $\qreject$, we call $\gL$ a decision problem.
+    Such $\gL$ is also called a \textbf{language}.
 \end{definition}
 
 \subsection{Boolean circuits}
@@ -115,7 +115,7 @@ This motivates the study of circuits with unbounded fan-in.
 $\AC^0$ circuits allow for an interesting number of operations.
 For example, addition and multiplication of numbers of fixed precision can be done with $\AC^0$ circuits.\bigcifu{No termino de entender a qué problema te referís acá con el fixed precision.}\bigrafa{fixed precision = punto fijo}
 Also, the equality of two strings of bits can be done in $\AC^0$.
-From the ability to compute equality it follows that any function $f$ with $O(\log(n))$ bits as input can be computed in $\AC^0$.
+From the ability to compute equality it follows that any function $f$ with $O(\log(n))$ bits as input\bigcifu{Entiendo a qué te referís, pero la oración no tiene sentido (quién es $n$?). Hay que reescribir esto.} can be computed in $\AC^0$.
 The circuit computing $f$ enumerates the result for each of the inputs, and outputs the one that corresponds to the branch equal to the input.
 If $k$ denotes the number of input bits of $f$, then $f$ can be represented by the formula $\land_{i = 0}^{2^k} (f(i) \land i = x)$.
 Observe that the formula represents a circuit of constant depth.
@@ -136,6 +136,8 @@ This theorem motivates the study of threshold circuits, circuits allowed to have
     The class $\TC$ is $\cup_{i \geq 0}\TC^i$.
 \end{definition}
 
+\bigcifu{Se usa TC en algún lado? Sino, la sacaría.}
+
 
 Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ began to be studied.
 
@@ -154,10 +156,12 @@ Following Theorem \ref{maj-notin-ac0}, a family of variations of $\MAJORITY$ beg
 
 \subsubsection{Randomized Boolean circuits}
 
+\bigcifu{Este subtítulo tiene otro estilo comparado con el resto, no?}
+
 In this thesis we also work with randomized Boolean circuits.
 These are Boolean circuits, but they are allowed to have random gates.
 These gates have fan-in $0$, and their value is a uniformly distributed bit.
-This value is fixed once the evaluation of the circuit starts.
+This value is fixed once the evaluation of the circuit starts.\bigcifu{Esto se usa?}
 Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought as evaluating a Boolean circuit $C'$ with input $x r$, where $r$ are the values of the random gates.
 
 \begin{definition}[Randomized Boolean circuits]
@@ -172,6 +176,8 @@ Then, the evaluation of a randomized circuit $C$ with input $x$ can be thought a
     If $v$ is the $i$-th input vertex, then $val(v) = x_i$; if $v$ is labeled as $\mathsf{random}$, then $val(v)$ is a uniform random Boolean variable; and otherwise $val(v)$ is defined recursively by applying $v$'s logical operation on the values of the vertices connected to $v$. 
     The output $C(x)$ is the value of the output vertex.
 \end{definition}
+
+\bigcifu{Referencia la figura del circuito randomizado! Esta piola y ayuda.}
 
 In general, we say that a family of random circuits recognizes a language $\gL$ when $\Pr[C_{|x|}(x) = \gL(x)]$ is high.
 
@@ -263,6 +269,7 @@ Observe that a Boolean circuit is a random Boolean circuit without random gates.
 \begin{theorem}
     Every circuit class $\mathcal{C}$ is contained in its corresponding randomized circuit class.
     For example $\AC^0 \subseteq \BPAC^0$.\bigcifu{Me parece bien este nombre, pero diría que es no estándar si es que no es estándar. Aparte, porque hay algo llamado $BP \oplus NP$ (o en general, podés poner $BP \oplus$ adelante de muchas clases) y puede mezclarse.}\bigrafa{en complexity zoo hay muchas clases que se llaman BP[C] que son la versión bounded probability de otra clase C. A qué te referis vos con $BP \oplus C$?}
+    \bigcifu{Ok, lo que digo capaz solo aplica a clases con juegos interactivos tipo NP (cuando  le pones el BP le agregas randomness al verifier). Dejemos como esta entonces.}
 \end{theorem}
 
 The other inclusion is not known in general.
@@ -277,7 +284,7 @@ In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(\log(n))$
     There are $O(n)$ possible random values.
     We can run the circuit for each of them in parallel leading only to a linear blow-up in width but constant in depth.
     Then, by definition of the random circuit, at least $2/3$ of the cases have the same output.
-    Therefore, we can output $\PROMISEDMAJORITY{2/3}$.
+    Therefore, we can output $\PROMISEDMAJORITY{2/3}$.\bigcifu{Which is in ... due to Theorem...}
 \end{proof}
 
 
@@ -298,7 +305,7 @@ In this section, we present some known relations between circuits and Turing mac
     $\Ptime = \cup_{c \geq 0} \DTIME(n^c)$.
 \end{definition}
 
-A probabilistic Turing machine is a Turing machine with access to a random coin.
+A probabilistic Turing machine is a Turing machine with access to random coins.
 
 
 \begin{definition}[$\BPTIME$]
@@ -334,3 +341,4 @@ Clearly $(\ppoly)/\mathsf{poly} = \ppoly$; thus, it follows from Adleman's theor
     $\BPppoly = \ppoly$
 \end{corollary}
 \bigrafa{no sé si me convence mi argumento tirado así no más. Creo que lo tendría que explicar un poco más. Vale la pena que lo haga? Siento que no va a ser lo suficientemente largo como para ameritar un apéndice pero si lo suficientemente largo como para ser molesto.}
+\bigcifu{Coincido que hay algunas observaciones que te podrían hacer, pero para mi el argumento que tirás convence lo suficiente. Lo falopa es decir que si vale una igualdad entonces podes aplicar $/Poly$ en ambos lados. En este caso vale porque la inclusión de Adleman es via simulacion exacta del algoritmo (lo mismo que hablamos el otro dia), asi que tambien podes simular el algoritmo con la ayuda.}

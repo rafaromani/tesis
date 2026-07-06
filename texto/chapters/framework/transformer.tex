@@ -12,8 +12,8 @@ The transformer iterates this process until it halts.
 These iterations are called \textbf{chain of thought} \citep{wei2022chain}.
 
 We split the process of generating the next token into two separate steps.
-First, the computation of the probability distribution over the alphabet which we call distribution generation.
-Second, the selection of a token based on the probability distribution, which we call token selection.
+First, the computation of the probability distribution over the alphabet which we call \textit{distribution generation}.
+Second, the selection of a token based on the probability distribution, which we call \textit{token selection}.
 In this work we analyze and compare two different algorithms for token selection.
 
 \medskip
@@ -28,11 +28,10 @@ For an input word of length $n$, no computation can take more than $\budget(n)$ 
 \medskip
 
 The process of distribution generation is dependent on many parameters.
-In the real models, these parameters are the ones computed during the training.
-
-
+In the real models, these parameters are the ones computed during the training. 
 We refer to them as $\theta$ and consider them as part of the definition of a transformer.
 
+\bigcifu{No se si banco tantos renglones en blanco, pero whatever.}
 
 \bigskip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,8 +43,10 @@ The autoregressive token generation is defined recursively.
 The token outputted after $i$ steps is $\TF^{i}(\alpha) := \TF^{i-1}(\alpha \TF(\alpha))$ with base case $\TF^1(\alpha) := \TF(\alpha)$.
 In other words, the output of the $i$th step is $\sigma_{i} = \TF^{i}(\alpha) = \TF(\alpha\sigma_{1}\dots\sigma_{i-1})$ where $\sigma_j \in \Sigma$ for all $j$.
 
+\bigcifu{Where $\sigma_j = TF^j(\alpha) \in \Sigma$ for all $1 \leq j < i$.}
+
 We denote by $\TF^*(\alpha)$ the token written by the transformer when it halts, i.e., at the end of the computation, when the input is $\alpha$.
-As said before, the transformer only halts when it prints a decision symbol ($\qaccept$ or $\qreject$).
+As said before, the transformer only halts when it prints a decision symbol.
 Therefore, $\TF^*(\alpha) \in \{\qaccept, \qreject\}$.
 
 
@@ -65,7 +66,7 @@ Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
 The algorithm works over vectors of numbers of certain dimension $d$.
-The dimension is dependent on the size of the input word. \footnote{This is note the case in the real models since the same model is used for all input sizes.}
+The dimension is dependent on the size of the input word.\footnote{This is note the case in the real models since the same model is used for all input sizes.}\bigcifu{Algún comentario más para defender la footnote? Tipo, decir que algunos resultados valen para el caso constante, o que de todas formas esta bueno tenerlo de parametro para entender tradeoffs.}
 We use $d(n)$ to refer to the \textbf{embedding size} when the input word has size $n$.
 
 We now describe each part of the transformer's architecture on detail:
@@ -73,15 +74,15 @@ We now describe each part of the transformer's architecture on detail:
 %Each part
 \textbf{Token Embedding:} It is a mapping from $\Sigma$ to vectors in $\Rd$. 
 This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. 
-For all $\sigma \in \Sigma$, we denote by $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ the mapping of token $\sigma$.
+For all $\sigma \in \Sigma$, we denote by $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ the mapping of token $\sigma$. \bigcifu{Capaz una aclaración de que $\theta(\sigma)$ is la columna $\sigma$ de $\theta$ (onda, como se codifica el mappeo).}
 
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times (\budget(n) + n)}$. 
 For all positions of the tape $1 \leq i \leq \budget(n) + n$ we denote by $\theta_{\PE}(i) \in \Rd$ the mapping of position $i$.
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
-Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
-This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}. \footnote{The matrices are named Q for query, K for key, V for value and O for output.
+Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}\bigcifu{Cuando poner refencias a cosas suele ser en mayuscula. Tipo Algorithm 1.}. 
+This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}.\footnote{The matrices are named Q for query, K for key, V for value and O for output.
 It is called query because $q_i$ represents a question of how much the $i$-th vector should attend to the others in a specific setting (determined by $W_Q$).
 The $k_j$ vector answers said question such that $\langle q_i, k_j \rangle$ is large if the $j$-th vector is relevant to the $i$-th.
 Thus, the key matrix is used to compute the relevance.
@@ -107,7 +108,7 @@ Finally, the output matrix is just a post-processing.
 Given $\theta_{\OUTPUT} \in \mathbb{R}^{| \Sigma | \times d}$, we define it as $\OUTPUT_{\theta_\OUTPUT}(h) := \softmax(\theta_\OUTPUT h)$.
 
 
-All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.
+All these parts come together for the distribution generator process in the algorithm \ref{alg:def_p_gen}.\bigcifu{Idem antes}
 
 \begin{algorithm}
 \caption{Distribution generator}\label{alg:def_p_gen}
@@ -140,11 +141,7 @@ Then, the deterministic selector always returns the token with the largest proba
 In transformers with this selector, we do not allow for two or more tokens to be tied with the maximum probability, i.e., $\nexists \sigma$ s.t. $p(\argmax(p)) = p(\sigma) \land \sigma \neq \argmax(p)$.
 In contrast, the probabilistic selector operates stochastically.
 It returns a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
-We allow for more than one maximum with this selector.
-
-\medskip
-
-Figure \ref{diag-transf} shows how the token selector connects with the distribution generator and its components.
+We allow for more than one maximum with this selector. Figure \ref{diag-transf} shows how the token selector connects with the distribution generator and its components.
 
 
 \begin{figure*}[h]
@@ -157,5 +154,5 @@ Figure \ref{diag-transf} shows how the token selector connects with the distribu
 
 
 
-Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ for representing them.
+Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ \bigcifu{Agregaría una aclaración sobre qué son estos, tipo "(a finite set of representable numbers, that we will define later)"}for representing them.
 The formal construction is the same, but all operations over the set of real numbers are replaced by their corresponding in the set of $\Floating$ numbers defined in Section \ref{repr}.

@@ -1,6 +1,6 @@
 \citet{toyota} expands on the work of \citet{merrill2023parallelism}.
 \citet{merrill2023parallelism} have shown that one step of a constant-depth, polynomial-embedding-dimension and log-precision deterministic transformer can be simulated in a small parallel time, i.e., using $\TC^0$ circuits.
-This result is built on the fact that multiplication and division of $n$-bit binary numbers are in $\TC^0$ \citep{hesse2001division}, as well as the iterated addition over $n$ different $n$-bit binary integers.
+This result is built on the fact that multiplication and division of $n$-bit binary numbers are in $\TC^0$ \citep{hesse2001division}, as well as the iterated addition over $n$ different $n$-bit binary integers. \bigcifu{Ok, se usa TC.}
 
 However, such $\TC^0$ expressiveness upper bounds may be unrealistic for transformers operating with floating-point numbers. 
 \citet{merrill2023parallelism} implicitly assumed that, when adding more than one floating-point number, the algorithm first computes the exact answer without rounding, using arbitrarily higher precision, and performs rounding only at the end.
@@ -14,11 +14,13 @@ Their model rounds after every numerical operation and represents numbers with a
 \citet{toyota} prove that $\mathsf{sum}_{e,s}:\Floating^n \to \Floating$ has an $\AC^0$ circuit when $e,s$ are both constants.
 Then, composing circuits, Theorem \ref{theo:ac0-sim-det-transf} is obtainded.
 
+\bigcifu{Sería mas extenso acá. "Notar que todas las componentes del algoritmo X se pueden implementar en AC0 dada que solo involucran operaciones sobre $F_{e,s}$, por lo que usando esta observacion se tiene que...}
+
 \begin{theorem}\label{theo:ac0-sim-det-transf}
     One step of a deterministic, constant-depth, polynomial-embedding-dimension transformer can be simulated with a circuit in $\AC^0$.
 \end{theorem}
 
-Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$.
+Observe that the fact that a single forward pass of a transformer can be simulated by an $\AC^0$ circuit immediately \bigcifu{No me gusta el immediately xD, pero opinable}implies that a transformer with $O(\log(n))$ steps of $\CoT$ can also be simulated by $\AC^0$.
 Thus, we obtain the following theorem.
 
 \begin{theorem}\label{theo:det-upper-bound-log-steps}
@@ -38,7 +40,8 @@ Thus, we obtain the following theorem.
     When $T = O(\log(n))$, this only leads to a $\poly(n)$ blow-up in circuit size.
     Therefore, it follows that $\CoT[\log(n), \poly(n)] \subseteq \AC^0$.
 \end{proof}
-    
+
+\bigcifu{Quedo muy bien esta proof.}
 
 \medskip
 

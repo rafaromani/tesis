@@ -6,7 +6,7 @@ This analysis avoids the unrealistic infinite precision assumption made in prior
 The definitions stated in this section are taken from \citet{toyota}.
 
 
-Intuitively, we represent the numbers as a tuple $\langle$ sign, significand, exponent$\rangle$ with a fixed number of bits for each coordinate.
+Intuitively, we represent the numbers as a tuple $\langle$sign, significand, exponent$\rangle$ with a fixed number of bits for each coordinate.
 The tuple is interpreted as $\text{sign} \cdot \text{significand} \cdot 2^{\text{exponent}}$.
 For example, the number $8$ is represented as $\langle +, 1, 3\rangle$.
 When fixing the number of bits for the significand and the exponent there are numbers non-representable.
@@ -31,7 +31,7 @@ Since in this work we only analyze constant precision transformers, we will omit
 
 
 \begin{definition}[Correct Rounding]\label{defi:rounding} 
-For any $x\in \mathbb{R}$, we define correct rounding $\round(x, \Floating)$ as the closest number to $x$ in $\Floating$. We break the tie by picking the one with a smaller absolute value. 
+For any $x\in \mathbb{R}$, we define correct rounding\bigcifu{Reminder de verificar que ninguna ecuación se escape de los margenes. Aca habia una que le pasaba, pero la movi cuando puse el comment} $\round(x, \Floating)$ as the closest number to $x$ in $\Floating$. We break the tie by picking the one with a smaller absolute value. 
 In particular, we denote the rounding operation with $e$-bit exponent, $2s$-bit precision by $\round_{e,s}(\cdot)\triangleq \round(\cdot,\Floating)$, which is also denoted by $\rdes{\cdot}$ for convenience. We extend the definition of $\round$ and $\round_{e,s}$ to vector inputs by applying rounding coordinate-wise.
 \end{definition} 
 
