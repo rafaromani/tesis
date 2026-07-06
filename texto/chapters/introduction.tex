@@ -17,8 +17,8 @@ LLMs are being used not only as chatbots for asking small questions, but are sha
 For example, \citet{liang2024mappingincreasingusellms} found that more than 17\% of the Computer Science's papers published between January 2020 and February 2024 on the \textit{arXiv}, \textit{bioRxiv}, and \textit{Nature} portfolio journals had sentences heavily edited by ChatGPT. 
 Naturally, the question of their computational power arises.
 Are these models genuinely capable of performing the tasks for which they are being employed?
-In this thesis, we aim to formally answer that question.
-We approach the problem from the perspective of formal languages.
+In this thesis, we aim to formally answer that question.\bigcifu{Medio fuerte. Diría que ya existen intentos, y vamos a intentar contribuir}
+We approach the problem from the perspective of formal languages.\bigcifu{Creo que estaría bueno ser más preciso acá. Decir algo como "Buscamos entender las limitaciones que los transformers heredan por su propia architectura, la cuál fue optimizada en busqueda de paralelismo y learnability, y no necesariamente en tanto capacidad para resolver problemas en el sentido de la teoría de la computabilidad / complejidad.}
 
 
 \bigskip
@@ -27,14 +27,14 @@ First, we need to define what an LLM is.
 We consider LLMs just as instantiations of the transformer architecture.
 Thus, we need to understand what transformers are.
 
-A transformer is a machine consisting of a tape from which it reads the input and onto which it appends the output character by character in an autoregressive manner.
+A transformer is a machine consisting of a tape from which it reads the input and onto which it appends the output character by character in an autoregressive\bigcifu{Esta palabra siempre me molesta, podemos poner un footnote o algo explicandola?} manner.
 It reads the content of the tape, then computes the next character, appends it at the end, and repeats.
 \citet{ATTN-all-you-need} presented a concrete structure of how to do this.
 
 First, the input text written by the user is split into tokens.
-This is a deterministic process and is done mainly as a resource optimization.
+This is a deterministic process and is done mainly as a resource optimization.\bigcifu{Aclararía algo acá, es medio oscuro sino eso de "resource optimization".}
 Thus, in this thesis (and in all the papers of the area) it is assumed that the user talks in tokens, i.e., the transformers receive tokens in their input tape.
-The set of tokens can be interpreted as the language of the transformers.
+The set of tokens can be interpreted as the language\bigcifu{Vocabulary?} of the transformers.
 
 Then, the first real component of a transformer is the mechanism that maps the tokens of the tape into vectors of numbers.
 Each occupied position of the tape is mapped into a vector.
@@ -49,14 +49,14 @@ The output of each layer is added to the original vectors and passed to the next
 In the vector corresponding to the last token of the tape, after passing through all the layers, a probability distribution over the next token is encoded.
 Said probability is extracted and used to pick the new token to append in the tape.
 The token is selected, and the process is repeated.
-In this way, the LLMs like ChatGPT generate the text that they answer to our prompts.
+In this way, the LLMs like ChatGPT generate the text that they answer to our prompts\bigcifu{El our es raro, pero opinable.}.
 
 \medskip
 
 The performance of LLMs improves when we allow them to generate more intermediate tokens.
 Intuitively, it is like giving them a scratch pad.
 This process is known as Chain of Thought, and it is known that increasing the number of intermediate tokens improves the quality of the answers \citep{wei2022chain}.
-Notably, using heuristic phrases in prompts, such as 'let us think step by step', improves the answers without the need to retrain the model \citep{kojima2022large}.
+Notably, using heuristic phrases in prompts, such as 'let us think step by step'\bigcifu{Ojo que las comillas en latex se usan de otra forma}, improves the answers without the need to retrain the model \citep{kojima2022large}.
 Also, prompting the first steps of the reasoning, even if they are wrong, gives better results \citep{wang-etal-2023-towards,cot-prompt}.
 This is why modern models perform this reasoning in the background before responding to the user.
 
@@ -93,7 +93,7 @@ We define the corresponding complexity classes and establish the analogues of th
 We complete the work studying the properties of the classes of languages recognizable by probabilistic transformers with different number of steps of $\CoT$.
 The classes defined in this work are closed under Boolean operations and behave well as probabilistic classes, i.e., regardless of how much error we allow in the probabilistic transformers, the recognizable languages remain the same.
 
-The main contribution of this work is that we prove relations between the power of probabilistic and deterministic transformers.
+The main contribution of this work is that we prove relations between the power of probabilistic and deterministic transformers\bigcifu{Para mi podés poner más acá. Las contribuciones me paece que son: (1) Das una def de randomized transducer que generaliza la deterministica (2) Probar propiedades razonables de clausura, i.e. el objeto randomized transducer se porta bien, y (3) probar que las intuiciones de Li. et all se extienden al caso estocastico.}.
 These relations provide a solid foundation for understanding when it suffices to study deterministic transformers and when a probabilistic abstraction is warranted.
 
 
