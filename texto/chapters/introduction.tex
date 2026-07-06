@@ -1,110 +1,111 @@
 \chapter{Introduction}
 
-\section{Uso y poder de los LLMS}
-
-% Estadísticas de uso y aplicaciones. Que se note son heavys
-
 In 2017, a group of researchers working at Google published a paper introducing a technology that revolutionized society.
 In \textit{Attention is All You Need}, they presented the transformers, today's core of large language models (LLMs) and generative AI.
 
-This architecture was build intended as text sequence-to-sequence model for machine translation but today has applications in various fields as natural language processing, computer vision or speech recognition.
+This architecture was built as a text sequence-to-sequence model for machine translation but today finds applications in various fields, such as natural language processing, computer vision, and speech recognition.
 
 The first model implementing transformers open for public use was ChatGPT by OpenAI.
 It made its debut in November 2022 and by December 2024 it reported 300 million global weekly users.
 Now there are many models competing for this market as Claude, from Anthropic, or Gemini from Google.
 
-These models can be all be grouped under the generative AI tools.
-This is a technology that is arguably the most rapid technology adopted by society.
+These models can all be categorized as generative AI tools.
+This technology is arguably the most rapidly adopted in history.
 In the second half of 2025, roughly one in six people worldwide were using generative AI tools \citep{microsoft2026aidiffusion}.
 
 LLMs are being used not only as chatbots for asking small questions, but are shaping the industry and future.
 For example, \citet{liang2024mappingincreasingusellms} found that more than 17\% of the Computer Science's papers published between January 2020 and February 2024 on the \textit{arXiv}, \textit{bioRxiv}, and \textit{Nature} portfolio journals had sentences heavily edited by ChatGPT. 
-So naturally, the question about their computing power pops up. Are this kind of models really capable of doing the stuff for what they are being used?
+Naturally, the question of their computational power arises.
+Are these models genuinely capable of performing the tasks for which they are being employed?
 In this thesis we aim to formally answer that question.
+We approach the problem from the point of view of formal languages.
 
 
 \bigskip
 
 First we need to define what an LLM is.
-We considered LLMs just as instantiations of the transformer architecture.
+We consider LLMs just as instantiations of the transformer architecture.
 Thus, we need to understand what transformers are.
 
-A transformer is a machine consistent of a tape from where it reads the input and in an autoregressive way, appends character by character the output.
+A transformer is a machine consisting of a tape from which it reads the input and onto which it appends the output character by character in an autoregressive manner.
 It reads the content of the tape, then computes the next character, appends it at the end and repeats.
 \citet{ATTN-all-you-need} presented a concrete structure of how to do this.
 
 First, the input text written by the user is split into tokens.
 This is a deterministic process and is done mainly as a resource optimization.
-Thus, in this thesis (and in all the papers of the area) it is assumed that the user talk in tokens, i.e., the transformers receive tokens in its input tape.
+Thus, in this thesis (and in all the papers of the area) it is assumed that the user talks in tokens, i.e., the transformers receive tokens in their input tape.
 The set of tokens can be interpreted as the language of the transformers.
 
 Then, the first real component of a transformer is the mechanism that maps the tokens of the tape into vectors of numbers.
 Each occupied position of the tape is mapped into a vector.
-Each vector is computed depending on the position from where is originated and the token that its position contains.
-Thus, we can divide the mapping of the tape to vectors in two functions: the position encoding and the token embedding.
+Each vector is computed depending on its position in the tape and the token at that position.
+Thus, this mapping from tape positions to vectors can be decomposed into two components: the position encoding and the token embedding.
 The dimension of the vectors is the dimension of the transformer.
 
-Then these vectors go through a fixed set of layers of a process called attention and a feed forward network.
-These mechanisms carry the information of how the vectors should relate, i.e., they say how a certain token in certain position is related to another in other position.
+Then, these vectors pass through a fixed sequence of layers consisting of an attention mechanism and a feed-forward network.
+These mechanisms encode information about how vectors relate to one another, i.e., how a token at a given position relates to a token at another position.
 The output of each layer is added to the original vectors and passed to the next layer.
 
-In the vector corresponding to the last token of the tape, after it went through all the layers, a probability distribution for the next token is encoded.
+In the vector corresponding to the last token of the tape, after passing through all the layers, a probability distribution over the next token is encoded.
 Said probability is extracted and used to pick the new token to append in the tape.
 The token is selected, and the process is repeated.
 In this way, the LLMs like ChatGPT generate the text that they answer to our prompts.
 
+\medskip
+
+The performance of LLMs improves when we allow them to generate more intermediate tokens.
+Intuitively, it is like giving them a scratch pad.
+This process is known as Chain of Thought, and it is known that increasing the number of intermediate tokens improves the quality of the answers \citep{wei2022chain}.
+Notably, using heuristic phrases in prompts, such as 'let us think step by step', improves the answers without the need to retrain the model \citep{kojima2022large}.
+Also, prompting the first steps of the reasoning, even if they are wrong, gives better results \citep{wang-etal-2023-towards} \citep{cot-prompt}.
+This is why modern models perform this reasoning in the background before responding to the user.
+
 \bigskip
 
-The 
+In this thesis, we analyze transformers as language recognizers.
+We define them as machines that receive an input string and determine whether it has a certain property, generating the token $\qaccept$ or $\qreject$ respectively.
+When working with Turing machines as language recognizers, it is standard to study the languages recognizable when the machines are limited to a certain time or space budget as a function of the input size.
+When working with transformers there are different resources interesting to bound.
+For example, \citet{merrill2026little} studied families of transformers that grow the number of layers with the input size.
+\citet{merrill2026little} prove that even with a logarithmic growth on the number of layers, there is a significant improvement in the languages that transformers can recognize.
+
+In this work, we extend the results of \citet{toyota}.
+They studied the number of steps of Chain of Thought ($\CoT$) as the limited resource.
+In their work, they give a formal argument to why transformers perform better with more steps of $\CoT$.
+They prove that with $T(n)$ steps of $\CoT$, a transformer can recognize languages recognizable with Boolean circuits of size $T(n)$.
+They also prove that a logarithmic number of steps of $\CoT$ does not grow the set of languages recognizable by transformers without $\CoT$.
+
+\citet{toyota} give bounds on the computing power of transformers and define classes of languages depending on how many steps of $\CoT$ are required to recognize them.
+They do not study the properties of those classes.
+In this thesis, as a previous step for our main objective, we prove that \citet{toyota} classes are closed under Boolean operations.
+
+\medskip
+
+Most of the formal work done to understand the computational power of transformers ignores one of their main characteristics.
+\citet{toyota} and \citet{merrill2026little} work with deterministic abstractions, but transformers are intrinsically stochastic.
+As was mentioned before, in each step of $\CoT$, transformers generate a probability distribution to decide next token.
+Formal works tend to not sample this distribution and just define the next token as the token with the largest probability in the distribution.
+In practice, the models behave in a nondeterministic way sampling the distribution for defining the next token.
+The stochasticity of the models is controlled through a parameter called temperature, and it is well known that a nonzero temperature is sometimes necessary for good performance \citep{demir2025optimal}.
+
+In this thesis, we adapt the abstraction of \citet{toyota} to incorporate the stochastic behavior.
+We define the corresponding complexity classes and establish the analogues of the deterministic bounds in the probabilistic setting.
+We complete the work studying the properties of the classes of languages recognizable by probabilistic transformers with different number of steps of $\CoT$.
+The classes defined in this work are closed under Boolean operations and behave well as probabilistic classes, i.e. it does not matter how much we allow the probabilistic transformers to answer incorrectly, the recognizable languages are the same.
+
+The main contribution of this work is that we prove relations between the power of probabilistic and deterministic transformers.
+These relations provide a solid foundation for understanding when it suffices to study deterministic transformers and when a probabilistic abstraction is warranted.
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-\section{Pero qué es un LLM?}
-
-% Muchos dibujos, diagramas de transformers
-% Hablar de CoT, y de la aleatoriedad
-
-\section{Formalizaciones previas y resultados que ignoran los aspectos probabilísticos}
-
-% Intuición de los resultados
-% Que se note que es más tardío lo de cot. Justificar por qué el COT es el parámetro relevante.
-%   Contar que otras personas estudian parámetros como la profundidad, o embedding, etc.
-% Remarcar que nadie modela los aspectos probabilísticos (salvo uno)
-
-\section{Objetivos y contribuciones}
-
-% Eso, qué esperamos encontrar.
-% Preguntas concretas que motiven el trabajo, ej
-%    -> Los resultados anteriores se extienden al contexto probabilistico?
-%    -> Hay una separacion estilo P y BPP?
-%    -> La clase probabilistica de CoT se comporta bien (clausura, amplificacion)
-
-
-
-
-
-{\color{orange} Missing usage in industry}
-
-
-
-\begin{itemize}
-    \item well-suited to parallelism enables transformer models to take full advantage of the power and speed offered by GPUs during both training and inference. This possibility, in turn, unlocked the opportunity to train transformer models on unprecedentedly massive datasets through self-supervised learning.
-    \item chatgpt, claude, gemini, 
-    \item every day users
-        \item number of users?
-    \item use in the industry?
-    \item other uses besides the chatbots?
-    \item no usamos normalizacion porque andie lo usa, es complicado. Si se achican los bitsize empieza a tener menos sentido
-\end{itemize}
+% \begin{itemize}
+%     \item well-suited to parallelism enables transformer models to take full advantage of the power and speed offered by GPUs during both training and inference. This possibility, in turn, unlocked the opportunity to train transformer models on unprecedentedly massive datasets through self-supervised learning.
+%     \item chatgpt, claude, gemini, 
+%     \item every day users
+%         \item number of users?
+%     \item use in the industry?
+%     \item other uses besides the chatbots?
+%     \item no usamos normalizacion porque andie lo usa, es complicado. Si se achican los bitsize empieza a tener menos sentido
+% \end{itemize}
