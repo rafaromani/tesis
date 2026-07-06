@@ -27,7 +27,7 @@ The value in each position in the tape of $\TF_n$ corresponds to the value of a 
 The positions may hold the value $1$, the value $0$, or remain empty if their value has not yet been computed.
 The first $n$ positions are the bits of $\alpha$.
 The following $f(n)$ are the bits of $r$.
-$\TF'_n$ can generate the tokens for the positions after $f(n)$, i.e., compute the values of the boolean gates.
+$\TF'_n$ can generate the tokens for the positions after $f(n)$, i.e., compute the values of the Boolean gates.
 The probability distributions $\TF'_n$ generates in the first $f(n)$ steps, i.e., the distributions corresponding to the tokens representing $r$, do not correspond to what we want (since from $\TF'_n$'s perspective, they are part of the input).
 Thus, using the $\PE$, we flag positions $n$ through $n+f(n)-1$ so that a constant function can be applied to them at the end of the body, forcing the probability distribution for tokens at positions $n+1$ through $n+f(n)$ to be the uniform distribution over $\{0, 1\}$.
 
