@@ -6,9 +6,9 @@ We proved that Boolean operations between languages can be computed in both sett
 \smallskip
 
 One of the main results of this work relates the expressive power of deterministic and probabilistic transformers, between them and with other models of computation (Section \ref{relations}).
-Theorem \ref{cotpoly-equals-rcotpoly} says that in the nonuniform setting, the languages recognized by deterministic and probabilistic transformers is the same if we only worry whether a polynomial number of $\CoT$ steps are enough.
+Theorem \ref{cotpoly-equals-rcotpoly} says that in the nonuniform setting, the languages recognized by deterministic and probabilistic transformers are the same if we only worry whether a polynomial number of $\CoT$ steps are enough.
 Theorem \ref{p-bpp-iff-ucot-urcot} implies the same in the uniform setting if $\Ptime = \BPP$.
-There is no consensus on said open question, but it is widely believed that access to randomness gives a polynomial advantage; thus studying probabilistic transformers is of interest when doing fine-grained complexity.
+There is no consensus on said open question, but it is widely believed that access to randomness gives a polynomial advantage; thus studying probabilistic transformers is relevant when working in fine-grained complexity
 
 \smallskip
 
@@ -18,10 +18,10 @@ The uniform constraint was artificially introduced to Boolean circuits to make t
 This constraint semantically says that there has to be some relation between the circuits of the same family, i.e., there has to be a polynomial-time deterministic Turing machine that computes the family.
 
 In real life, models undergo computationally intensive training in which they learn their weights.
-This extensive training is analogous to the power conferred by non-uniformity on polynomial-size circuits, which is generally believed to be slightly greater than that of $\Ptime$
+This extensive training is analogous to the power conferred by non-uniformity on polynomial-size circuits, which is generally believed to be slightly greater than that of $\Ptime$.
 Recall that it is widely believed that $\ppoly \nsubseteq \NP$.
 
-Consistent with the accepted belief that non-uniformity gives just enough power to hide randomness, we proved that allowing non-uniformity in deterministic transformers is sufficient to simulate uniform probabilistic transformers (Theorem \ref{urcot-cot}).
+Consistent with the accepted belief that non-uniformity gives just enough power to simulate randomness, we proved that allowing non-uniformity in deterministic transformers is sufficient to simulate uniform probabilistic transformers (Theorem \ref{urcot-cot}).
 It remains an open question whether deterministic transformers can simulate probabilistic ones without the help of non-uniformity.
 Determining whether such a simulation is possible, and characterizing its overhead, would provide insight into the relationship between the expressive power of the two models and the practical implications of Theorem \ref{cotpoly-equals-rcotpoly}.
 

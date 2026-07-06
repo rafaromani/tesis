@@ -115,11 +115,11 @@ This motivates the study of circuits with unbounded fan-in.
 $\AC^0$ circuits allow for an interesting number of operations.
 For example, addition and multiplication of numbers of fixed precision can be done with $\AC^0$ circuits.\bigcifu{No termino de entender a qué problema te referís acá con el fixed precision.}\bigrafa{fixed precision = punto fijo}
 Also, the equality of two strings of bits can be done in $\AC^0$.
-From the ability to compute equality it emerges that any function $f$ with $O(\log(n))$ bits as input can be computed in $\AC^0$.
-The circuit computing $f$ enumerates the result for each of the inputs and outputs the one that correspond to the branch equal to the input.
-Let $k$ be the number of bits of the input of $f$, then $f$ can be represented as the following formula: $\land_{i = 0}^{2^k} f(i) \land i = x$.
+From the ability to compute equality it follows that any function $f$ with $O(\log(n))$ bits as input can be computed in $\AC^0$.
+The circuit computing $f$ enumerates the result for each of the inputs, and outputs the one that corresponds to the branch equal to the input.
+If $k$ denotes the number of input bits of $f$, then $f$ can be represented by the formula $\land_{i = 0}^{2^k} (f(i) \land i = x)$.
 Observe that the formula represents a circuit of constant depth.
-Also note that the formula has size $O(2^k)$; then, if $k \in O(\log(n))$ the circuit has polynomial size; and, therefore, it is in $\AC^0$.
+Also note that the formula has size $O(2^k)$; then, if $k \in O(\log(n))$, the circuit has polynomial size; and, therefore, it is in $\AC^0$.
 
 
 One of the main results of circuit complexity is that the $\MAJORITY$ problem\footnote{$\MAJORITY = \left\{x : \frac{\sum_{i=1}^{|x|} x_i}{|x|} > \frac{1}{2}\right\}$, i.e., the words with more $1$s than $0$s} cannot be computed by $\AC^0$ circuits \citep{furst1984parity}.
@@ -266,7 +266,7 @@ Observe that a Boolean circuit is a random Boolean circuit without random gates.
 \end{theorem}
 
 The other inclusion is not known in general.
-In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(\log(n))$ random bits is enough to be make it fall inside $\AC^0$.
+In the case of $\AC^0$ and $\BPAC^0$, restricting $\BPAC^0$ to only $O(\log(n))$ random bits is enough to make it fall inside $\AC^0$.
 \begin{theorem}\label{const-random-in-ac0}
     $\BPAC^0[\log(n)] \subseteq \AC^0$
 \end{theorem}
@@ -311,7 +311,7 @@ A probabilistic Turing machine is a Turing machine with access to a random coin.
     $\BPP = \cup_{c \geq 0} \BPTIME(n^c)$.
 \end{definition}
 
-When restricting $\ppoly$ and $\BPppoly$ to only their uniform families they coincide with $\Ptime$ and $\BPP$.
+When restricting $\ppoly$ and $\BPppoly$ to only their uniform families, they coincide with $\Ptime$ and $\BPP$.
 To simulate a circuit by a Turing machine, one first computes the circuit description (this can be done since we are only analyzing uniform families) and then evaluates it, both in polynomial time.
 For the simulation of Turing machines by circuits, the construction of Cook-Levin works.
 
@@ -328,8 +328,9 @@ Adleman proved that the non-uniformity of $\ppoly$ gives enough power to simulat
 
 The machines of $\ppoly$ can be interpreted as polynomial deterministic Turing machines that receive a polynomial-size advice.
 Then $(\ppoly)/\mathsf{poly}$ are the machines of $\ppoly$ with another polynomial advice.
-Clearly $(\ppoly)/\mathsf{poly} = \ppoly$; thus, from Adleman's theorem its deduced the following corollary:
+Clearly $(\ppoly)/\mathsf{poly} = \ppoly$; thus, it follows from Adleman's theorem that
 
 \begin{corollary}\label{coro:bpppoly-equals-ppoly}
     $\BPppoly = \ppoly$
 \end{corollary}
+\bigrafa{no sé si me convence mi argumento tirado así no más. Creo que lo tendría que explicar un poco más. Vale la pena que lo haga? Siento que no va a ser lo suficientemente largo como para ameritar un apéndice pero si lo suficientemente largo como para ser molesto.}

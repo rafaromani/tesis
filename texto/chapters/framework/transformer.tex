@@ -1,4 +1,4 @@
-In this work we are going to analyze transformers as language recognizers.
+In this work we analyze transformers as language recognizers.
 A transformer is a machine that works over an alphabet $\Sigma$.
 It has a single tape from which it reads the input and onto which it appends additional tokens in an autoregressive manner.
 There are two distinguished tokens called \textbf{decision symbols}.
@@ -73,18 +73,18 @@ We now describe each part of the transformer's architecture on detail:
 %Each part
 \textbf{Token Embedding:} It is a mapping from $\Sigma$ to vectors in $\Rd$. 
 This mapping is defined by $\theta_{\TE} \in \mathbb{R}^{d \times | \Sigma |}$. 
-For all $\sigma \in \Sigma$, we note $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ to the mapping of token $\sigma$.
+For all $\sigma \in \Sigma$, we denote by $\theta_{\TE}(\sigma) \in \mathbb{R}^d$ the mapping of token $\sigma$.
 
 \textbf{Position Encoding:} It is a mapping from the positions of the tape to vectors in $\Rd$.
 This mapping is defined by $\theta_{\PE} \in \mathbb{R}^{d \times (\budget(n) + n)}$. 
-For all position of the tape $1 \leq i \leq \budget(n) + n$ we note $\theta_{\PE}(i) \in \Rd$ to the mapping of position $i$.
+For all positions of the tape $1 \leq i \leq \budget(n) + n$ we denote by $\theta_{\PE}(i) \in \Rd$ the mapping of position $i$.
 
 \textbf{Self Attention Layer: } It is a mapping from $(\Rd)^a$ to $(\Rd)^a$.
 Given parameters $\theta_{\ATTN} = (W_Q, W_K , W_V , W_O) \in \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d} \times \mathbb{R}^{d \times d}$, the layer is defined by the algorithm \ref{alg:def_attn}. 
 This layer is defined only as a single head attention layer because a multi-head attention layer with any constant number of heads can be simulated with multiple single-head attention layers \citep{cookbook}. \footnote{The matrices are named Q for query, K for key, V for value and O for output.
-It is called query because $q_i$ represents a question of how much the $i$-th vector should attend the others in a specific setting (determined by $W_Q$).
+It is called query because $q_i$ represents a question of how much the $i$-th vector should attend to the others in a specific setting (determined by $W_Q$).
 The $k_j$ vector answers said question such that $\langle q_i, k_j \rangle$ is large if the $j$-th vector is relevant to the $i$-th.
-Thus, the key matrix is for computing the relevance of the vectors.
+Thus, the key matrix is used to compute the relevance.
 The value matrix has the role of extracting the information that the $j$-th vector should give to the $i$-th.
 Finally, the output matrix is just a post-processing.
 }
@@ -138,13 +138,13 @@ In this work we study two selectors, we call them \textbf{deterministic selector
 Let $p \in \Delta(\Sigma)$ be the distribution over $\Sigma$ outputted by the distribution generator.
 Then, the deterministic selector always returns the token with the largest probability ($\argmax$ over $p$).
 In transformers with this selector, we do not allow for two or more tokens to be tied with the maximum probability, i.e., $\nexists \sigma$ s.t. $p(\argmax(p)) = p(\sigma) \land \sigma \neq \argmax(p)$.
-In contrast, the probabilistic selector works stochastic.
+In contrast, the probabilistic selector operates stochastically.
 It returns a token $\sigma \in \Sigma$ with probability $p(\sigma)$.
 We allow for more than one maximum with this selector.
 
 \medskip
 
-In Figure \ref{diag-transf} there is a visual representation of how the token selector connects with the distribution generator and its components.
+Figure \ref{diag-transf} shows how the token selector connects with the distribution generator and its components.
 
 
 \begin{figure*}[h]
@@ -158,4 +158,4 @@ In Figure \ref{diag-transf} there is a visual representation of how the token se
 
 
 Although the presentation for transformers introduced in this section operates over real numbers, the transformers analyzed during this work utilize $\Floating$ for representing them.
-The formal construction is the same, but all operations over the set of real numbers are replaced but their corresponding in the set of $\Floating$ numbers defined in Section \ref{repr}.
+The formal construction is the same, but all operations over the set of real numbers are replaced by their corresponding in the set of $\Floating$ numbers defined in Section \ref{repr}.

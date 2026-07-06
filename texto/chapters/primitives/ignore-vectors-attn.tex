@@ -4,7 +4,7 @@ A vector $h_i$ ignores vector $h_j$ when the attention score is $0$, which can b
 \bigskip
 
 We extend the embedding dimension with three more coordinates for preserving the attention score of the other vectors previous to taking $\softmax$. 
-We construct $\TF'$ over $\TF$ such that the $l$-th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
+We construct $\TF'$ based on $\TF$ such that the $l$-th vector ignores a set of vectors $M$ in an $\ATTN$ layer; specifically, we require said layer to satisfy: 
 \[
     \langle q_i', k_j' \rangle = \begin{cases}
         \minrep                  & \text{ if } i = l \land j \in M \\

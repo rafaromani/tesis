@@ -1,6 +1,6 @@
 \chapter{General properties}
 
-In this chapter we study the properties of $\CoTtndn$ classes and the primitive operations that transformers can perform.
+In this chapter, we study the properties of $\CoTtndn$ classes and the primitive operations that transformers can perform.
 We define the notion of normalized transformer and prove that $\CoTtndn$ classes are closed  under boolean operations.
 
 
@@ -11,10 +11,10 @@ The operations are applied as modifications to an already existing transformer.
 If the operations are applied to an entire family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ such that the language it computes is in $\CoTtndn$, then the language of the modified family will be in the same class.
 This is because, although the operations add layers and coordinates to the size of the embedding, this is only a constant factor.
 
-Most operations don't make sense on their own, but they are used in later demonstrations.
+Most operations do not make sense on their own, but they are used in later proofs.
 
 It is interesting to remark that these are not only a theoretical gadget.
-It has been observed that transformers during training develop this type of structures and can be identifiable by patterns in the attention matrices \citep{olsson2022context}.
+It has been observed that transformers during training develop these types of structures and can be identified by patterns in the attention matrices \citep{olsson2022context}.
 
 
 \subsection{Flagging tokens and positions}
@@ -61,7 +61,7 @@ It has been observed that transformers during training develop this type of stru
 \section{Boolean Operations}\label{det-bool}
 
 In this section we prove that $\CoTtndn$ classes are closed under boolean operations.
-We show that the complement of a language in $\CoTtndn$ is in $\CoTtndn$ and that the disjunction of two language of the same class, stays in the same class.
+We show that the complement of a language in $\CoTtndn$ is in $\CoTtndn$ and that the disjunction of two languages of the same class, stays in the same class.
 
 \subsection{Complement of a language}
 \input{chapters/boolean-op/deterministic-not.tex}

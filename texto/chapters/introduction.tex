@@ -7,7 +7,7 @@ This architecture was built as a text sequence-to-sequence model for machine tra
 
 The first model implementing transformers open for public use was ChatGPT by OpenAI.
 It made its debut in November 2022 and by December 2024 it reported 300 million global weekly users.
-Now there are many models competing for this market as Claude, from Anthropic, or Gemini from Google.
+Now there are many models competing for this market such as Claude, from Anthropic, or Gemini from Google.
 
 These models can all be categorized as generative AI tools.
 This technology is arguably the most rapidly adopted in history.
@@ -17,18 +17,18 @@ LLMs are being used not only as chatbots for asking small questions, but are sha
 For example, \citet{liang2024mappingincreasingusellms} found that more than 17\% of the Computer Science's papers published between January 2020 and February 2024 on the \textit{arXiv}, \textit{bioRxiv}, and \textit{Nature} portfolio journals had sentences heavily edited by ChatGPT. 
 Naturally, the question of their computational power arises.
 Are these models genuinely capable of performing the tasks for which they are being employed?
-In this thesis we aim to formally answer that question.
-We approach the problem from the point of view of formal languages.
+In this thesis, we aim to formally answer that question.
+We approach the problem from the perspective of formal languages.
 
 
 \bigskip
 
-First we need to define what an LLM is.
+First, we need to define what an LLM is.
 We consider LLMs just as instantiations of the transformer architecture.
 Thus, we need to understand what transformers are.
 
 A transformer is a machine consisting of a tape from which it reads the input and onto which it appends the output character by character in an autoregressive manner.
-It reads the content of the tape, then computes the next character, appends it at the end and repeats.
+It reads the content of the tape, then computes the next character, appends it at the end, and repeats.
 \citet{ATTN-all-you-need} presented a concrete structure of how to do this.
 
 First, the input text written by the user is split into tokens.
@@ -57,7 +57,7 @@ The performance of LLMs improves when we allow them to generate more intermediat
 Intuitively, it is like giving them a scratch pad.
 This process is known as Chain of Thought, and it is known that increasing the number of intermediate tokens improves the quality of the answers \citep{wei2022chain}.
 Notably, using heuristic phrases in prompts, such as 'let us think step by step', improves the answers without the need to retrain the model \citep{kojima2022large}.
-Also, prompting the first steps of the reasoning, even if they are wrong, gives better results \citep{wang-etal-2023-towards} \citep{cot-prompt}.
+Also, prompting the first steps of the reasoning, even if they are wrong, gives better results \citep{wang-etal-2023-towards,cot-prompt}.
 This is why modern models perform this reasoning in the background before responding to the user.
 
 \bigskip
@@ -65,7 +65,7 @@ This is why modern models perform this reasoning in the background before respon
 In this thesis, we analyze transformers as language recognizers.
 We define them as machines that receive an input string and determine whether it has a certain property, generating the token $\qaccept$ or $\qreject$ respectively.
 When working with Turing machines as language recognizers, it is standard to study the languages recognizable when the machines are limited to a certain time or space budget as a function of the input size.
-When working with transformers there are different resources interesting to bound.
+When working with transformers, there are different resources of interest to bound.
 For example, \citet{merrill2026little} studied families of transformers that grow the number of layers with the input size.
 \citet{merrill2026little} prove that even with a logarithmic growth on the number of layers, there is a significant improvement in the languages that transformers can recognize.
 
@@ -77,7 +77,7 @@ They also prove that a logarithmic number of steps of $\CoT$ does not grow the s
 
 \citet{toyota} give bounds on the computing power of transformers and define classes of languages depending on how many steps of $\CoT$ are required to recognize them.
 They do not study the properties of those classes.
-In this thesis, as a previous step for our main objective, we prove that \citet{toyota} classes are closed under Boolean operations.
+In this thesis, as a preliminary step toward our main objective, we prove that the classes of \citet{toyota} are closed under Boolean operations.
 
 \medskip
 
@@ -91,7 +91,7 @@ The stochasticity of the models is controlled through a parameter called tempera
 In this thesis, we adapt the abstraction of \citet{toyota} to incorporate the stochastic behavior.
 We define the corresponding complexity classes and establish the analogues of the deterministic bounds in the probabilistic setting.
 We complete the work studying the properties of the classes of languages recognizable by probabilistic transformers with different number of steps of $\CoT$.
-The classes defined in this work are closed under Boolean operations and behave well as probabilistic classes, i.e. it does not matter how much we allow the probabilistic transformers to answer incorrectly, the recognizable languages are the same.
+The classes defined in this work are closed under Boolean operations and behave well as probabilistic classes, i.e., regardless of how much error we allow in the probabilistic transformers, the recognizable languages remain the same.
 
 The main contribution of this work is that we prove relations between the power of probabilistic and deterministic transformers.
 These relations provide a solid foundation for understanding when it suffices to study deterministic transformers and when a probabilistic abstraction is warranted.

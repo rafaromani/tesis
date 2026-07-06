@@ -11,7 +11,7 @@ We now show that we can replace $2/3$ with any constant in the interval $[1/2, 1
 
 \bigskip
 
-Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $[1/2, 1)$ and show that is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
+Let $\{\TF_n\}_{n \in \mathbb{N}}$ be a family of probabilistic transformers such that $\alpha \in \gL \iff \Pr[\TF_{|\alpha|}^*(\alpha) = \qaccept] > c $ for some fixed $c$ in the interval $[1/2, 1)$ and show that it is equivalent to a family $\{\TF'_n\}_{n \in \mathbb{N}}$ that answers correctly with probability $d < 1$.
 
 For each $\TF_n$ we construct $\TF'_n$ such that for all words of length $n$, $\alpha \in \gL \iff \Pr[\TF_n'^*(\alpha) = \qaccept] > d $.
 First, if $d \leq c$, then $\TF_n = \TF'_n$.
@@ -29,7 +29,7 @@ It worked as a counter of how many transformers accepted the word.
 We replicate this strategy to check whether the majority of the $r$ runs of $\TF_n$ accepted the word, i.e., $f_c > r/2$.
 If that is the case, we force $\TF'_n$ to accept; otherwise, we force it to reject.
 
-Fixed $c$ and $d$ only a constant number of runs (dependent on $c$ and $d$) are needed for the construction to work properly.
+For fixed $c$ and $d$, only a constant number of runs (depending on $c$ and $d$) are needed for the construction to work properly.
 The exact number is computed using Chernoff's bound.
 The calculations are shown in Appendix \ref{appendix:runs-error-red}.
 

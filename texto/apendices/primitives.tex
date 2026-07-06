@@ -134,12 +134,12 @@ Then, in the second layer we move the result to the right place.
 \]
 
 We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers preceding this mechanism
-This can be achieved maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in Section \ref{const-fun}.
+This can be achieved by maintaining them as $0$ since the beginning or transformed to $0$ with the primitive described in Section \ref{const-fun}.
 
 \medskip
 
 Let us construct each of the $\ATTN$ layers.
-As said before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
+As mentioned before, in both layers we will need for $\widetilde{h_f}$ to only attend to itself.
 Therefore, we define $W_Q$ and $W_K$ using the strategy of Section \ref{ignore-vecs}.
 
 Recall from the definition of the $\ATTN$ mechanism (\ref{alg:def_attn}) that the output of the $\ATTN$ layer is $h'_i = W_O \sum_{j=1}^a (s_i)_j v_j$. 
@@ -297,7 +297,7 @@ Thus, $\TF'$ prints $\sigma$.
 
 Observe that this only works if the token does not appear in the input word.
 This case can be handled by exploiting the non-uniformity of the model.
-If the input word is of size $n$, with the $\PE$ we can flag the first $n$ vectors.
+Since the input word has size $n$, we can use the $\PE$ to flag the first $n$ vectors.
 Then, we can use that flag to set to $0$ the coordinate used by the $\TE$ for flagging the token to be repeated, i.e., turning of the flag.
 We make them $0$ using a constant function as described in the Section \ref{const-fun}.
 

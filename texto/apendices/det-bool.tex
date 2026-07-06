@@ -6,7 +6,7 @@ Let $\TF$ be a transformer, we construct $\TF'$ that flips the decision token of
 This is the only change made to $\TF$, thus $\TF'^i(\sigma) = \TF^i(\sigma)$ for every $i$ when $\sigma$ is not a decision symbol.
 
 This is done by swapping the rows associated with $\qaccept$ and $\qreject$ in the matrix of the $\OUTPUT$ layer of $\TF$.
-Thus, when the largest probability is associated with $\qaccept$ in $\TF$, that same number will be associated to $\qreject$ in $\TF'$.
+Thus, when the largest probability is associated with $\qaccept$ in $\TF$, that same number will be associated with $\qreject$ in $\TF'$.
 
 Formally, $\TF'$ is defined exactly the same as $\TF$ except in the $\OUTPUT$ layer, where the matrix is different.
 Let $M$ be the matrix of the $\OUTPUT$ layer of $\TF$, let $i$ be the position of the token $\qaccept$ and $j$ the position of $\qreject$, then the matrix of the $\OUTPUT$ layer of $\TF'$ will be $M' = PM$ where $P$ is the matrix that flips the rows $i$ and $j$.
@@ -161,7 +161,7 @@ Before going to the $\OUTPUT$ layer we move the value of $f_c$ to the coordinate
 Therefore, the token with the maximum probability will be $\qaccept$ iff $\tfone{\TF}$ or $\tftwo{\TF}$ accepted $\alpha$, and it will be $\qreject$ in the other case.
 
 Then, $\TF$ computes the union of the languages of $\tfone{\TF}$ and $\tftwo{\TF}$.
-The number of steps of $\CoT$ that it needs is exactly the ones made by $\tfone{\TF}$ plus the ones made by $\tftwo{\TF}$ plus $1$ extra for taking the disjunction, thus in $O(\cdot)$ notation it takes the same as the maximum of $\tfone{\TF}$ and $\tftwo{\TF}$.
+The number of steps of $\CoT$ that it needs is exactly the ones made by $\tfone{\TF}$ plus the ones made by $\tftwo{\TF}$ plus $1$ extra for taking the disjunction, thus it has the same asymptotic cost as the maximum of $\tfone{\TF}$ and $\tftwo{\TF}$.
 The embedding dimension of $\TF$ is the same as the dimension of $\tfone{\TF}$ plus the dimension of $\tftwo{\TF}$ plus some constant number of flags, thus in $O(\cdot)$ notation it is the same as the maximum of $\tfone{\TF}$ and $\tftwo{\TF}$.
 
 Therefore, the language computed by the family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ is in $\CoTtndn$.

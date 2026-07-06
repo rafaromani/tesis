@@ -57,7 +57,7 @@ Since $\BPppoly$ restricted to uniform circuits coincides with $\BPP$ (Theorem \
 \end{theorem}
 
 
-Since it is not know whether $\Ptime = \BPP$, we can not deduce the uniform version of Theorem \ref{cotpoly-equals-rcotpoly}, we can only prove:
+Since it is not known whether $\Ptime = \BPP$, we cannot deduce the uniform version of Theorem \ref{cotpoly-equals-rcotpoly}, we can only prove:
 %
 \begin{theorem}\label{p-bpp-iff-ucot-urcot}
     $\Ptime = \BPP \iff \UCoTpoly = \URCoTpoly$.
@@ -65,14 +65,15 @@ Since it is not know whether $\Ptime = \BPP$, we can not deduce the uniform vers
 
 Although $\Ptime = \BPP$ is an open question in complexity theory, this theorem is an interesting result.
 It implies that, when restricted to uniform families of transformers, the constrained access to randomness that transformers have is equivalent in expressive power to the unrestricted access allowed to probabilistic polynomial-time Turing machines.
-Then, this theorem seems to imply that studying probabilistic transformers is important when working in fine-grained complexity, because even though it is not known whether $\Ptime = \BPP$, there is a consensus (but no proof) that randomness yields a polynomial advantage.
+This result suggests that studying probabilistic transformers is particularly relevant in fine-grained complexity, given the widely held (though unproven) belief that randomness yields a polynomial advantage.
+
 
 
 
 \subsection{Uniform and non-uniform transformers}
 
 We show that non-uniformity in deterministic transformers can simulate randomness in uniform probabilistic transformers.
-Theorems \ref{bpp-equals-urcot} (a), Adleman (b) and \ref{cotpoly-ppoly} (c) give the following relation:\[
+Theorems \ref{bpp-equals-urcot} (a), \ref{adleman} (b) and \ref{cotpoly-ppoly} (c) give the following relation:\[
     \URCoTpoly \stackrel{\text{(a)}}{=} \BPP \stackrel{\text{(b)}}{\subseteq} \ppoly \stackrel{\text{(c)}}{=} \UCoTpoly
 \]
 %

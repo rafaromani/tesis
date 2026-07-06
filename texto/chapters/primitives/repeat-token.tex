@@ -1,8 +1,8 @@
-For later proof we will need to assume that a transformer consumes all of its budget.
+For a later proof we will need to assume that a transformer consumes all of its budget.
 Thus, we will argue that for every transformer $\TF$ there is a transformer $\TF'$ of the same $\CoTtndn$ class that computes the same language and consumes all of its budget.
 
-We construct $\TF'$ as $\TF$ but once it prints a token $\sigma$, it repeats it until the budget run out (or another construction makes it stop).
-This is achieved flagging the token $\sigma$ and applying a constant function at the end of the body of the transformer to all  the vectors flagged.
+We construct $\TF'$ as $\TF$ but once it prints a token $\sigma$, it repeats it until the budget runs out (or another construction makes it stop).
+This is achieved by flagging the token $\sigma$ and applying a constant function at the end of the body of the transformer to all  the vectors flagged.
 The constant function force the probability distribution to have all the probability concentrated in the token $\sigma$.
 
 We give the exact construction in appendix \ref{appendix:repeat-token}

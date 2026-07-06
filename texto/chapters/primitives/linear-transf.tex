@@ -3,7 +3,7 @@ Applying a linear transformation to a vector is not straightforward, since in ev
 \bigrafa{lo llaman residual stream pero para usarlo acá siento que lo debería introducir antes y creo que no es worth.}
 An intuitive idea would be to apply the transformation $M-I$ when we want to transform the vector $x$ to $Mx$, since $x + (M-I)x = x + Mx - Ix = Mx$.
 This does not hold in our model since the addition and multiplication are not commutative in $\Floating$.
-For avoiding the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
+To avoid the representation error, we will extend the embedding dimension to get more memory per vector such that we can store in new coordinates the value of $Mx$ and then replace it in the original ones.
 
 \bigskip
 
@@ -11,7 +11,7 @@ We give a construction that applies the linear transformation $M$ to a vector pr
 Let $h_f$ be the flagged vector.
 As mentioned, we need to double the embedding dimension (from $d$ to $2d$) so we can have coordinates to use as a temporary memory.
 Our construction works with two $\ATTN$ layers operating as shown in Figure \ref{fig:steps-linear-tranf} (see Appendix \ref{appendix:linear-transf} for the exact construction).
-The first $\ATTN$ layer, computes the transformation saving its result in the coordinates $d+1$ to $2d$.
+The first $\ATTN$ layer computes the transformation saving its result in the coordinates $d+1$ to $2d$.
 Then, the second layer we move the result to the right place.
 
 \begin{figure}[h]
