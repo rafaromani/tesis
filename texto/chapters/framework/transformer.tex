@@ -56,7 +56,11 @@ Each decoder layer has two sub-layers: a multi-head self-attention layer ($\ATTN
 Each part and layer has its own trainable parameters.
 Then, we can define the distribution generation algorithm by its parameters $\theta = \{\theta_\TE, \theta_\PE, \{\theta_\ATTN^{l}, \theta_\FF^{l}\}_{l=0}^{L-1}, \theta_\OUTPUT\}$.
 The algorithm works over vectors of numbers of certain dimension $d$.
-The dimension is dependent on the size of the input word.\footnote{This is note the case in the real models since the same model is used for all input sizes. In this work, we mainly worry about a logarithmic growth in the embedding dimension in relation to input size. In practice, we were unable to train models capable of processing inputs of arbitrary length, so accepting a small increase in the embedding dimension could still yield realistic results.}
+The dimension is dependent on the size of the input word.\footnote{This is not the case for the real models, which have constant embedding size as the same model is used across all inputs. 
+In this work, many results are relevant for the case in which we have a logarithmic growth in the embedding dimension in relation to input size, but nonetheless most of the results apply under the stronger hypothesis of constant size. 
+Also, observe that considering the possibility of increasing the size of the embedding somewhat resembles the process over which LLMs increase their size month by month as more computational resources are dedicated to them.}
+
+
 We use $d(n)$ to refer to the \textbf{embedding size} when the input word has size $n$.
 
 We now describe each part of the transformer's architecture on detail:
