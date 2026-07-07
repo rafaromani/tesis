@@ -2,9 +2,20 @@
 %\large \bf \runtitulo
 %\end{center}
 %\vspace{1cm}
-\chapter*{\runtitulo}
+\chapter*{\runtitle}
 
-\noindent [write your abstract here]
+\noindent
+Transformers are the basic building block of large language models (LLMs).
+In this thesis, we study the formal languages recognized by different theoretical abstractions of transformers when limiting the number of steps in the chain of thought.
+First, we build on the work of \citet{toyota} and study the properties of their formal abstraction.
+Second, we extend their model to incorporate the stochastic behavior of transformers, which has received little attention in the literature.
+We study the formal languages recognizable by our definition of probabilistic transformers when limiting the number of steps in the chain of thought.
+Our analysis is carried out through the lens of Boolean circuit complexity.
+Finally, we relate both models to Turing machines and provide arguments regarding when the randomness of transformers can and cannot be ignored in order to study their expressive power.
+
+Our main results yield that transformers doing $T(n)$ steps of chain of thought are equivalent to Boolean circuits of size $T(n)$.
+This holds true for deterministic and probabilistic transformers and circuits, even in the $\Ptime$-uniform or nonuniform setting.
+
 \bigskip
 
-\noindent\textbf{Keywords:} [write your keywords here]
+\noindent\textbf{Keywords:} probabilistic transformers, chain-of-thought, Boolean circuits, formal languages.

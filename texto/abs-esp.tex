@@ -4,7 +4,18 @@
 %\vspace{1cm}
 \chapter*{\runtitulo}
 
-\noindent [Acá va el resumen]
+\noindent 
+Los transformers son el componente básico de los grandes modelos de lenguaje (LLM).
+En esta tesis, estudiamos los lenguajes formales que reconocen las diferentes abstracciones teóricas de los transformers cuando se limita el número de pasos de chain-of-thought.
+En primer lugar, partimos del trabajo de \citet{toyota} y estudiamos las propiedades de su abstracción.
+En segundo lugar, ampliamos su modelo para incorporar el comportamiento estocástico de los transformers, al que se le ha prestado poca atención en la literatura.
+Estudiamos los lenguajes formales reconocibles por nuestra definición de transformers probabilísticos cuando se limita el número de pasos de chain-of-thought.
+Nuestro análisis se lleva a cabo desde la perspectiva de la teoría de circuitos booleanos.
+Finalmente, relacionamos ambos modelos con las máquinas de Turing y ofrecemos argumentos sobre cuándo se puede y cuándo no se puede ignorar la aleatoriedad de los transformers para estudiar su poder expresivo.
+
+Nuestros principales resultados indican que los transformers que realizan $T(n)$ pasos de chain-of-thought son equivalentes a circuitos booleanos de tamaño $T(n)$.
+Esto es válido tanto para los transformers y circuitos determinísticos como para los probabilísticos, incluso en el contexto $\Ptime$-uniforme o no uniforme.
+
 \bigskip
 
-\noindent\textbf{Palabras claves:} [acá van las palabras clave]
+\noindent\textbf{Palabras claves:} transformers probabilísticos, chain-of-thought, circuitos booleanos, lenguajes formales.

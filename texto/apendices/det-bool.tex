@@ -66,10 +66,10 @@ We have some extra coordinates for flags at the end, but we will ignore them for
 \]\[
 \PE(n)_i = \begin{cases}
     \tfone{\PE}(n)_i                            &\text{ if } i \leq \tfone{d}(|\alpha|) \\
-    \text{shifted}\tftwo{\PE}(n)_{i-\tfone{d}(|\alpha|)}\footnote{Defined later in the construction}      &\text{ if } \tfone{d}(|\alpha|) < i \leq \tftwo{d}(|\alpha|) \\
+    \text{shifted}\tftwo{\PE}(n)_{i-\tfone{d}(|\alpha|)}\footnotemark      &\text{ if } \tfone{d}(|\alpha|) < i \leq \tftwo{d}(|\alpha|) \\
     \text{flags}                                &\text{ if } \tftwo{d}(|\alpha|) < i\\
 \end{cases}
-\]
+\]\footnotetext{Defined later in the construction}
 
 
 The transformer $\TF$ has one layer for each layer of $\tfone{\TF}$ and each of $\tftwo{\TF}$.
@@ -165,5 +165,5 @@ The number of steps of $\CoT$ that it needs is exactly the ones made by $\tfone{
 The embedding dimension of $\TF$ is the same as the dimension of $\tfone{\TF}$ plus the dimension of $\tftwo{\TF}$ plus some constant number of flags, thus in $O(\cdot)$ notation it is the same as the maximum of $\tfone{\TF}$ and $\tftwo{\TF}$.
 
 Therefore, the language computed by the family of transformers $\{\TF_n\}_{n \in \mathbb{N}}$ is in $\CoTtndn$.
-Thus, $\gL1 \cup \gL2 \in \CoTtndn$.
+Thus, $\gL_1 \cup \gL_2 \in \CoTtndn$.
 

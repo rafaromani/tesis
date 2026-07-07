@@ -12,7 +12,7 @@ We construct $\TF'$ based on $\TF$ such that the $l$-th vector ignores a set of 
     \end{cases}
 \]
     
-This can be achieved by saturating the finite representation since $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
+This can be achieved by saturating the finite representation since the attention score is dependent on $\langle q'_l, k'_i \rangle = \sum_{x=1}^{d+3} (q'_l)_x (k'_i)_x$.
 If the last two terms of the summation are $\minrep$, then because of the iterative rounding, $\langle q'_l, k'_i \rangle = \minrep$.
 Since we do not want to change the attention scores of vectors not in $M$, when $i \notin M$ the last three terms should be $0$.
 The explicit construction achieving this is explained in Appendix \ref{appendix:ignore-vectors-attn}
