@@ -69,7 +69,7 @@ We have some extra coordinates for flags at the end, but we will ignore them for
     \text{shifted}\tftwo{\PE}(n)_{i-\tfone{d}(|\alpha|)}\footnotemark      &\text{ if } \tfone{d}(|\alpha|) < i \leq \tftwo{d}(|\alpha|) \\
     \text{flags}                                &\text{ if } \tftwo{d}(|\alpha|) < i\\
 \end{cases}
-\]\footnotetext{Defined later in the construction}
+\]\footnotetext{Defined later in the construction.\bigcifu{Capaz podés dar una intuición de por qué lo llamamos shifted? Me parece que podés transmitir bastante la idea en algo informal.}}
 
 
 The transformer $\TF$ has one layer for each layer of $\tfone{\TF}$ and each of $\tftwo{\TF}$.
@@ -91,7 +91,7 @@ Then, all the matrices in the layers of the first part of the body of $\TF$ look
 
 It is important to notice that the values of the coordinates corresponding to one transformer do not affect the values of the other.
 Thus, if the tape of the transformer has content $\gamma$, then at the end of the body of $\TF$, the last vector would look like $(x, y, \text{flags})$ where $x$ is the last vector at the end of the body of $\tfone{\TF}$ when its tape content is $\gamma$, and $y$ the one at the end of $\tftwo{\TF}$ when its tape content is $\gamma$.
-Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$, then $\TF$ will produce the same tape as $\tfone{\TF}$.
+Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$\bigcifu{De pesa nomás: seguro que no hay que mandarlo a $-\infty$ al resto? Digo para que desaparezcan en la suma tras aplicarle el softmax (altas chances de que me esté olvidando algún procesamiento más que pasa antes).}, then $\TF$ will produce the same tape as $\tfone{\TF}$.
 This works for generating the first $\tfone{T}(|\alpha|)$ tokens which are $\beta \tfone{q}$.
 Thus, we would like to apply this transformation only to the vectors generating them.
 Therefore, we need to flag them with the position encoding.
@@ -103,11 +103,12 @@ After running $\tfone{T}(|\alpha|)$ steps of this construction, the tape will be
 At this point, we want to start generating $\gamma$, i.e., the tape of $\tftwo{\TF}$.
 Just changing what we choose before the $\OUTPUT$ layer does not work, since what the construction will produce would be $\tftwo{\TF}(\alpha \beta \tfone{q})$, and we need $\tftwo{\TF}(\alpha)$.
 
+
 \medskip
 
 Now we show how to run $\tftwo{\TF}$ in this construction ignoring the tokens produced by $\tfone{\TF}$.
 We make $\tftwo{\TF}$ not attend to the tokens in positions $|\alpha| + 1$ to $\tfone{T}(|\alpha|)$ (this can be done using the primitive presented in the Section \ref{ignore-vecs}).
-We also need for them to be invisible to the portion of the position encoding corresponding to $\tftwo{\TF}$, thus we "shift" it in the following way.
+We also need for them to be invisible to the portion of the position encoding corresponding to $\tftwo{\TF}$, thus we "shift" it in the following way.\bigcifu{Me parece queda más lindo referenciar la ecuación de antes y decir algo tipo "Thus, the shifted version of the positional encoding mentioned in Eq ... is defined as...".}
 
 \[
 \PE(n)_i = \begin{cases}
@@ -138,6 +139,7 @@ Therefore, before choosing the distribution, we need to copy the vector $h_{|\al
 Notice that nothing more is needed, since the attention mechanism only attends to vectors to the right, so $h_{|\alpha|}$ is not affected by the vectors coming from the tokens produced by $\tfone{\TF}$.
 This is done with the operation presented in Section \ref{copy-vector}.
 
+\bigcifu{El párrafo que está arriba tampoco me resulta super claro, pero no se cómo mejorarlo.}
 
 With this last fix, $\TF$ generates the tape of $\tfone{\TF}$ followed by the tape of $\tftwo{\TF}$.
 We now show how to compute $q$, i.e., the disjunction of $\tfone{q}$ and $\tftwo{q}$.

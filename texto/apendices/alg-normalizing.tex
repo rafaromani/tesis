@@ -6,6 +6,7 @@ For normalizing transformers, first we make them meet \projection\ and then \con
 
 Notice that every linear transformation $M: \Rd \to \Floating^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
 \footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
+\bigcifu{Pq aca pones de $\Rd$ a $\Floating$? No sería desde $\Floating^d$?}
 
 \[
     \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \end{matrix} \right) 
@@ -71,6 +72,7 @@ or the non-zero coordinate of $v$ is negative, then the maximum will be $0$ and 
 Whichever happens in $v$, the other happens in $-v$.
 Then, for adding both vectors we can use one $\FF$ layer with the following parameters.
 Observe that this works since all the coordinates of $\relu(-v)$ are non-negative.
+\bigcifu{La explicación de esta parte final me parece menos clara que otras cosas, pero no sé como mejorarla :(}
 
 \begin{align*}
     & W_1 = id^{d\times d}
@@ -82,5 +84,3 @@ Observe that this works since all the coordinates of $\relu(-v)$ are non-negativ
         0^{d\times d}
     \end{matrix}\right) 
 \end{align*}
-
-\bigcifu{hacer step by step esta $\FF$}

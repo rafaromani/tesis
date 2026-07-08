@@ -4,7 +4,7 @@ The question is how many runs of $\TF_n$ are needed, given that it answers corre
 We estimate the necessary $r$ using Chernoff's bound.
 
 \begin{theorem}[Chernoff's bound]
-    Let $y_1, \dots, y_r$ be independent Boolean random variables with $\Pr[y_i = 1] = c$ for every $1 \leq i \leq r$.
+    Let $y_1, \dots, y_r$ be independent Boolean random variables with $\Pr[y_i = 1] = c$\bigcifu{Ojo que acá deberías tener $\geq c$ para modelar lo que pasa con los TF} for every $1 \leq i \leq r$.
     Let $Y = \sum_{i=1}^r y_i$ and let $\delta \in (0,1)$.
     Then $\Pr[Y \leq (1-\delta)rc] \leq e^{-\frac{\delta^2}{4}rc}$ and $\Pr[Y \geq (1+\delta)rc] \geq e^{-\frac{\delta^2}{4}rc}$.
 \end{theorem}
@@ -15,7 +15,8 @@ Each $y_i$ represents a run of $\TF_n$.
 $y_i = 1$ indicates that the $i$th run of $\TF_n$ answered correctly, and $y_i = 0$ that it answered incorrectly.
 Since $\TF_n$ answers correctly with probability higher than $c$, we have $\Pr[y_i = 1] > c$.
 
-Applying Chernoff's bound, we require $\delta$ and $r$ such that $(1+\delta)rc > r/2$ and $e^{-\delta^2rc/4} \geq d$.
+Applying Chernoff's bound, we require $\delta$ and $r$ such that\bigcifu{La primer desigualdad siempre es cierta si $\delta>0$, $c>1/2$.} $(1+\delta)rc > r/2$ and $e^{-\delta^2rc/4} \geq d$.
+\bigcifu{Está mal esto. Fijate que la versión de Chebyshev que estás usando te dice que tan probable es que te pases por arriba del promedio (que es $rc$). Vos querés la que hace por abajo para alejarte de la frontera $r/2$.}
 %
 \begin{align*}
     (1+\delta)rc &> \frac{r}{2}       &           e^{-\frac{\delta^2}{4}rc} & \geq d \\
