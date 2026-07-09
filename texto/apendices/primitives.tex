@@ -123,15 +123,14 @@ Therefore, after these two layers $h_f$ will be replaced with $Mh_f$.
 
 We need to double the embedding size from $d$ to $2d$ (plus some flags) since we need to store the result of the transformation in some coordinates (the added $d+1$ to $2d$) as a middle step.
 In the first $\ATTN$ layer, we compute the transformation saving its result in the coordinates $d+1$ to $2d$.
-Then, in the second layer we move the result to the right place.\bigcifu{En el dibujo de abajo me parece que sería mas claro escribir un vector de dos componente $h_f$ y $0^{n\times 1}$. Me pasó leyendolo que me mezcle pensando que esto era un vector con todos los 
-$h_1\ldots h_f$ de cada posición.}
+Then, in the second layer we move the result to the right place.
 
 \[
-    \widetilde{h_f} = \left( \begin{matrix} (h_f)_1    \\ \vdots \\ (h_f)_d    \\ 0      \\ \vdots \\ 0       \end{matrix} \right) 
+    \widetilde{h_f} = \left( \begin{matrix} h_f    \\ 0^{d \times 1}       \end{matrix} \right) 
     \xrightarrow{\text{first $\ATTN$ layer}}
-    \widetilde{h_f} = \left( \begin{matrix} 0      \\ \vdots \\ 0      \\ (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \end{matrix} \right)
+    \widetilde{h_f} = \left( \begin{matrix} 0^{d \times 1}     \\  Mh_f \end{matrix} \right)
     \xrightarrow{\text{second $\ATTN$ layer}}
-    \widetilde{h_f} = \left( \begin{matrix} (Mh_f)_1 \\ \vdots \\ (Mh_f)_d \\ 0      \\ \vdots \\ 0      \end{matrix} \right)
+    \widetilde{h_f} = \left( \begin{matrix} Mh_f \\ 0^{d \times 1}      \end{matrix} \right)
 \]
 
 We assume that the $d+1$ to $2d$ coordinates (used as memory) are set to $0$ by the layers preceding this mechanism
@@ -212,8 +211,15 @@ Instantiating the matrices as follows produces the desire effect:
 
 The special operation is more complicated.
 It is not a linear transformation; therefore, we need to define a new technique.
-Observe that one\bigcifu{Estas son las indicadoras de que $a>b$ y al revés? Porque si está en el main text capaz está bueno recordarlo ahora. Aparte, habría que hacer algún comentario sobre precisión numérica? I.e. no puede pasar que $a\neq b$ pero $a-b = 0$? Supongo que con alguna hipótesis se arregla, suena también que es algo cierto dado que la representación numérica es más densa cerca del 0.} of $\mathbb{I}_a$ and $\mathbb{I}_b$ equals $1$ and the other equals $0$.
+Recall the definitions of $\mathbb{I}_a$ and $\mathbb{I}_b$.
+$\mathbb{I}_a$ is computed as $\relu(b-a)$. 
+It is the indicator function of $a>b$, therefore $\mathbb{I}_a$ equals $1$ if $a>b$ and $0$ otherwise.
+Notice that it cannot occur that $a \neq b$ but $b-a = 0$ since the numbers near $0$ are more densely represented.
+$\mathbb{I}_b$ indicates $b>a$ in the same way as $\mathbb{I}_b$.
+Observe that one of $\mathbb{I}_a$ and $\mathbb{I}_b$ equals $1$ and the other equals $0$.
 Then, $\mathbb{I}_b = 1 - \mathbb{I}_a$ and $\mathbb{I}_a = 1 - \mathbb{I}_b$.
+
+
 
 \begin{equation*}
     \left(\begin{matrix}
@@ -293,10 +299,6 @@ The third $\FF$ layer has parameters:
 
 
 
-\bigrafa{intenté escribir cómo quedaban las $\FF$ instanciadas pero queda medio ilegible. No sé si vale la pena}
-\bigcifu{Para mi está bueno. Hasta acá me parece que está super piola el apéndice.}
-
-
 
 \section{Repeat tokens}\label{appendix:repeat-token}
 
@@ -307,7 +309,7 @@ Assume that $\TF$ is normalized and let us define $\TF'$.
 $\TF'$ is identical to $\TF$ except for the following modifications.
 Let $\sigma$ be the token to repeat.
 We flag the vectors coming from $\sigma$ with the token embedding.
-Since we are replicating a token that was printed, i.e., it is not part of the input\bigcifu{Nunca puede serlo? Entiendo que en los casos de uso de la primitiva es uno de los signos reservados, pero en general creo que pueden escribir lo que quieran los TF. Si lo dice el main text, capaz lo podríamos recordar acá.}, its corresponding vector is the last one.
+Since we are replicating a token that was printed, i.e., it is not part of the input\bigcifu{Nunca puede serlo? Entiendo que en los casos de uso de la primitiva es uno de los signos reservados, pero en general creo que pueden escribir lo que quieran los TF. Si lo dice el main text, capaz lo podríamos recordar acá.}\bigrafa{Podría serlo pero eso se parchea más abajo. La primitiva hace que una vez que se imprime el token, el transformer lo repite infinitamente}, its corresponding vector is the last one.
 This is because we begin repeating it after the first time it is printed.
 
 
@@ -321,7 +323,7 @@ Thus, $\TF'$ prints $\sigma$.
 \medskip
 
 Observe that this only works if the token does not appear in the input word.
-This case can be handled by exploiting the non-uniformity of the model\bigcifu{No se si es la no-uniformity, porque este truco sale uniformemente. Capaz pondría que el caso general se parchea usando el positional embedding contando lo que pones abajo y listo}.
+This case can be handled by exploiting that for each input size, we have a different position encoding.
 Since the input word has size $n$, we can use the $\PE$ to flag the first $n$ vectors.
 Then, we can use that flag to set to $0$ the coordinate used by the $\TE$ for flagging the token to be repeated, i.e., turning of the flag.
 We make them $0$ using a constant function as described in the Section \ref{const-fun}.

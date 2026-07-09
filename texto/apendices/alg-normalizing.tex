@@ -4,9 +4,8 @@ For normalizing transformers, first we make them meet \projection\ and then \con
 
 \section*{Algorithm for \projection}
 
-Notice that every linear transformation $M: \Rd \to \Floating^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
+Notice that every linear transformation $M: \Floating^d \to \Floating^{|\Sigma|}$ with $d \geq |\Sigma|$ can be decomposed into two steps. 
 \footnote{We can always add more coordinates to the embedding if $d < |\Sigma|$. Since the language is fixed, it will be a constant number of coordinates, thus not changing the class of the transformer.}
-\bigcifu{Pq aca pones de $\Rd$ a $\Floating$? No sería desde $\Floating^d$?}
 
 \[
     \left( \begin{matrix} x_1    \\ \vdots \\ x_d    \end{matrix} \right) 
@@ -33,7 +32,7 @@ Then, if the maximum is positive, multiplying by $\maxrep$, then subtracting $1$
 
 \[
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ x_{max} \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
-    \xrightarrow[\maxrep]{\text{multiplying by}}
+    \xrightarrow[\maxrep]{\text{multiplying twice by }\maxrep}
     \left( \begin{matrix} 0 \\ \vdots \\ 0 \\ \maxrep \\ 0 \\ \vdots \\ 0    \end{matrix} \right) 
     \xrightarrow{\text{subtracting } 1}
     \left( \begin{matrix} -1 \\ \vdots \\ -1 \\ \maxrep -1 \\ -1 \\ \vdots \\ -1    \end{matrix} \right) 
@@ -59,20 +58,21 @@ Since $\relu(x) + \relu(-x) = |x|$ for all $x$, our algorithm does the following
     \left(\begin{matrix}  \relu(v) \\ \relu(-v) \\\vdots \end{matrix}\right)
     \xrightarrow[]{}
     \left(\begin{matrix}  \relu(v) + \relu(-v) \\ \vdots \end{matrix}\right)
+    = \left(\begin{matrix}  |v| \\ \vdots \end{matrix}\right)
 \]
 
 \noindent where $\relu$ is applied position wise. 
 
 
 The first step is done in the same way as the first half of the linear transformations.
-For the second step, we take max-coordinate (Section \ref{maximum}) in $v$ and $-v$ independently.
-This works since all the coordinates of $v$ are $0$ except one thus there are only two scenarios.
-The non-zero coordinate of $v$ is positive, then it will be the maximum (so it won't be modified) and all the others will remain $0$;
-or the non-zero coordinate of $v$ is negative, then the maximum will be $0$ and all the coordinates will become $0$.
-Whichever happens in $v$, the other happens in $-v$.
-Then, for adding both vectors we can use one $\FF$ layer with the following parameters.
-Observe that this works since all the coordinates of $\relu(-v)$ are non-negative.
-\bigcifu{La explicación de esta parte final me parece menos clara que otras cosas, pero no sé como mejorarla :(}
+For the second step, notice that $\relu(x)$ can be computed with one $\FF$ layer ($W_2 = W_1 = id$, $b_2 = b_1 = 0$).
+Thus, $\relu(v)$ and $\relu(-v)$ can be computed with one $\FF$ layer.
+Then, in one step $\relu(v)$ and $\relu(-v)$ are computed and stored in fresh coordinates.
+Next, they are moved to the desired positions.
+Finally, for adding both vectors we can use one $\FF$ layer with the following parameters.
+Observe that this works since all the coordinates of $\relu(-v)$ are non-negative, thus $\relu(\relu(-v)) = \relu(-v)$.
+
+\bigrafa{Ahí mejoré el párrafo, además de que cambié la forma de computar el segundo step a algo mucho más fácil. No creo que valga la pena que expanda mucho más no?}
 
 \begin{align*}
     & W_1 = id^{d\times d}
