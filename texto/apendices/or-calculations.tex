@@ -18,6 +18,7 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
   % Fila 1
   \begin{subfigure}[t]{0.48\linewidth}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{|r|c|c|}
       \hline
                       & $\TF^1$ accepts   & $\TF^1$ rejects \\
@@ -27,12 +28,14 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
       $\TF^2$ rejects & $p_1(1-p_2)$      & $(1-p_1)(1-p_2)$ \\
       \hline
     \end{tabular}
+    }
     \captionsetup{labelformat=empty}
     \caption{Case 1: $\alpha \in \gL_1 \land \alpha \in \gL_2$}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.48\linewidth}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{|r|c|c|}
       \hline
                       & $\TF^1$ accepts   & $\TF^1$ rejects \\
@@ -42,6 +45,7 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
       $\TF^2$ rejects & $p_1p_2$          & $(1-p_1)p_2$ \\
       \hline
     \end{tabular}
+    }
     \captionsetup{labelformat=empty}
     \caption{Case 2: $\alpha \in \gL_1 \land \alpha \notin \gL_2$}
   \end{subfigure}
@@ -51,6 +55,7 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
   % Fila 2
   \begin{subfigure}[t]{0.48\linewidth}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{|r|c|c|}
       \hline
                       & $\TF^1$ accepts       & $\TF^1$ rejects \\
@@ -60,12 +65,14 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
       $\TF^2$ rejects & $(1-p_1)(1-p_2)$      & $p_1(1-p_2)$ \\
       \hline
     \end{tabular}
+    }
     \captionsetup{labelformat=empty}
     \caption{Case 3: $\alpha \notin \gL_1 \land \alpha \in \gL_2$}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.48\linewidth}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{|r|c|c|}
       \hline
                       & $\TF^1$ accepts       & $\TF^1$ rejects \\
@@ -75,6 +82,7 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
       $\TF^2$ rejects & $(1-p_1)p_2$          & $p_1p_2$ \\
       \hline
     \end{tabular}
+    }
     \captionsetup{labelformat=empty}
     \caption{Case 4: $\alpha \notin \gL_1 \land \alpha \notin \gL_2$}
   \end{subfigure}
@@ -82,8 +90,6 @@ In Figure \ref{fig:cases}, we show the probability of $\TF^1$ and $\TF^2$ accept
   \caption{Probabilities of all possible behaviors of $\TF^1$ and $\TF^2$}
   \label{fig:cases}
 \end{figure}
-
-\rafa{ya sé que estas tablas se ven mal. Tengo que revisarles el estilo}
 
 $\TF$ accepts whenever $\TF^1$ or $\TF^2$ accepts.
 Let us analyze case by case the probability of $\TF$ answering correctly.
