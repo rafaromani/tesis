@@ -31,7 +31,12 @@ comentarios sobre:
 
 doy la idea de normalización acá?
 
+no hay tools
+no normalizamos
+
     Por qué estudiar CoT y qué otros parámetros se pueden estudiar
+
+https://arxiv.org/pdf/2505.18948
 
 # Clases CoT[T(n), d(n)]
 
@@ -154,12 +159,16 @@ BPP = (Uniform)RCoT[poly]
 
 P = BPP? pregunta abierta sin consenso pero hay acuerdo en que el azar da una ventaja polinomial ---> tenemos algún ejemplo?
 
+AKS sin azar
+test de primalidad miller ez con azar
+
 - Future work: los transformers son muy finitos, el azar que tienen se debe poder computar. Estaría bueno tener una simulación de probabilisticos por deterministicos y ver su overhead.
 
 ## URCoT[poly] in CoT[poly]
 
 Como en el teo de adleman, BPP subseteq P/poly.
 La no uniformidad da suficiente poder como para comerse al azar también en los transformers
+
 
 
 
