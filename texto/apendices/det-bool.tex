@@ -72,7 +72,7 @@ We have some extra coordinates for flags at the end, but we will ignore them for
         \text{flags}                                &\text{ if } \tftwo{d}(|\alpha|) < i\\
     \end{cases}
 \end{equation}\label{PE}
-\footnotetext{Defined later in the construction.\bigcifu{Capaz podés dar una intuición de por qué lo llamamos shifted? Me parece que podés transmitir bastante la idea en algo informal.}\bigrafa{siento que el nombre transmite un poquito y intentar explicarlo ahora va a traer mucho ruido.}}
+\footnotetext{Defined later in the construction.}
 
 
 The transformer $\TF$ has one layer for each layer of $\tfone{\TF}$ and each of $\tftwo{\TF}$.
@@ -94,7 +94,7 @@ Then, all the matrices in the layers of the first part of the body of $\TF$ look
 
 It is important to notice that the values of the coordinates corresponding to one transformer do not affect the values of the other.
 Thus, if the tape of the transformer has content $\gamma$, then at the end of the body of $\TF$, the last vector would look like $(x, y, \text{flags})$ where $x$ is the last vector at the end of the body of $\tfone{\TF}$ when its tape content is $\gamma$, and $y$ the one at the end of $\tftwo{\TF}$ when its tape content is $\gamma$.
-Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$\bigcifu{De pesa nomás: seguro que no hay que mandarlo a $-\infty$ al resto? Digo para que desaparezcan en la suma tras aplicarle el softmax (altas chances de que me esté olvidando algún procesamiento más que pasa antes).}\bigrafa{No hace falta hacer nada más porque está normalizado. Agregué un comentario más abajo de que cuando queremos generar el otro usamos (y,0,0). Lo cierto es que la normalización se encarga de que solo importen las primeras $|\Sigma|$ coords}, then $\TF$ will produce the same tape as $\tfone{\TF}$.
+Therefore, if we always choose to transform said vector into $(x, 0, \dots, 0)$, then $\TF$ will produce the same tape as $\tfone{\TF}$.
 This works for generating the first $\tfone{T}(|\alpha|)$ tokens which are $\beta \tfone{q}$.
 Thus, we would like to apply this transformation only to the vectors generating them.
 Therefore, we need to flag them with the position encoding.
@@ -142,8 +142,6 @@ The distribution corresponding to it is in the vector $h_{|\alpha|}$ but the las
 Therefore, before choosing the distribution, we need to copy the vector $h_{|\alpha|}$ to $h_{|\alpha| + \tfone{T}(|\alpha|)}$.
 Notice that nothing more is needed, since the attention mechanism only attends to vectors to the right, so $h_{|\alpha|}$ is not affected by the vectors coming from the tokens produced by $\tfone{\TF}$.
 This is done with the operation presented in Section \ref{copy-vector}.
-
-\bigcifu{El párrafo que está arriba tampoco me resulta super claro, pero no se cómo mejorarlo.}
 
 With this last fix, $\TF$ generates the tape of $\tfone{\TF}$ followed by the tape of $\tftwo{\TF}$.
 We now show how to compute $q$, i.e., the disjunction of $\tfone{q}$ and $\tftwo{q}$.

@@ -309,7 +309,7 @@ Assume that $\TF$ is normalized and let us define $\TF'$.
 $\TF'$ is identical to $\TF$ except for the following modifications.
 Let $\sigma$ be the token to repeat.
 We flag the vectors coming from $\sigma$ with the token embedding.
-Since we are replicating a token that was printed, i.e., it is not part of the input\bigcifu{Nunca puede serlo? Entiendo que en los casos de uso de la primitiva es uno de los signos reservados, pero en general creo que pueden escribir lo que quieran los TF. Si lo dice el main text, capaz lo podríamos recordar acá.}\bigrafa{Podría serlo pero eso se parchea más abajo. La primitiva hace que una vez que se imprime el token, el transformer lo repite infinitamente}, its corresponding vector is the last one.
+Since we are replicating a token that was printed, i.e., it is not part of the input, its corresponding vector is the last one.
 This is because we begin repeating it after the first time it is printed.
 
 
