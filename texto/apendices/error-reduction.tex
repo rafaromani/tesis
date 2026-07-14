@@ -6,19 +6,20 @@ We estimate the number of runs $r$ using Chernoff's bound.
 \begin{theorem}[Chernoff's bound]
     Let $y_1, \dots, y_r$ be independent Boolean random variables with $\Pr[y_i = 1] = c'$.
     Let $Y = \sum_{i=1}^r y_i$ and let $\delta \in (0,1)$.
-    Then $\Pr[Y \leq (1-\delta)rc'] \leq e^{-\frac{\delta^2}{4}rc'}$ and $\Pr[Y \geq (1+\delta)rc'] \leq e^{-\frac{\delta^2}{4}rc'}$.
+
+    Then, $\Pr[Y \leq (1-\delta)rc'] \leq e^{-\frac{\delta^2}{4}rc'}$ and $\Pr[Y \geq (1+\delta)rc'] \leq e^{-\frac{\delta^2}{4}rc'}$.
 \end{theorem}
 
 Let $y_i$ be a random Boolean variable representing whether the $i$-th run of $\TF_n$ answered correctly on input $x$, i.e., $\TF_n^*(x) = \gL(x)$.
-By definition of the family $\{\TF_n\}_{n\in\mathbb{N}}$, $\Pr[y_i = 1] > c > 1/2$.
+By definition of the family $\{\TF_n\}_{n\in\mathbb{N}}$, \mbox{$\Pr[y_i = 1] > c > 1/2$}.
 Therefore, there exists $c \leq c' \leq 1$ such that $\Pr[y_i = 1] = c'$.
 
 We need to find $r$ such that $\Pr[Y < r/2] < d$.
 We choose $\delta$ such that $\delta > \frac{2c'-1}{2c'}$; then $r/2 < (1-\delta)rc'$.
 Thus, $\Pr[Y < r/2] < \Pr[Y < (1-\delta)rc'] < e^{-\frac{\delta^2}{4}rc'}$.
-Finally, choosing $r \leq \frac{4\ln(d)}{c'\delta^2}$, we have $d \leq e^{-\frac{\delta^2}{4}rc'}$, and therefore, $\Pr[Y < r/2] < d$.
+Finally, choosing $r \geq -\frac{4\ln(d)}{c'\delta^2}$, we have $e^{-\frac{\delta^2}{4}rc'} \leq d$, and therefore, $\Pr[Y < r/2] < d$.
 
-Thus, doing $\rceil\frac{4\ln(d)}{c'\delta^2}\lceil$ runs of $\TF_n^*(x)$ and computing the majority vote of the runs is enough to give the correct answer for $\gL(x)$ with probability at least $d$.
+Thus, doing $\left\lceil-\frac{4\ln(d)}{c'\delta^2}\right\rceil$ runs of $\TF_n^*(x)$ and computing the majority vote of the runs is enough to give the correct answer for $\gL(x)$ with probability at least $d$.
 Observe that computing more runs only increases the probability of answering correctly.
 Thus, for having the right answer with probability at least $d$ for all inputs of size $n$, we run $\TF_n$ for the largest $r$ needed.
 Observe that $r$ is largest for the inputs $x$ whose probability of being answered correctly is closest to $c$, i.e., those with the highest probability of error.
