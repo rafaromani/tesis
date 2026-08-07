@@ -29,18 +29,18 @@ Furthermore, the result of the $\FF$ layer will have a zero in the $i$th coordin
 \begin{figure*}[h]
     \begin{align*}
         \left(\begin{matrix}
-            A^{i \times r} & 0^{i \times 1} & B^{i \times n-1-r} \\
-            0^{1 \times r} & 0 & 0^{1 \times n-1-r} \\
-            C^{n-1-i \times r} & 0^{n-1-i \times 1} & D^{n-1-i \times n-1-r}         
+            A^{r     \times i} & 0^{r     \times 1} & B^{r     \times n-1-i} \\
+            0^{1     \times i} & 0                  & 0^{1     \times n-1-i} \\
+            C^{n-1-r \times r} & 0^{n-1-r \times 1} & D^{n-1-r \times n-1-i}         
         \end{matrix}\right)
         \left( \begin{matrix}
-            v^{i \times 1} \\
-            x^{1 \times 1}\\
+            v^{i     \times 1} \\
+            x^{1     \times 1}\\
             w^{n-1-i \times 1}
         \end{matrix}\right)    = 
         \left( \begin{matrix}
             Av + Bw \\
-            x\\
+            0\\
             Cv + Dw
         \end{matrix}\right)    \sim
         \left(\begin{matrix}
